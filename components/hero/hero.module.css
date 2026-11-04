@@ -10,6 +10,26 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid color-mix(in srgb, var(--asphalt) 70%, transparent);
+  transition:
+    background-color 200ms ease-out,
+    border-color 200ms ease-out;
+}
+
+/* Over daylight sections: solid, light, strong contrast (set by HeaderTheme). */
+.header[data-theme="day"] {
+  background: #fff;
+  border-bottom-color: #d5dbe1;
+  box-shadow: 0 1px 0 rgb(18 26 34 / 0.04), 0 6px 18px -12px rgb(18 26 34 / 0.35);
+}
+
+.header[data-theme="day"] .demoPill {
+  color: var(--tinte); /* DESIGN.md 2.6: --tinte text on day */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    transition: none;
+  }
 }
 
 .headerInner {

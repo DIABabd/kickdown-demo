@@ -1,0 +1,319 @@
+/* Showroom – night section with spotlights (DESIGN.md 4.5). */
+
+.showroom {
+  position: relative;
+  scroll-margin-top: 64px;
+  padding-bottom: 72px;
+  background: var(--nacht);
+  color: var(--markierung);
+}
+
+/* Daylight (times section) → night */
+.dusk {
+  height: 96px;
+  background: linear-gradient(to bottom, var(--tag), color-mix(in srgb, var(--lapis) 30%, var(--nacht)) 70%, var(--nacht));
+}
+
+.inner {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.eyebrow {
+  margin: 24px 0 4px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--kd-blau);
+}
+
+.h2 {
+  margin: 0 0 24px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variation-settings: "wdth" 110;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+/* ---------- Filter (native radios) ---------- */
+
+.filter {
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 4px;
+  border: 1px solid var(--asphalt);
+  border-radius: 8px;
+  background: #0f1e2d;
+}
+
+.filter input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.filter label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding-inline: 18px;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--markierung);
+  cursor: pointer;
+  transition:
+    background-color 150ms ease-out,
+    color 150ms ease-out;
+}
+
+.filter input:checked + label {
+  background: var(--kd-blau);
+  color: var(--nacht); /* 5.8 : 1 */
+}
+
+.filter input:focus-visible + label {
+  outline: 3px solid var(--kd-blau);
+  outline-offset: 2px;
+}
+
+/* Filtering only where :has() works; otherwise every vehicle stays visible. */
+.room:has(input[value="automatik"]:checked) .bay:not([data-getriebe="automatik"]),
+.room:has(input[value="schaltung"]:checked) .bay:not([data-getriebe="schaltung"]) {
+  display: none;
+}
+
+/* ---------- Bays ---------- */
+
+/* Phones: a swipeable row inside the section (the page never scrolls sideways). */
+.bays {
+  display: flex;
+  gap: 16px;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 4px var(--gutter) 16px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-color: var(--asphalt) transparent;
+}
+
+.bay {
+  flex: 0 0 min(84%, 320px);
+  scroll-snap-align: start;
+}
+
+.card {
+  height: 100%;
+  border: 1px solid color-mix(in srgb, var(--asphalt) 80%, transparent);
+  background: linear-gradient(to bottom, #0a1520, #0d1a27 60%, #0b1622);
+  outline: none;
+  transition: border-color 200ms ease-out;
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--kd-blau);
+  outline-offset: 2px;
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: color-mix(in srgb, var(--kd-blau) 55%, transparent);
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px 0;
+  overflow: hidden;
+  isolation: isolate;
+  /* Lapis light pool on the floor */
+  background: radial-gradient(ellipse 75% 22% at 50% 82%, color-mix(in srgb, var(--lapis) 70%, transparent), transparent 70%);
+}
+
+/* Spotlight cone from above */
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgb(220 238 255 / 0.22), rgb(220 238 255 / 0.04) 70%, transparent);
+  clip-path: polygon(40% 0, 60% 0, 96% 100%, 4% 100%);
+  filter: blur(8px);
+  opacity: 0.55;
+  transition: opacity 250ms ease-out;
+}
+
+.card:hover .stage::before,
+.card:focus-visible .stage::before {
+  opacity: 1;
+}
+
+/* Photo: never wider than 248 × 268 CSS px (DESIGN.md 2.5). */
+.frame {
+  width: min(100%, 248px);
+  aspect-ratio: 370 / 400;
+  /* Only the bottom edge fades into the floor – the photo pixels are not changed. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent);
+  mask-image: linear-gradient(to bottom, #000 86%, transparent);
+  transition: translate 250ms ease-out;
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.reflection {
+  width: min(100%, 248px);
+  height: 56px;
+  overflow: hidden;
+  border-top: 1px solid color-mix(in srgb, var(--kd-blau) 45%, transparent);
+  opacity: 0.22;
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
+  mask-image: linear-gradient(to bottom, #000, transparent);
+}
+
+.reflection .photo {
+  transform: scaleY(-1);
+}
+
+/* ---------- Text (always visible) ---------- */
+
+.info {
+  padding: 16px 20px 20px;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.ausstattung {
+  margin: 4px 0 16px;
+  color: color-mix(in srgb, var(--markierung) 85%, var(--nacht));
+}
+
+.detailsTitle {
+  margin: 0 0 4px;
+  font-size: 15px;
+  color: color-mix(in srgb, var(--markierung) 72%, var(--nacht));
+}
+
+/* Dashboard-style spec lines – styling only, words unchanged. */
+.specs {
+  margin: 0 0 16px;
+}
+
+.spec {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 12px;
+  padding: 8px 0;
+  border-top: 1px solid color-mix(in srgb, var(--kd-blau) 28%, transparent);
+}
+
+.spec dt {
+  font-size: 15px;
+  color: color-mix(in srgb, var(--markierung) 72%, var(--nacht));
+}
+
+.spec dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.fazit {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--kd-blau);
+}
+
+/* ---------- Motion (only when allowed) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .card:hover .frame,
+  .card:focus-visible .frame {
+    translate: 0 -4px;
+  }
+
+  /* A filtered vehicle fades back in (display: none → shown restarts it). */
+  .bay {
+    animation: kd-bay-in 220ms ease-out both;
+  }
+
+  .bays {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filter label,
+  .card,
+  .stage::before,
+  .frame {
+    transition: none;
+  }
+}
+
+@keyframes kd-bay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Tablet / desktop: a grid, no sideways scrolling at all ---------- */
+
+@media (min-width: 640px) {
+  .bays {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+}
+
+@media (min-width: 1024px) {
+  .showroom {
+    scroll-margin-top: 72px;
+    padding-bottom: 112px;
+  }
+  .dusk {
+    height: 140px;
+  }
+  .h2 {
+    margin-bottom: 32px;
+    font-size: 43px;
+    line-height: 1.05;
+  }
+  .bays {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+}

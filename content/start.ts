@@ -24,4 +24,9 @@ export const ui = {
   signUp: "Jetzt anmelden",
   /** Heading of the times section (UI word from DESIGN.md 5.13). */
   zeiten: "Zeiten",
+  /** Showroom eyebrow and filter (UI words from DESIGN.md 5.13). */
+  showroom: "Der Showroom",
+  filterAlle: "Alle",
+  filterAutomatik: "Automatik",
+  filterSchaltung: "Schaltung",
 } as const;

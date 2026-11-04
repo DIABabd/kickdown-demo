@@ -47,7 +47,7 @@ Die Fragen sind nach Wichtigkeit sortiert: oben die wichtigsten.
 
 ## E. Weniger dringend – Texte und Aufbau
 
-28. **Kleine Fehler in den Texten:** Wir übernehmen alle Texte genau so wie auf der alten Seite. Dort gibt es kleine Fehler, z. B. „einen passendes Theorie-Angebot“, „an deine Bedürfnisse“, „Automatik Getriebe“ und „Automatikgetriebe“. Sollen wir diese Fehler korrigieren?
+28. **Kleine Fehler in den Texten:** Wir übernehmen alle Texte genau so wie auf der alten Seite. Dort gibt es kleine Fehler, z. B. „einen passendes Theorie-Angebot“, „an deine Bedürfnisse“, „Automatik Getriebe“ und „Automatikgetriebe“ oder das Leerzeichen in „Fahrschüler/ Fahranfänger“ (bei allen 7 Autos). Sollen wir diese Fehler korrigieren?
 29. **Andere Führerscheinklassen:** Auf der alten Seite steht nur Klasse B. Bieten Sie noch andere Klassen an?
 30. **Theorie-Intensivkurs:** Im Quellcode stehen alte Intensivkurse (2019/2020 und März 2021). Wir zeigen sie nicht. Gibt es heute einen Intensivkurs, den wir zeigen sollen?
 31. **Fahrlehrerverband:** Im Quellcode steht „Wir sind Mitglied im Fahrlehrerverband Bremen e. V.“, aber es ist nicht sichtbar. Sind Sie noch Mitglied? Sollen wir das zeigen?
