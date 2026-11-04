@@ -1,68 +1,71 @@
 # Fragen an die Fahrschule Kickdown
 
 Diese Fragen gehören zur **privaten Demo** der neuen Website. Die Demo ist nicht online und wird nicht veröffentlicht.
-Bitte beantworten Sie die Fragen, bevor aus der Demo eine echte Website wird.
-Die Fragen sind nach Wichtigkeit sortiert: oben die wichtigsten.
+
+Bitte beantworten Sie zuerst Teil A. Teil B kann auch nach dem Livegang noch geklärt werden.
 
 ---
 
-## A. Sehr wichtig – stimmen die Fakten?
+## A. Vor dem Livegang nötig
 
-1. **Bürozeiten am Freitag:** In der Fußzeile der alten Seite steht „Freitag 16:00 Uhr bis 19:00 Uhr“. Auf der Kontaktseite stehen nur Montag und Samstag. Ist das Büro am Freitag geöffnet? (In der Demo zeigen wir Freitag so wie in der Fußzeile.)
-2. **Preise:** Sind alle Preise in der Preisliste für Klasse B noch aktuell?
-3. **Schüler- und Studenten-Aktion:** Gilt die Aktion aus der Preisliste noch? Wer bekommt sie? Gibt es ein Enddatum?
-4. **Ersparnis von 260 €:** Die 260 € passen nur, wenn man mit dem Lehrmaterial **ohne** Drivers Cam (60 €) rechnet. Mit Drivers Cam (90 €) wären es 290 €. Ist im Aktionspreis Drivers Cam enthalten oder nicht?
-5. **Theoriezeiten:** Sind die Theoriezeiten (Dienstag, Mittwoch, Donnerstag, 17:00–18:30 und 19:00–20:30 Uhr) noch aktuell?
-6. **„An 3 Wochentagen bieten wir 4 Themen an“:** Was bedeutet dieser Satz genau? Stimmt er noch?
-7. **Team:** Arbeiten alle 8 Personen noch bei Ihnen? Stimmen alle Aufgaben (z. B. „Fahrlehrerin / Büroleitung“)?
-8. **Fahrzeuge:** Sind alle 7 Autos noch im Einsatz? Gibt es neue Autos?
-9. **VW Golf VI:** Das Foto sieht aus wie ein neueres Golf-Modell. Welches Modell ist es genau?
-10. **Audi A4:** Auf dem Foto steht das Kennzeichen „HB-PR 218“, bei den anderen Autos „HB-KD …“. Ist der Audi A4 ein Auto der Fahrschule?
+Diese Fragen betreffen Fakten, Rechte und rechtliche Texte. Ohne Antwort können wir nicht sicher sein, dass die Inhalte stimmen oder benutzt werden dürfen.
 
-## B. Sehr wichtig – Erlaubnis und Rechte
+### Fakten prüfen
 
-11. **Fotos vom Team:** Sind alle Personen damit einverstanden, dass ihr Foto auf der neuen Website gezeigt wird?
-12. **Hintergrundbilder:** Die großen Bilder der alten Seite (Auto bei Nacht, zwei Personen vor dem Bremer Rathaus, Blick aus dem Auto, Asphalt) sind wahrscheinlich von Adobe Stock. Dürfen Sie diese Bilder auch auf der neuen Website benutzen? (In der Demo benutzen wir sie nicht.)
-13. **Schaufenster-Bild:** Auf dem Bild mit dem Comic-Auto ist ein Copyright-Hinweis von einer Gestaltungsfirma zu sehen. Dürfen wir das Bild benutzen? **Noch offen.** In der Demo steht das Bild jetzt im Abschnitt „Willkommen“ – vollständig, ohne Zuschnitt und ohne den Copyright-Hinweis zu verdecken – mit dem Hinweis „Dieses Foto muss vor der Veröffentlichung freigegeben werden.“ **Das Foto muss vor der Veröffentlichung freigegeben werden.**
-14. **Kalender-Foto (Theorie):** Auf dem Foto stehen Name, Telefonnummern und E-Mail einer Lieferfirma. Wir schneiden diesen Teil ab. Ist das in Ordnung, oder haben Sie ein anderes Foto?
-15. **Datenschutz und Hosting:** In der Datenschutzerklärung stehen KS Design und Timme Hosting. Wenn die neue Website woanders liegt, muss der Text geändert werden. Wer schreibt und prüft den neuen Text?
-16. **Hinweis „Programmiert durch KS Design“:** Soll dieser Hinweis in Fußzeile und Impressum bleiben?
-17. **Impressum:** Ist der Name der Erlaubnisbehörde („Der Senator für Klimaschutz, Umwelt, Mobilität, Stadtentwicklung und Wohnungsbau“) noch richtig?
+1. **Freitag im Büro geöffnet?** In der Fußzeile der alten Seite steht „Freitag 16:00–19:00 Uhr", auf der Kontaktseite nicht. Die Demo zeigt Freitag wie in der Fußzeile. Stimmt das?
+2. **Preise aktuell?** Sind alle Preise aus der Preisliste für Klasse B noch richtig?
+3. **Schüler-/Studenten-Aktion aktuell?** Gilt sie noch? Wer bekommt sie? Gibt es ein Enddatum?
+4. **Ersparnis von 260 € richtig?** Das stimmt nur ohne Drivers Cam (60 €). Mit Drivers Cam (90 €) wären es 290 €. Ist Drivers Cam im Aktionspreis enthalten?
+5. **Theoriezeiten aktuell?** Dienstag, Mittwoch, Donnerstag, 17:00–18:30 und 19:00–20:30 Uhr – stimmt das noch?
+6. **Satz „An 3 Wochentagen bieten wir 4 Themen an"** – was bedeutet das genau? Stimmt er noch?
+7. **Team noch aktuell?** Arbeiten alle 8 Personen noch bei Ihnen? Stimmen die Aufgaben (z. B. „Fahrlehrerin / Büroleitung")?
+8. **Fahrzeuge noch aktuell?** Sind alle 7 Autos noch im Einsatz? Gibt es neue Autos?
+9. **Gehört der Audi A4 zur Fahrschule?** Sein Kennzeichen „HB-PR 218" sieht anders aus als bei den anderen Autos („HB-KD …").
+10. **Welche Führerscheinklassen bieten Sie an?** Die alte Seite zeigt nur Klasse B.
 
-## C. Wichtig – Kontakt und Anmeldung
+### Rechte und rechtliche Texte
 
-18. **E-Mail-Adresse:** Auf der Startseite steht „Schreib uns einfach eine E-Mail“, aber es ist keine E-Mail-Adresse zu sehen. Im Quellcode steht info@fahrschule-kickdown.de. Ist diese Adresse aktiv? Soll sie auf der Website stehen?
-19. **Zweite Telefonnummer:** Auf der Kontaktseite gibt es ein verstecktes Telefon-Symbol mit der Nummer +49 1525 6751996. Wem gehört diese Nummer? Soll sie auf der Website stehen?
-20. **Online-Anmeldung:** In der Demo ist die Anmeldung nur eine Simulation. Möchten Sie später eine echte Online-Anmeldung?
-21. **Wenn ja:** Wohin sollen die Anmeldungen gehen (z. B. E-Mail)? Welche Angaben brauchen Sie von den Fahrschülern?
-22. **Fahrschüler unter 18:** Müssen bei der Anmeldung die Eltern zustimmen oder kontaktiert werden?
-23. **Google Maps:** Möchten Sie auf der echten Website eine Karte von Google Maps? (Dafür braucht man eine Zustimmung der Besucher. In der Demo gibt es nur einen Link zur Karte.)
+11. **Teamfotos – Einverständnis?** Sind alle gezeigten Personen damit einverstanden, dass ihr Foto auf der neuen Website zu sehen ist?
+12. **Schaufenster-Foto – noch offen.** Darauf ist ein Copyright-Hinweis einer Gestaltungsfirma zu sehen. Dürfen wir das Foto benutzen? In der Demo steht es vollständig (ohne Zuschnitt, Copyright-Hinweis sichtbar) mit dem Vermerk „Muss vor Veröffentlichung freigegeben werden." **Dieses Foto braucht vor dem Livegang eine Freigabe.**
+13. **Kalender-Foto (Theorie) – Zuschnitt in Ordnung?** Auf dem Original stehen Name, Telefonnummer und E-Mail einer Lieferfirma; wir schneiden das ab. Ist das in Ordnung, oder haben Sie ein anderes Foto?
+14. **Impressum: Name der Behörde noch richtig?** („Der Senator für Klimaschutz, Umwelt, Mobilität, Stadtentwicklung und Wohnungsbau")
+15. **E-Mail-Adresse info@fahrschule-kickdown.de aktiv?** Auf der Startseite steht „Schreib uns eine E-Mail", aber keine Adresse ist sichtbar. Ist diese Adresse richtig und soll sie auf der Website stehen?
 
-## D. Wichtig – Bilder und Logo
+---
 
-24. **Foto von Inna Korobova:** Haben Sie ein Foto von ihr? Bis dahin zeigen wir ihren Namen und ihre Aufgabe in einem leeren Rahmen. Ist das in Ordnung?
-25. **Logo:** Haben Sie das Logo als Vektor-Datei (SVG, AI, EPS oder PDF)? Das jetzige Bild ist sehr klein (200 × 50 Pixel).
-26. **Größere Fotos:** Die Fotos vom Team und von den Autos sind klein (370 × 400 Pixel). Haben Sie die Originale in größer? Oder möchten Sie neue Fotos machen lassen?
-27. **3D-Auto:** Auf der Startseite steht ein 3D-Auto in Kickdown-Blau, ohne Logo einer Automarke. Gefällt Ihnen das? Soll Ihr Kickdown-Logo auf das Auto?
+## B. Später möglich
 
-## E. Weniger dringend – Texte und Aufbau
+Diese Punkte betreffen Wünsche, kleine Korrekturen oder Dinge, die erst für eine echte (nicht nur simulierte) Funktion wichtig werden. Sie müssen vor dem Livegang der Demo nicht geklärt sein.
 
-28. **Kleine Fehler in den Texten:** Wir übernehmen alle Texte genau so wie auf der alten Seite. Dort gibt es kleine Fehler, z. B. „einen passendes Theorie-Angebot“, „an deine Bedürfnisse“, „Automatik Getriebe“ und „Automatikgetriebe“ oder das Leerzeichen in „Fahrschüler/ Fahranfänger“ (bei allen 7 Autos). Sollen wir diese Fehler korrigieren?
-29. **Andere Führerscheinklassen:** Auf der alten Seite steht nur Klasse B. Bieten Sie noch andere Klassen an?
-30. **Theorie-Intensivkurs:** Im Quellcode stehen alte Intensivkurse (2019/2020 und März 2021). Wir zeigen sie nicht. Gibt es heute einen Intensivkurs, den wir zeigen sollen?
-31. **Fahrlehrerverband:** Im Quellcode steht „Wir sind Mitglied im Fahrlehrerverband Bremen e. V.“, aber es ist nicht sichtbar. Sind Sie noch Mitglied? Sollen wir das zeigen?
-32. **Preise im Menü:** Auf der alten Seite waren die Preise nur in der Fußzeile verlinkt. Auf der neuen Seite stehen sie im Hauptmenü. Ist das in Ordnung?
-33. **Theorie und Praxis:** Wir möchten die zwei Seiten „Theoretischer Unterricht“ und „Praktischer Unterricht“ zu einer Seite „Unterricht“ zusammenlegen. Es geht kein Text verloren. Ist das in Ordnung?
-34. **Neue kurze Texte:** Für Knöpfe und Hinweise brauchen wir ein paar neue Wörter, z. B. „Jetzt anmelden“, „Anrufen“, „Route planen“, „Wer neben dir sitzt“. Sind diese Texte in Ordnung? (Die Liste steht in DESIGN.md, Abschnitt 5.13.)
-35. **Weitere neue Texte (Navigation, Überschriften, Hinweise):** Beim Bauen der Startseite sind diese neuen Wörter dazugekommen. Sind sie in Ordnung?
-    - Kopfzeile und Handy-Leiste: „Menü“, „Preise“, „Fahrzeuge“, „Team“, „Kontakt“, „Anmelden“, „Anrufen“, „Zeiten“
-    - Kleine Zeile über den Überschriften: „Willkommen“, „Anmeldung · Theorie · Fahrstunden · Prüfung“, „Preise“, „Zeiten“, „Wer neben dir sitzt“, „Der Showroom“, „Kontakt“, „Simulation“
-    - Überschrift der Zeiten: „Bürozeiten, Theoriezeiten und Praxiszeiten“
-    - Links in der „Strecke“: „Anmelden“, „Theoriezeiten“, „Unsere Fahrzeuge“, „Preise ansehen“; im Kontakt-Bereich der Link „Bürozeiten“
-    - Hinweis unter dem Schaufenster-Bild: „Demo-Hinweis: Dieses Foto muss vor der Veröffentlichung freigegeben werden.“
-    - Bildbeschreibungen (für Screenreader): „Schaufenster der Fahrschule Kickdown“, „(Foto 1 von 3)“ usw. bei den drei gleichen VW T-Roc
-    - Nur für Screenreader: „Hauptnavigation“, „Schnellzugriff“, „Rechtliches“, „(öffnet in neuem Tab)“
-    - Platzhalter-Seite: „Diese Seite wird nach Freigabe der Startseite gebaut.“, „Zur Startseite“
-    - Anmeldung (Simulation): die Fragen, Hinweise und Fehlermeldungen des Formulars, „Simulation beendet – es wurde keine Anmeldung gesendet.“, „Simulation neu starten“
-36. **Drei gleiche VW T-Roc:** Die drei VW T-Roc mit Automatik haben auf der alten Seite genau denselben Text. In der Demo stehen sie deshalb zusammen auf einer Karte mit allen drei Fotos. Ist das in Ordnung, oder sollen es wieder drei einzelne Karten sein? (Der VW T-Roc mit manueller Schaltung hat einen anderen Text und bleibt eine eigene Karte.)
-37. **Text bei „Fahrstunden“:** In der „Strecke“ steht bei „Fahrstunden“ jetzt der Text von der alten Seite „Praktischer Unterricht“ („Wir bereiten dich zu fairen Preisen …“), damit sich der Willkommens-Text nicht wiederholt. Ist das in Ordnung?
+### Echte Online-Anmeldung (nur falls gewünscht)
+
+16. **Wollen Sie später eine echte Online-Anmeldung** statt der Simulation?
+17. **Falls ja:** Wohin sollen die Anmeldungen gehen (z. B. E-Mail)? Welche Angaben brauchen Sie?
+18. **Falls ja:** Brauchen Sie bei Fahrschülern unter 18 eine Zustimmung der Eltern?
+
+### Karte und zweite Nummer
+
+19. **Google Maps gewünscht?** Für eine echte Karte auf der Website braucht man eine Zustimmung der Besucher (Cookie-Banner). Die Demo zeigt nur einen Link zur Karte.
+20. **Zweite Telefonnummer zeigen?** Auf der alten Kontaktseite gibt es ein verstecktes Symbol mit der Nummer +49 1525 6751996. Wem gehört sie? Soll sie auf die Website?
+
+### Bilder und Logo
+
+21. **Foto von Inna Korobova vorhanden?** Bis dahin zeigen wir Namen und Aufgabe in einem leeren Rahmen.
+22. **Logo als Vektor-Datei vorhanden** (SVG, AI, EPS oder PDF)? Das jetzige Bild ist nur 200 × 50 Pixel.
+23. **Größere Fotos vorhanden** (Team und Autos, jetzt 370 × 400 Pixel)? Oder sollen neue Fotos gemacht werden?
+24. **Hintergrundbilder der alten Seite** (Auto bei Nacht, Bremer Rathaus, Blick aus dem Auto, Asphalt) – dürfen die auf der neuen Website benutzt werden? (In der Demo nicht verwendet.)
+25. **3D-Auto auf der Startseite:** Gefällt Ihnen das blaue Auto ohne Marken-Logo? Soll Ihr Kickdown-Logo darauf?
+26. **VW Golf VI – genaues Modell?** Das Foto sieht nach einem neueren Modell aus.
+
+### Texte und Aufbau
+
+27. **Kleine Fehler in den alten Texten korrigieren?** Wir übernehmen die Texte genau so, inkl. kleiner Fehler (z. B. „einen passendes Theorie-Angebot", „Automatik Getriebe" vs. „Automatikgetriebe", Leerzeichen in „Fahrschüler/ Fahranfänger"). Sollen wir das korrigieren?
+28. **Theorie-Intensivkurs:** Im alten Quellcode stehen nur alte Termine (2019–2021), wir zeigen sie nicht. Gibt es einen aktuellen Kurs, den wir zeigen sollen?
+29. **Mitgliedschaft im Fahrlehrerverband Bremen e. V. zeigen?** Steht im alten Quellcode, ist aber nicht sichtbar.
+30. **„Programmiert durch KS Design" in Fußzeile/Impressum behalten?**
+31. **Datenschutztext zu Hosting (KS Design, Timme Hosting) anpassen** – nötig, sobald die echte Website woanders liegt. Wer schreibt und prüft den neuen Text?
+32. **Preise jetzt im Hauptmenü statt nur in der Fußzeile – in Ordnung?**
+33. **Theorie- und Praxisunterricht zu einer Seite „Unterricht" zusammengelegt – in Ordnung?** Kein Text geht verloren.
+34. **Die drei gleichen VW T-Roc (Automatik) auf einer Karte mit drei Fotos statt drei einzelnen Karten – in Ordnung?**
+35. **Text bei „Fahrstunden" ist der alte Text von „Praktischer Unterricht" – in Ordnung?** (Damit wiederholt sich der Willkommens-Text nicht.)
+36. **Neue, kurze UI-Texte freigeben?** Für Knöpfe, Navigation und Hinweise mussten wir ein paar neue Wörter ergänzen (z. B. „Jetzt anmelden", „Anrufen", „Route planen", „Menü", „Zeiten", „Simulation beendet – es wurde keine Anmeldung gesendet."). Die vollständige Liste steht in DESIGN.md, Abschnitt 5.13.
