@@ -1,0 +1,464 @@
+/* Sign-up simulation – daylight style (DESIGN.md 4.7). */
+
+.section {
+  scroll-margin-top: 0;
+  padding-bottom: 72px;
+  background: var(--tag);
+  color: var(--tinte);
+}
+
+/* Night (team) → daylight */
+.dawn {
+  height: 96px;
+  background: linear-gradient(to bottom, var(--nacht), color-mix(in srgb, var(--lapis) 35%, var(--tag)) 55%, var(--tag));
+}
+
+.inner {
+  max-width: 720px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.h2 {
+  margin: 24px 0 24px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variation-settings: "wdth" 110;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+/* Number-plate panel */
+.panel {
+  position: relative;
+  padding: 20px 20px 24px 32px;
+  border: 2px solid var(--tinte);
+  border-radius: 16px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 12px;
+  background: var(--kd-blau-text);
+}
+
+/* ---------- Demo notice: clearly visible, not small print ---------- */
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 2px solid var(--tinte);
+  border-radius: 8px;
+  background: #fff6d6;
+  color: var(--tinte);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.noticeIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--tinte);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-style: normal;
+}
+
+/* ---------- Speedometer ---------- */
+
+.progress {
+  display: grid;
+  justify-items: center;
+  margin-bottom: 8px;
+}
+
+.gauge {
+  width: min(100%, 220px);
+  height: auto;
+}
+
+.segment {
+  fill: none;
+  stroke-width: 12;
+  stroke: #d5dbe1;
+  transition: stroke 200ms ease-out;
+}
+
+.segment[data-state="done"] {
+  stroke: var(--kd-blau-text);
+}
+
+.segment[data-state="current"] {
+  stroke: var(--kd-blau);
+}
+
+.segment[data-red] {
+  stroke: color-mix(in srgb, var(--tacho-rot) 30%, #fff);
+}
+
+.segment[data-red][data-state="current"] {
+  stroke: var(--tacho-rot);
+}
+
+.tick {
+  stroke: var(--tinte);
+  stroke-width: 1.5;
+  opacity: 0.5;
+}
+
+.needle {
+  transform-box: view-box;
+  transform-origin: 100px 100px;
+  fill: var(--tinte);
+  transition: transform 250ms ease-out;
+}
+
+.needle[data-red] {
+  fill: var(--tacho-rot);
+}
+
+.hub {
+  fill: var(--tinte);
+}
+
+.progressText {
+  margin: 4px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Steps ---------- */
+
+.form {
+  margin: 0;
+}
+
+.fieldsetReset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.group legend {
+  padding: 0;
+}
+
+.question {
+  margin: 12px 0 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.question:focus {
+  outline: none;
+}
+
+/* Focus moves here on every step change – marked, but not boxed like an input. */
+.question:focus-visible {
+  outline: none;
+  text-decoration: underline 3px var(--kd-blau);
+  text-underline-offset: 6px;
+}
+
+.hint {
+  margin: -4px 0 12px;
+  font-size: 15px;
+  color: var(--grau);
+}
+
+.options {
+  display: grid;
+  gap: 10px;
+}
+
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 2px solid #b9c2cc;
+  border-radius: 8px;
+  background: #fff;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: border-color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.option input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  flex: none;
+  accent-color: var(--kd-blau-text);
+}
+
+.option:has(input:checked) {
+  border-color: var(--kd-blau-text);
+  background: color-mix(in srgb, var(--kd-blau) 9%, #fff);
+}
+
+.option:has(input:focus-visible) {
+  outline: 3px solid var(--kd-blau);
+  outline-offset: 2px;
+}
+
+.group[aria-invalid="true"] .option {
+  border-color: var(--tacho-rot);
+}
+
+.field + .field {
+  margin-top: 16px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 14px;
+  border: 2px solid #8996a3;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--tinte);
+  font: inherit;
+  font-size: 18px; /* ≥16px avoids zoom on iOS */
+}
+
+.input:focus-visible {
+  outline: 3px solid var(--kd-blau);
+  outline-offset: 2px;
+  border-color: var(--kd-blau-text);
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--tacho-rot);
+}
+
+.error {
+  margin: 8px 0 0;
+  color: #b3141c; /* tacho red darkened for text: 6.4:1 on white */
+  font-weight: 700;
+}
+
+.error::before {
+  content: "! ";
+}
+
+/* Review */
+.summary {
+  margin: 0;
+}
+
+.summaryRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "term   change"
+    "value  change";
+  align-items: center;
+  gap: 2px 12px;
+  padding: 12px 0;
+  border-top: 1px solid #d5dbe1;
+}
+
+.summaryRow dt {
+  grid-area: term;
+  font-size: 15px;
+  color: var(--grau);
+}
+
+.summaryRow dd {
+  margin: 0;
+}
+
+.summaryRow dd:first-of-type {
+  grid-area: value;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.summaryRow dd:last-of-type {
+  grid-area: change;
+}
+
+.change {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--kd-blau-text);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ---------- Buttons ---------- */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.primary,
+.secondary,
+.simulate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease-out;
+}
+
+.primary,
+.simulate {
+  margin-left: auto;
+  border: 2px solid var(--tinte);
+  background: var(--tinte);
+  color: #fff;
+}
+
+.primary:hover,
+.simulate:hover {
+  background: #26323e;
+}
+
+.secondary {
+  border: 2px solid var(--tinte);
+  background: #fff;
+  color: var(--tinte);
+}
+
+.secondary:hover {
+  background: var(--tag);
+}
+
+.primary:disabled,
+.secondary:disabled,
+.simulate:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.primary:focus-visible,
+.secondary:focus-visible,
+.simulate:focus-visible,
+.change:focus-visible {
+  outline: 3px solid var(--kd-blau);
+  outline-offset: 2px;
+}
+
+/* Result screen */
+.result p {
+  margin: 0 0 16px;
+}
+
+.subhead {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.hours {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.hours div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 8px;
+}
+
+.hours dt {
+  font-weight: 700;
+}
+
+.hours dd {
+  margin: 0;
+}
+
+.result .actions .primary {
+  margin-left: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment,
+  .needle,
+  .option,
+  .primary,
+  .secondary,
+  .simulate {
+    transition: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .panel {
+    padding: 28px 32px 32px 48px;
+  }
+  .panel::before {
+    width: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding-bottom: 112px;
+  }
+  .dawn {
+    height: 140px;
+  }
+  .h2 {
+    margin-top: 32px;
+    font-size: 43px;
+    line-height: 1.05;
+  }
+  .question {
+    font-size: 26px;
+  }
+}
