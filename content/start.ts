@@ -22,4 +22,6 @@ export const ui = {
   privateDemo: "Private Demo",
   privateDemoHint: "keine echte Website der Fahrschule",
   signUp: "Jetzt anmelden",
+  /** Heading of the times section (UI word from DESIGN.md 5.13). */
+  zeiten: "Zeiten",
 } as const;

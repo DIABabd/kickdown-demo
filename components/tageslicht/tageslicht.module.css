@@ -1,0 +1,439 @@
+/*
+ * Daylight sections – prices (#preise) and times (#zeiten), DESIGN.md 4.6.
+ * "Tageslicht": --tag background, --tinte text, white panels framed like a
+ * number plate (dark border, blue band on the left – no stars, no letters).
+ * Contrast: --tinte on white/--tag ≈ 17:1, --grau ≈ 5.1:1, --kd-blau-text ≈ 4.8:1+.
+ */
+
+.day {
+  /* Anchor jumps (#preise, #zeiten) land below the sticky header. */
+  scroll-margin-top: 64px;
+  padding-block: 72px;
+  background: var(--tag);
+  color: var(--tinte);
+}
+
+.dayTimes {
+  padding-top: 0;
+  /* No top padding here, so leave room under the header for #zeiten jumps. */
+  scroll-margin-top: 88px;
+}
+
+.inner {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.h2 {
+  margin: 0 0 24px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variation-settings: "wdth" 110;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.h3 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+/* ---------- Prices: phone toggle ---------- */
+
+.toggle {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 4px;
+  border: 2px solid var(--tinte);
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* Visually hidden but focusable radios; the labels are the segments. */
+.toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.25;
+  letter-spacing: normal;
+  color: var(--tinte);
+  cursor: pointer;
+  transition:
+    background-color 150ms ease-out,
+    color 150ms ease-out;
+}
+
+.toggle input:checked + label {
+  background: var(--tinte);
+  color: #fff;
+}
+
+.toggle input:focus-visible + label {
+  outline: 3px solid var(--kd-blau);
+  outline-offset: 2px;
+}
+
+/* Only hide the other list where the toggle is shown and :has() works. */
+@media (max-width: 1023px) {
+  .lists:has(input[value="mit"]:checked) .panel[data-list="ohne"],
+  .lists:has(input[value="ohne"]:checked) .panel[data-list="mit"] {
+    display: none;
+  }
+}
+
+/* ---------- Prices: the two lists ---------- */
+
+.panels {
+  display: grid;
+  gap: 24px;
+}
+
+.panel {
+  position: relative;
+  padding: 20px 20px 16px 36px;
+  border: 2px solid var(--tinte);
+  border-radius: 16px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* Number-plate band */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 14px;
+  background: var(--kd-blau-text);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.caption {
+  padding-bottom: 12px;
+  text-align: left;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
+  letter-spacing: normal;
+}
+
+.table th,
+.table td {
+  padding: 12px 8px;
+  border-top: 1px solid #d5dbe1;
+  vertical-align: baseline;
+}
+
+.table th {
+  padding-left: 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.table td {
+  padding-right: 0;
+  text-align: right;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rows that only exist in one list (Grundbetrag, Lehrmaterial). */
+.table tr[data-differs] th,
+.table tr[data-differs] td {
+  background: color-mix(in srgb, var(--kd-blau) 9%, #fff);
+}
+
+.table tr[data-differs] th {
+  padding-left: 10px;
+  box-shadow: inset 3px 0 0 var(--kd-blau-text);
+}
+
+.table tr[data-differs] td {
+  padding-right: 10px;
+}
+
+.ersparnis {
+  margin: 12px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--kd-blau-text);
+}
+
+.footnotes {
+  max-width: 64ch;
+  margin-top: 20px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--grau);
+}
+
+.footnotes p {
+  margin: 0 0 8px;
+}
+
+/* ---------- Times: blocks ---------- */
+
+.blocks {
+  display: grid;
+  gap: 16px;
+}
+
+.block {
+  padding: 20px;
+  border: 2px solid var(--tinte);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.slots {
+  margin: 0;
+}
+
+.slot + .slot {
+  margin-top: 12px;
+}
+
+.slot dt {
+  font-weight: 700;
+}
+
+.slot dd {
+  margin: 6px 0 0;
+}
+
+.plate {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1.5px solid var(--tinte);
+  border-radius: 6px;
+  background: #fff;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.plain {
+  margin: 0;
+  font-size: 18px;
+}
+
+.phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  margin-top: 16px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: var(--tinte);
+  color: #fff;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+}
+
+.phone:hover {
+  background: #26323e;
+}
+
+/* ---------- Times: week overview (desktop only) ---------- */
+
+.week {
+  display: none;
+}
+
+/* ---------- Tablet ---------- */
+
+@media (min-width: 640px) {
+  .blocks {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ---------- Desktop ---------- */
+
+@media (min-width: 1024px) {
+  .day {
+    scroll-margin-top: 72px;
+    padding-block: 112px;
+  }
+  .dayTimes {
+    padding-top: 0;
+    scroll-margin-top: 104px;
+  }
+  .h2 {
+    margin-bottom: 32px;
+    font-size: 43px;
+    line-height: 1.05;
+  }
+  .h3 {
+    font-size: 28px;
+  }
+
+  .toggle {
+    display: none;
+  }
+  .panels {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .panel {
+    padding: 28px 28px 20px 48px;
+  }
+  .panel::before {
+    width: 18px;
+  }
+  .table td {
+    font-size: 28px;
+  }
+
+  .blocks {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .week {
+    display: block;
+    margin-top: 32px;
+    padding: 24px 28px;
+    border: 2px solid var(--tinte);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin-bottom: 16px;
+    font-size: 15px;
+    color: var(--tinte);
+  }
+
+  .legendBuero,
+  .legendTheorie {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .legendBuero::before,
+  .legendTheorie::before {
+    content: "";
+    width: 22px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .legendBuero::before {
+    border: 1.5px solid var(--tinte);
+  }
+
+  .legendTheorie::before {
+    background: var(--kd-blau);
+  }
+
+  .legendPraxis {
+    color: var(--grau);
+  }
+
+  .weekRows {
+    display: grid;
+    gap: 8px;
+  }
+
+  .weekRow {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+  }
+
+  .weekDay {
+    font-weight: 700;
+  }
+
+  .track {
+    position: relative;
+    height: 36px;
+    border-radius: 6px;
+    background: var(--tag);
+  }
+
+  .tick {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    background: #d5dbe1;
+  }
+
+  .barBuero,
+  .barTheorie {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .barBuero {
+    border: 1.5px solid var(--tinte);
+    background: #fff;
+    color: var(--tinte);
+  }
+
+  .barTheorie {
+    background: var(--kd-blau);
+    color: var(--tinte); /* 5.8 : 1 */
+    /* small gap between the two back-to-back courses */
+    margin-inline: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle label {
+    transition: none;
+  }
+}
