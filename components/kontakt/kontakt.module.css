@@ -1,13 +1,10 @@
-/* Contact – night section with a road sign and a daylight plate card. */
+/* Contact – DAYLIGHT section: a number-plate card and a blue road sign. */
 
 .kontakt {
   scroll-margin-top: 64px;
   padding-block: 72px;
-  border-top: 1px solid color-mix(in srgb, var(--asphalt) 80%, transparent);
-  background:
-    radial-gradient(ellipse 60% 50% at 85% 60%, color-mix(in srgb, var(--lapis) 30%, transparent), transparent 70%),
-    var(--nacht);
-  color: var(--markierung);
+  background: var(--tag);
+  color: var(--tinte);
 }
 
 .inner {
@@ -18,19 +15,9 @@
   padding-inline: var(--gutter);
 }
 
-.h2 {
-  margin: 0 0 16px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-variation-settings: "wdth" 110;
-  font-size: 28px;
-  line-height: 1.1;
-}
-
 .text {
   max-width: 64ch;
   margin: 0;
-  color: color-mix(in srgb, var(--markierung) 90%, var(--nacht));
 }
 
 .signs {
@@ -38,10 +25,14 @@
   gap: 20px;
 }
 
-/* ---------- Daylight plate: phone + hours ---------- */
+/* ---------- Number-plate card: phone + link to the office hours ---------- */
 
 .plate {
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
   padding: 20px 16px 20px 30px;
   border: 2px solid var(--tinte);
   border-radius: 16px;
@@ -84,36 +75,17 @@
   background: #26323e;
 }
 
-.h3 {
-  margin: 20px 0 8px;
-  font-family: var(--font-display);
+.hoursLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  color: var(--kd-blau-text); /* 5.3 : 1 on white */
   font-weight: 700;
-  font-size: 20px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-.hours {
-  margin: 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.hours div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 8px;
-  padding: 6px 0;
-  border-top: 1px solid #d5dbe1;
-}
-
-.hours dt {
-  min-width: 6.5em;
-  font-weight: 700;
-}
-
-.hours dd {
-  margin: 0;
-}
-
-/* ---------- Night road sign: address ---------- */
+/* ---------- Road sign: address ---------- */
 
 .roadSign {
   padding: 20px;
@@ -123,7 +95,7 @@
   box-shadow:
     inset 0 0 0 4px var(--lapis),
     inset 0 0 0 7px #fff,
-    0 18px 40px -18px color-mix(in srgb, var(--kd-blau) 55%, transparent);
+    0 0 0 2px var(--tinte);
   color: #fff; /* 7.6 : 1 on --lapis */
 }
 
@@ -183,15 +155,16 @@
 }
 
 .phone:focus-visible,
-.route:focus-visible,
-.insta:focus-visible {
+.hoursLink:focus-visible {
   outline: 3px solid var(--kd-blau);
   outline-offset: 3px;
 }
 
+/* Inside the blue sign a white ring is the visible one. */
 .route:focus-visible,
 .insta:focus-visible {
-  outline-color: #fff;
+  outline: 3px solid #fff;
+  outline-offset: 3px;
 }
 
 /* ---------- Tablet / desktop ---------- */
@@ -211,10 +184,6 @@
     grid-template-columns: 5fr 7fr;
     gap: 48px;
     align-items: center;
-  }
-  .h2 {
-    font-size: 43px;
-    line-height: 1.05;
   }
   .address {
     font-size: 26px;

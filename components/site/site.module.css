@@ -1,0 +1,364 @@
+/* Shared site parts: header + navigation, phone bottom bar, section
+   heading pattern, night/day seam. */
+
+/* ---------- Header (moved from hero.module.css) ---------- */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--nacht) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid color-mix(in srgb, var(--asphalt) 70%, transparent);
+  transition:
+    background-color 200ms ease-out,
+    border-color 200ms ease-out;
+}
+
+/* Over daylight sections: solid, light, strong contrast (set by HeaderTheme). */
+.header[data-theme="day"] {
+  background: #fff;
+  border-bottom-color: #d5dbe1;
+  box-shadow: 0 1px 0 rgb(18 26 34 / 0.04), 0 6px 18px -12px rgb(18 26 34 / 0.35);
+}
+
+.headerInner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1200px;
+  height: 64px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  border-radius: 8px;
+}
+
+.logo img {
+  width: 140px;
+  height: auto;
+}
+
+.demoPill {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding-inline: 10px;
+  border: 1px solid var(--tacho-rot);
+  border-radius: 999px;
+  color: var(--markierung);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.header[data-theme="day"] .demoPill {
+  color: var(--tinte); /* DESIGN.md 2.6: --tinte text on day */
+}
+
+/* ---------- Navigation ---------- */
+
+.nav {
+  margin-left: auto;
+}
+
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--markierung) 40%, transparent);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--markierung);
+  font: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.header[data-theme="day"] .menuButton {
+  border-color: var(--tinte);
+  color: var(--tinte);
+}
+
+.menuIcon,
+.menuIcon::before,
+.menuIcon::after {
+  display: block;
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+.menuIcon {
+  position: relative;
+}
+
+.menuIcon::before,
+.menuIcon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+
+.menuIcon::before {
+  top: -5px;
+}
+
+.menuIcon::after {
+  top: 5px;
+}
+
+.menuIcon[data-open] {
+  background: transparent;
+}
+
+.menuIcon[data-open]::before {
+  top: 0;
+  rotate: 45deg;
+}
+
+.menuIcon[data-open]::after {
+  top: 0;
+  rotate: -45deg;
+}
+
+/* Phone / tablet: links in a panel below the header */
+.navLinks {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 8px var(--gutter) 16px;
+  list-style: none;
+  background: var(--nacht);
+  border-bottom: 1px solid var(--asphalt);
+  box-shadow: 0 12px 24px -12px rgb(0 0 0 / 0.6);
+}
+
+.navLinks[data-open] {
+  display: grid;
+  gap: 4px;
+}
+
+.navLink,
+.navCta {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 12px;
+  border-radius: 8px;
+  color: var(--markierung);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+
+.navCta {
+  justify-content: center;
+  margin-top: 4px;
+  background: var(--kd-blau);
+  color: var(--nacht); /* 5.8 : 1 */
+}
+
+.navCta:hover {
+  background: #23b2ee;
+}
+
+.menuButton:focus-visible,
+.navLink:focus-visible,
+.navCta:focus-visible,
+.logo:focus-visible {
+  outline: 3px solid var(--kd-blau);
+  outline-offset: 2px;
+}
+
+/* ---------- Phone bottom bar ---------- */
+
+.bottomBar {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .bottomBar {
+    position: fixed;
+    z-index: 30;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    height: var(--bar-h);
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    box-sizing: content-box;
+    background: var(--nacht);
+    border-top: 1px solid var(--asphalt);
+    box-shadow: 0 -8px 20px -12px rgb(0 0 0 / 0.6);
+  }
+
+  /* While a text field is focused (on-screen keyboard), the bar steps aside. */
+  :global(body:has(input[type="text"]:focus, input[type="tel"]:focus)) .bottomBar {
+    display: none;
+  }
+}
+
+.barItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 48px;
+  border-radius: 8px;
+  color: var(--markierung);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-decoration: none;
+}
+
+.barItem:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+
+.barPrimary {
+  background: var(--kd-blau);
+  color: var(--nacht);
+}
+
+.barPrimary:hover {
+  background: #23b2ee;
+}
+
+.barItem:focus-visible {
+  outline: 3px solid var(--kd-blau);
+  outline-offset: -3px;
+}
+
+.barPrimary:focus-visible {
+  outline-color: var(--markierung);
+}
+
+/* ---------- Section heading pattern ---------- */
+
+.heading {
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
+  letter-spacing: normal;
+}
+
+.heading[data-tone="night"] .eyebrow {
+  color: var(--kd-blau); /* 6.6 : 1 on --nacht */
+}
+
+.heading[data-tone="day"] .eyebrow {
+  color: var(--kd-blau-text); /* 4.9 : 1 on --tag */
+}
+
+.h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variation-settings: "wdth" 110;
+  font-size: 28px;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.heading[data-tone="night"] .h2 {
+  color: var(--markierung);
+}
+
+.heading[data-tone="day"] .h2 {
+  color: var(--tinte);
+}
+
+/* ---------- Night ↔ day seam ---------- */
+
+.seam {
+  height: 28px;
+  background:
+    /* dashed centre line */
+    repeating-linear-gradient(to right, var(--markierung) 0 28px, transparent 28px 52px) center / 100% 2px no-repeat,
+    var(--asphalt);
+  border-block: 2px solid color-mix(in srgb, var(--markierung) 28%, var(--asphalt));
+}
+
+/* ---------- Desktop ---------- */
+
+@media (min-width: 1024px) {
+  .headerInner {
+    height: 72px;
+    gap: 16px;
+  }
+  .logo img {
+    width: 200px;
+  }
+  .menuButton {
+    display: none;
+  }
+  .navLinks,
+  .navLinks[data-open] {
+    position: static;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+  .navLink {
+    min-height: 44px;
+    padding: 0 12px;
+  }
+  .navCta {
+    min-height: 44px;
+    margin: 0 0 0 8px;
+    padding: 0 18px;
+  }
+  .header[data-theme="day"] .navLink {
+    color: var(--tinte);
+  }
+  .header[data-theme="day"] .navLink:hover {
+    background: var(--tag);
+  }
+  .heading {
+    margin-bottom: 32px;
+  }
+  .h2 {
+    font-size: 43px;
+    line-height: 1.05;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    transition: none;
+  }
+}

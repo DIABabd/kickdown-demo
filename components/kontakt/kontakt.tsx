@@ -1,43 +1,40 @@
+import Link from "next/link";
+import { SectionHeading } from "@/components/site/section-heading";
 import { adresse, fragen, instagram, kontaktUi, telefon } from "@/content/kontakt";
+import { ui } from "@/content/start";
 import { buerozeiten } from "@/content/zeiten";
 import styles from "./kontakt.module.css";
 
 /**
  * Contact block (#kontakt) – DESIGN.md section 9 ("Du hast Fragen …").
- * Night section with two "signs": a blue road sign for the address
- * (map link opens Google Maps in a new tab – nothing is embedded or
- * loaded from Google) and a white number-plate card for phone + hours.
+ * DAYLIGHT section: information people read and act on. A white
+ * number-plate card for the phone (+ a link to the office hours, which
+ * live in full in #zeiten) and a blue road sign for the address (map link
+ * opens Google Maps in a new tab – nothing is embedded or loaded from Google).
  */
 export function Kontakt() {
   return (
     <section id="kontakt" className={styles.kontakt} aria-labelledby="kontakt-title">
       <div className={styles.inner}>
         <div className={styles.intro}>
-          <h2 id="kontakt-title" className={styles.h2}>
-            {fragen.title}
-          </h2>
+          <SectionHeading id="kontakt-title" eyebrow={ui.eyebrows.kontakt} title={fragen.title} tone="day" />
           <p className={styles.text}>{fragen.text}</p>
         </div>
 
         <div className={styles.signs}>
-          {/* Daylight card: phone + office hours */}
+          {/* Number-plate card: phone + link to the office hours */}
           <div className={styles.plate}>
             <a href={telefon.href} className={styles.phone}>
               <PhoneIcon />
               <PhoneText />
             </a>
-            <h3 className={styles.h3}>{buerozeiten.title}</h3>
-            <dl className={styles.hours}>
-              {buerozeiten.slots.map((s) => (
-                <div key={s.day}>
-                  <dt>{s.day}</dt>
-                  <dd>{s.time}</dd>
-                </div>
-              ))}
-            </dl>
+            <Link href={ui.bottomBar.times.href} className={styles.hoursLink}>
+              {buerozeiten.title}
+              <span aria-hidden="true"> →</span>
+            </Link>
           </div>
 
-          {/* Night road sign: address, route, Instagram */}
+          {/* Road sign: address, route, Instagram */}
           <div className={styles.roadSign}>
             <address className={styles.address}>
               <PinIcon />

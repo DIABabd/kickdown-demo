@@ -1,4 +1,6 @@
+import { SectionHeading } from "@/components/site/section-heading";
 import { preise, type PriceRow } from "@/content/preise";
+import { ui } from "@/content/start";
 import styles from "./tageslicht.module.css";
 
 type List = { label: string; rows: readonly PriceRow[] };
@@ -15,9 +17,7 @@ export function Preise() {
   return (
     <section id="preise" className={styles.day} aria-labelledby="preise-title">
       <div className={styles.inner}>
-        <h2 id="preise-title" className={styles.h2}>
-          {preise.title}
-        </h2>
+        <SectionHeading id="preise-title" eyebrow={ui.eyebrows.preise} title={preise.title} tone="day" />
 
         <div className={styles.lists}>
           <div className={styles.toggle} role="radiogroup" aria-labelledby="preise-title">

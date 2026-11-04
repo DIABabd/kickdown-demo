@@ -23,7 +23,7 @@ Die Fragen sind nach Wichtigkeit sortiert: oben die wichtigsten.
 
 11. **Fotos vom Team:** Sind alle Personen damit einverstanden, dass ihr Foto auf der neuen Website gezeigt wird?
 12. **Hintergrundbilder:** Die großen Bilder der alten Seite (Auto bei Nacht, zwei Personen vor dem Bremer Rathaus, Blick aus dem Auto, Asphalt) sind wahrscheinlich von Adobe Stock. Dürfen Sie diese Bilder auch auf der neuen Website benutzen? (In der Demo benutzen wir sie nicht.)
-13. **Schaufenster-Bild:** Auf dem Bild mit dem Comic-Auto ist ein Copyright-Hinweis von einer Gestaltungsfirma zu sehen. Dürfen wir das Bild benutzen?
+13. **Schaufenster-Bild:** Auf dem Bild mit dem Comic-Auto ist ein Copyright-Hinweis von einer Gestaltungsfirma zu sehen. Dürfen wir das Bild benutzen? **Noch offen.** In der Demo steht das Bild jetzt im Abschnitt „Willkommen“ – vollständig, ohne Zuschnitt und ohne den Copyright-Hinweis zu verdecken – mit dem Hinweis „Dieses Foto muss vor der Veröffentlichung freigegeben werden.“ **Das Foto muss vor der Veröffentlichung freigegeben werden.**
 14. **Kalender-Foto (Theorie):** Auf dem Foto stehen Name, Telefonnummern und E-Mail einer Lieferfirma. Wir schneiden diesen Teil ab. Ist das in Ordnung, oder haben Sie ein anderes Foto?
 15. **Datenschutz und Hosting:** In der Datenschutzerklärung stehen KS Design und Timme Hosting. Wenn die neue Website woanders liegt, muss der Text geändert werden. Wer schreibt und prüft den neuen Text?
 16. **Hinweis „Programmiert durch KS Design“:** Soll dieser Hinweis in Fußzeile und Impressum bleiben?
@@ -54,3 +54,15 @@ Die Fragen sind nach Wichtigkeit sortiert: oben die wichtigsten.
 32. **Preise im Menü:** Auf der alten Seite waren die Preise nur in der Fußzeile verlinkt. Auf der neuen Seite stehen sie im Hauptmenü. Ist das in Ordnung?
 33. **Theorie und Praxis:** Wir möchten die zwei Seiten „Theoretischer Unterricht“ und „Praktischer Unterricht“ zu einer Seite „Unterricht“ zusammenlegen. Es geht kein Text verloren. Ist das in Ordnung?
 34. **Neue kurze Texte:** Für Knöpfe und Hinweise brauchen wir ein paar neue Wörter, z. B. „Jetzt anmelden“, „Anrufen“, „Route planen“, „Wer neben dir sitzt“. Sind diese Texte in Ordnung? (Die Liste steht in DESIGN.md, Abschnitt 5.13.)
+35. **Weitere neue Texte (Navigation, Überschriften, Hinweise):** Beim Bauen der Startseite sind diese neuen Wörter dazugekommen. Sind sie in Ordnung?
+    - Kopfzeile und Handy-Leiste: „Menü“, „Preise“, „Fahrzeuge“, „Team“, „Kontakt“, „Anmelden“, „Anrufen“, „Zeiten“
+    - Kleine Zeile über den Überschriften: „Willkommen“, „Anmeldung · Theorie · Fahrstunden · Prüfung“, „Preise“, „Zeiten“, „Wer neben dir sitzt“, „Der Showroom“, „Kontakt“, „Simulation“
+    - Überschrift der Zeiten: „Bürozeiten, Theoriezeiten und Praxiszeiten“
+    - Links in der „Strecke“: „Anmelden“, „Theoriezeiten“, „Unsere Fahrzeuge“, „Preise ansehen“; im Kontakt-Bereich der Link „Bürozeiten“
+    - Hinweis unter dem Schaufenster-Bild: „Demo-Hinweis: Dieses Foto muss vor der Veröffentlichung freigegeben werden.“
+    - Bildbeschreibungen (für Screenreader): „Schaufenster der Fahrschule Kickdown“, „(Foto 1 von 3)“ usw. bei den drei gleichen VW T-Roc
+    - Nur für Screenreader: „Hauptnavigation“, „Schnellzugriff“, „Rechtliches“, „(öffnet in neuem Tab)“
+    - Platzhalter-Seite: „Diese Seite wird nach Freigabe der Startseite gebaut.“, „Zur Startseite“
+    - Anmeldung (Simulation): die Fragen, Hinweise und Fehlermeldungen des Formulars, „Simulation beendet – es wurde keine Anmeldung gesendet.“, „Simulation neu starten“
+36. **Drei gleiche VW T-Roc:** Die drei VW T-Roc mit Automatik haben auf der alten Seite genau denselben Text. In der Demo stehen sie deshalb zusammen auf einer Karte mit allen drei Fotos. Ist das in Ordnung, oder sollen es wieder drei einzelne Karten sein? (Der VW T-Roc mit manueller Schaltung hat einen anderen Text und bleibt eine eigene Karte.)
+37. **Text bei „Fahrstunden“:** In der „Strecke“ steht bei „Fahrstunden“ jetzt der Text von der alten Seite „Praktischer Unterricht“ („Wir bereiten dich zu fairen Preisen …“), damit sich der Willkommens-Text nicht wiederholt. Ist das in Ordnung?

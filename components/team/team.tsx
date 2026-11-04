@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { BayRow } from "@/components/showroom/bay-row";
+import { SectionHeading } from "@/components/site/section-heading";
 import { ui } from "@/content/start";
 import { team, type Member } from "@/content/team";
 import styles from "./team.module.css";
@@ -32,10 +33,7 @@ export function Team() {
       </svg>
 
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>{ui.teamEyebrow}</p>
-        <h2 id="team-title" className={styles.h2}>
-          {team.title}
-        </h2>
+        <SectionHeading id="team-title" eyebrow={ui.eyebrows.team} title={team.title} tone="night" />
 
         <BayRow className={styles.doors}>
           {team.members.map((m, i) => (

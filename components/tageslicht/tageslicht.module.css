@@ -25,14 +25,7 @@
   padding-inline: var(--gutter);
 }
 
-.h2 {
-  margin: 0 0 24px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-variation-settings: "wdth" 110;
-  font-size: 28px;
-  line-height: 1.1;
-}
+/* Section headings: shared pattern in components/site (SectionHeading). */
 
 .h3 {
   margin: 0 0 12px;
@@ -270,12 +263,6 @@
   background: #26323e;
 }
 
-/* ---------- Times: week overview (desktop only) ---------- */
-
-.week {
-  display: none;
-}
-
 /* ---------- Tablet ---------- */
 
 @media (min-width: 640px) {
@@ -294,11 +281,6 @@
   .dayTimes {
     padding-top: 0;
     scroll-margin-top: 104px;
-  }
-  .h2 {
-    margin-bottom: 32px;
-    font-size: 43px;
-    line-height: 1.05;
   }
   .h3 {
     font-size: 28px;
@@ -324,111 +306,6 @@
 
   .blocks {
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  .week {
-    display: block;
-    margin-top: 32px;
-    padding: 24px 28px;
-    border: 2px solid var(--tinte);
-    border-radius: 8px;
-    background: #fff;
-  }
-
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 24px;
-    margin-bottom: 16px;
-    font-size: 15px;
-    color: var(--tinte);
-  }
-
-  .legendBuero,
-  .legendTheorie {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .legendBuero::before,
-  .legendTheorie::before {
-    content: "";
-    width: 22px;
-    height: 12px;
-    border-radius: 3px;
-  }
-
-  .legendBuero::before {
-    border: 1.5px solid var(--tinte);
-  }
-
-  .legendTheorie::before {
-    background: var(--kd-blau);
-  }
-
-  .legendPraxis {
-    color: var(--grau);
-  }
-
-  .weekRows {
-    display: grid;
-    gap: 8px;
-  }
-
-  .weekRow {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    align-items: center;
-  }
-
-  .weekDay {
-    font-weight: 700;
-  }
-
-  .track {
-    position: relative;
-    height: 36px;
-    border-radius: 6px;
-    background: var(--tag);
-  }
-
-  .tick {
-    position: absolute;
-    top: 6px;
-    bottom: 6px;
-    width: 1px;
-    background: #d5dbe1;
-  }
-
-  .barBuero,
-  .barTheorie {
-    position: absolute;
-    top: 3px;
-    bottom: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 14px;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .barBuero {
-    border: 1.5px solid var(--tinte);
-    background: #fff;
-    color: var(--tinte);
-  }
-
-  .barTheorie {
-    background: var(--kd-blau);
-    color: var(--tinte); /* 5.8 : 1 */
-    /* small gap between the two back-to-back courses */
-    margin-inline: 2px;
   }
 }
 

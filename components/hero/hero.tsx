@@ -1,9 +1,7 @@
-import Image from "next/image";
-import Link from "next/link";
 import type { ReactNode } from "react";
-import { logoAlt, start, ui } from "@/content/start";
+import { SiteHeader } from "@/components/site/site-header";
+import { start, ui } from "@/content/start";
 import { CarStill } from "./car-still";
-import { HeaderTheme } from "./header-theme";
 import { HeroStage } from "./hero-stage";
 import styles from "./hero.module.css";
 
@@ -13,18 +11,7 @@ export function Hero({ children }: { children?: ReactNode }) {
 
   return (
     <>
-      <header className={styles.header} data-site-header>
-        <HeaderTheme />
-        <div className={styles.headerInner}>
-          <Link href="/" className={styles.logo}>
-            <Image src="/old-site/logo/logo.png" alt={logoAlt} width={200} height={50} priority />
-          </Link>
-          <span className={styles.demoPill}>
-            {ui.privateDemo}
-            <span className="sr-only"> – {ui.privateDemoHint}</span>
-          </span>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main>
         <section className={styles.hero} aria-labelledby="hero-title">

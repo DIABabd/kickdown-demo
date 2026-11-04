@@ -1,4 +1,6 @@
+import { SectionHeading } from "@/components/site/section-heading";
 import { anmeldung } from "@/content/anmeldung";
+import { ui } from "@/content/start";
 import { SignupForm } from "./signup-form";
 import styles from "./anmeldung.module.css";
 
@@ -10,11 +12,8 @@ import styles from "./anmeldung.module.css";
 export function Anmeldung() {
   return (
     <section id="anmeldung" className={styles.section} aria-labelledby="anmeldung-title">
-      <div className={styles.dawn} aria-hidden="true" />
       <div className={styles.inner}>
-        <h2 id="anmeldung-title" className={styles.h2}>
-          {anmeldung.title}
-        </h2>
+        <SectionHeading id="anmeldung-title" eyebrow={ui.eyebrows.anmeldung} title={anmeldung.title} tone="day" />
         <SignupForm />
       </div>
     </section>

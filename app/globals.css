@@ -17,6 +17,20 @@
   --font-body: var(--font-atkinson), system-ui, sans-serif;
 
   --gutter: 20px;
+  /* Height of the phone bottom bar (without the safe-area inset). */
+  --bar-h: 56px;
+}
+
+/* Phones: reserve room for the fixed bottom bar, so it never covers the
+   footer or anything else; focus/anchor scrolling also stops above it.
+   Bar = --bar-h + 12px padding + 1px border; +8px breathing room. */
+@media (max-width: 639px) {
+  html {
+    scroll-padding-bottom: calc(var(--bar-h) + 21px + env(safe-area-inset-bottom));
+  }
+  body {
+    padding-bottom: calc(var(--bar-h) + 21px + env(safe-area-inset-bottom));
+  }
 }
 
 @media (min-width: 640px) {

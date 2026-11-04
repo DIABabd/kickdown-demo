@@ -2,7 +2,8 @@
 
 .journey {
   position: relative;
-  padding-top: 72px;
+  scroll-margin-top: 64px;
+  padding-block: 72px;
   background: var(--nacht);
   color: var(--markierung);
 }
@@ -14,20 +15,10 @@
   padding-inline: var(--gutter);
 }
 
-.title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-variation-settings: "wdth" 110;
-  font-size: 28px;
-  line-height: 1.1;
-}
-
 .layout {
   display: grid;
   grid-template-columns: 56px minmax(0, 1fr);
   gap: 16px;
-  margin-top: 32px;
 }
 
 /* ---------- Road (sticky, decorative) ---------- */
@@ -186,69 +177,6 @@
   color: color-mix(in srgb, var(--markierung) 90%, var(--nacht));
 }
 
-.times {
-  margin: 0 0 16px;
-}
-
-.times p {
-  margin: 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.timesTitle {
-  margin: 0 0 4px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 17px;
-  color: var(--kd-blau);
-}
-
-.prices {
-  width: 100%;
-  max-width: 30rem;
-  margin: 0 0 16px;
-  border-collapse: collapse;
-}
-
-.prices caption {
-  padding-bottom: 4px;
-  text-align: left;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: normal;
-  color: color-mix(in srgb, var(--markierung) 72%, var(--nacht));
-}
-
-.prices th,
-.prices td {
-  padding: 10px 0;
-  border-bottom: 1px solid var(--asphalt);
-  vertical-align: baseline;
-}
-
-.prices th {
-  padding-right: 16px;
-  text-align: left;
-  font-weight: 400;
-}
-
-.prices td {
-  text-align: right;
-  white-space: nowrap;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 20px;
-  font-variant-numeric: tabular-nums;
-}
-
-.note {
-  margin: 0 0 16px;
-  font-size: 15px;
-  line-height: 1.5;
-  color: color-mix(in srgb, var(--markierung) 72%, var(--nacht));
-}
-
 .link {
   display: inline-flex;
   align-items: center;
@@ -275,20 +203,6 @@
   filter: blur(10px);
   opacity: 0.7;
   pointer-events: none;
-}
-
-/* ---------- Night → daylight ---------- */
-
-.dawn {
-  height: 40svh;
-  min-height: 220px;
-  background: linear-gradient(
-    to bottom,
-    var(--nacht) 0%,
-    color-mix(in srgb, var(--lapis) 55%, var(--nacht)) 35%,
-    color-mix(in srgb, var(--kd-blau) 35%, var(--tag)) 70%,
-    var(--tag) 100%
-  );
 }
 
 /* ---------- Reduced motion: a plain numbered list ---------- */
@@ -324,16 +238,12 @@
 
 @media (min-width: 1024px) {
   .journey {
-    padding-top: 112px;
-  }
-  .title {
-    font-size: 43px;
-    line-height: 1.05;
+    scroll-margin-top: 72px;
+    padding-block: 112px;
   }
   .layout {
     grid-template-columns: minmax(260px, 5fr) minmax(0, 7fr);
     gap: 48px;
-    margin-top: 48px;
   }
   .road {
     top: 96px; /* 72px header + 24px */
@@ -355,7 +265,8 @@
     width: 34px;
   }
   .station {
-    min-height: 64svh;
+    /* Shorter now that stations hold only text + link; still room to drive. */
+    min-height: 48svh;
     padding-block: 48px;
   }
   .stationTitle {

@@ -3,38 +3,16 @@
 .showroom {
   position: relative;
   scroll-margin-top: 64px;
+  /* Follows the (night) team section directly – no top padding needed. */
   padding-bottom: 72px;
   background: var(--nacht);
   color: var(--markierung);
-}
-
-/* Daylight (times section) → night */
-.dusk {
-  height: 96px;
-  background: linear-gradient(to bottom, var(--tag), color-mix(in srgb, var(--lapis) 30%, var(--nacht)) 70%, var(--nacht));
 }
 
 .inner {
   max-width: 1200px;
   margin-inline: auto;
   padding-inline: var(--gutter);
-}
-
-.eyebrow {
-  margin: 24px 0 4px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--kd-blau);
-}
-
-.h2 {
-  margin: 0 0 24px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-variation-settings: "wdth" 110;
-  font-size: 28px;
-  line-height: 1.1;
 }
 
 /* ---------- Filter (native radios) ---------- */
@@ -112,6 +90,11 @@
   scroll-snap-align: start;
 }
 
+/* Combined card on phones: a little wider, photos side by side. */
+.bay:not([data-photos="1"]) {
+  flex-basis: min(92%, 420px);
+}
+
 .card {
   height: 100%;
   border: 1px solid color-mix(in srgb, var(--asphalt) 80%, transparent);
@@ -158,6 +141,23 @@
 .card:hover .stage::before,
 .card:focus-visible .stage::before {
   opacity: 1;
+}
+
+/* One spotlight spot per photo (frame + floor reflection). */
+.spot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Several photos of identical cars: side by side, each ≤ 248 px. */
+.stageMany {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 248px);
+  justify-content: center;
+  gap: 12px;
 }
 
 /* Photo: never wider than 248 × 268 CSS px (DESIGN.md 2.5). */
@@ -297,6 +297,10 @@
     padding: 0;
     overflow: visible;
   }
+  /* The combined card (identical text, several photos) spans the row. */
+  .bay:not([data-photos="1"]) {
+    grid-column: span 2;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -304,16 +308,11 @@
     scroll-margin-top: 72px;
     padding-bottom: 112px;
   }
-  .dusk {
-    height: 140px;
-  }
-  .h2 {
-    margin-bottom: 32px;
-    font-size: 43px;
-    line-height: 1.05;
-  }
   .bays {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px;
+  }
+  .bay:not([data-photos="1"]) {
+    grid-column: span 3;
   }
 }

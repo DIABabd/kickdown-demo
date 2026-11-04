@@ -140,7 +140,7 @@ Native sizes: team and car photos **370 × 400 px**; shop window **870 × 470**;
 | `brt-1.jpg` asphalt (subpage headers, journey road) | CSS asphalt: `--asphalt` base + SVG `feTurbulence` grain (inline, ~1 KB) + dashed `--markierung` center line via `repeating-linear-gradient`. |
 | `s-1.jpg` car at night (old hero) | The Three.js hero scene itself (night stage, rim light, wet-floor reflection). |
 | `s-3.jpg` cockpit at night (journey "Fahrstunden") | CSS: blurred streaks of light (`linear-gradient` bands with `filter: blur`) moving toward the viewer on scroll, like city lights through a windshield. |
-| `s-2.jpg` people in front of Bremen Rathaus (journey "Prüfung") | CSS: the night gradient brightens into `--tag` daylight – the "road ends in daylight" moment. No people, no landmarks. |
+| `s-2.jpg` people in front of Bremen Rathaus (journey "Prüfung") | The journey ends with the asphalt seam (dashed road line) and the daylight price section begins – the "road ends in daylight" moment. No people, no landmarks. (Built first as a soft gradient; replaced by the crisp seam.) |
 
 ---
 
@@ -150,17 +150,21 @@ Native sizes: team and car photos **370 × 400 px**; shop window **870 × 470**;
 
 Sections on `/`, in order:
 
-1. Header (logo, "Private Demo" pill, nav, "Anmelden" button) + phone bottom bar
-2. Hero with 3D car (4.1)
-3. Willkommen text + shop-window photo (4.2)
-4. Scroll journey Anmeldung → Theorie → Fahrstunden → Prüfung (4.3)
-5. Preise – full "Preisliste für Klasse B" with both lists and all footnotes (4.6)
-6. Zeiten – Bürozeiten, Theoriezeiten, Praxiszeiten (4.6)
-7. Showroom – all 7 vehicles (4.5)
-8. Team – all 8 people incl. Inna Korobova (4.4)
-9. "Du hast Fragen zu Führerschein und Fahrschule?" block with phone and address
-10. Anmeldung – 4-step simulated form (4.7)
-11. Footer
+1. Header (logo, "Private Demo" pill, nav Preise · Fahrzeuge · Team · Kontakt + "Anmelden" button; "Menü" panel below 1024 px) + phone bottom bar (Anrufen · Zeiten · Anmelden, below 640 px)
+2. Hero with 3D car (4.1) – night
+3. Willkommen text + shop-window photo (4.2) – day
+4. Scroll journey Anmeldung → Theorie → Fahrstunden → Prüfung (4.3) – night
+5. Preise – full "Preisliste für Klasse B" with both lists and all footnotes (4.6) – day
+6. Zeiten – Bürozeiten, Theoriezeiten, Praxiszeiten (4.6) – day; the one main place for the full office hours
+7. Team – all 8 people incl. Inna Korobova (4.4) – night (moved above the showroom: who teaches matters most to parents)
+8. Showroom – all 7 vehicles, the three identical VW T-Roc automatics on one card (4.5) – night
+9. "Du hast Fragen zu Führerschein und Fahrschule?" contact block with phone, link to the office hours, address – day
+10. Anmeldung – 4-step simulated form (4.7) – day
+11. Footer – night
+
+Section pattern: every section opens with the same heading block (small label + H2, `components/site/section-heading.tsx`). Every night ↔ day switch is marked by the same crisp seam – a short asphalt strip with a dashed white road line (`components/site/seam.tsx`) – instead of soft gradient bands.
+
+No repetition: prices appear only in the price list; full office hours only in `#zeiten` (plus footer and the sign-up result screen); other places link to `#zeiten`. Every fact still appears at least once.
 
 Prices, times, showroom, team and form are full versions on the homepage so the demo shows every main idea in one page. Later subpages reuse the same components.
 
@@ -188,8 +192,8 @@ Old URL mapping (for a real launch later): `index.html`, `index-1.html` → `/`;
 
 ### 3.3 Global elements
 
-- Header: logo · "Private Demo" · Unterricht · Preise · Fahrzeuge · Team · Kontakt · button "Anmelden". A status chip shows the next office time computed from the footer Bürozeiten (e.g. "Büro heute 16:30–19:30 Uhr" / "Nächste Bürozeit: Samstag 14:00 Uhr"). On phones the chip moves into the "Zeiten" sheet.
-- Phone: compact header (logo + demo pill + menu) and a **fixed bottom bar**: "Anrufen" (tel:+4917670386440) · "Zeiten" (sheet with all times) · "Anmelden".
+- Header (built): logo · "Private Demo" · Preise · Fahrzeuge · Team · Kontakt · button "Anmelden" (all link to the homepage sections, also from the placeholder page). "Unterricht" is not in the header yet (no page/section; it is in the footer → placeholder). Below 1024 px the links open from a "Menü" button (Escape closes, focus returns to the button). Not built: the office-time status chip.
+- Phone (built, below 640 px): compact header (logo + demo pill + "Menü") and a **fixed bottom bar**: "Anrufen" (tel:+4917670386440, the visible number) · "Zeiten" (link to `#zeiten`; no sheet) · "Anmelden". The page reserves the bar's height at the bottom and in scroll-padding, so the bar never covers content, buttons, the form or the footer; while a text field is focused (on-screen keyboard) the bar is hidden.
 - Footer: logo, address (map link), phone, Infos (Team, Unterricht, Fahrzeuge, Preise), Bürozeiten, Theoriezeiten, Instagram (icon + text link), Kontakt · Impressum · Datenschutzerklärung · Cookie-Einstellungen, copyright line as on the old site.
 
 ---
@@ -237,6 +241,8 @@ PHONE (390 px)                       DESKTOP (1440 px)
 
 Day section. "Willkommen in der Fahrschule Kickdown" + both paragraphs word for word, left column 64ch. Right (desktop) / below (phone): shop-window photo `start/01.jpg` at max 580 CSS px wide, no filter.
 
+**As built:** the photo is the original file, shown complete – no crop, no rounded corners, no mask, no overlay – so the visible copyright notice ("© Copyright … Werbegestaltung", bottom-right) is not cut off, covered or edited. Under the photo a visible demo note: "Demo-Hinweis: Dieses Foto muss vor der Veröffentlichung freigegeben werden." **The photo must be approved before going live (owner question 13 stays open).**
+
 ### 4.3 Scroll journey – "Deine Strecke zum Führerschein"
 
 A real sequence, so numbered markers are justified.
@@ -257,12 +263,12 @@ PHONE                                   DESKTOP (road left, sticky; text right)
 
 | Station | Content (word for word from CONTENT.md) | Link | Background |
 |---|---|---|---|
-| 1 Anmeldung | "…beraten dich vom ersten Antrag bis zur praktischen Prüfung…"; Grundbetrag inkl. Lehrmaterial 300 € (MIT SCHÜLER/STUDENTEN AKTION) / Grundbetrag 500 € (OHNE AKTION) | `#anmeldung`, `#preise` | Night |
-| 2 Theorie | "Unser Theorieunterricht findet in Form von Kursen statt…"; Dienstag, Mittwoch und Donnerstag: 17:00 Uhr bis 18:30 Uhr und 19:00 Uhr bis 20:30 Uhr; "An 3 Wochentagen bieten wir 4 Themen an." | `#zeiten` | Night |
-| 3 Fahrstunden | "Ob Automatik oder Schaltung, Stadt, Landstraße oder Autobahn…"; Übungsfahrt (45 Min.) 65 €, Sonderfahrt (45 Min.) 75 €; Praxiszeiten: nach Vereinbarung | `#zeiten`, `#fahrzeuge` | CSS light streaks |
-| 4 Prüfung | "…und bereiten dich auf die praktische Prüfung vor."; Vorstellung zur theor. Prüfung* 30 €, Vorstellung zur prakt. Prüfung* 170 €; the "*Die amtlichen Gebühren…" footnote | `#preise` | Night fades to daylight |
+| 1 Anmeldung | S8, first sentence: "Wir stehen dir gern als Ansprechpartner zur Verfügung und beraten dich vom ersten Antrag bis zur praktischen Prüfung zu allen Themen rund um den Führerschein." | "Anmelden" → `#anmeldung` | Night |
+| 2 Theorie | U4, complete: "Unser Theorieunterricht findet in Form von Kursen statt. Das hat für dich den Vorteil, …" | "Theoriezeiten" → `#zeiten` | Night |
+| 3 Fahrstunden | U10, complete: "Wir bereiten dich zu fairen Preisen mit modernsten Lehrmethoden gezielt auf deinen Weg zur Fahrprüfung vor. Unser flexibles Ausbildungskonzept orientiert sich dabei ganz an deine Bedürfnisse." | "Unsere Fahrzeuge" → `#fahrzeuge` | CSS light streaks |
+| 4 Prüfung | S6, end of a sentence: "… und bereiten dich auf die praktische Prüfung vor." | "Preise ansehen" → `#preise` | Night, then the seam into daylight |
 
-Quotes are exact excerpts (with "…" marking the cut); nothing is reworded. Station 4 ends in daylight: the price section below is the first `--tag` section.
+Each station: its real text and ONE link – no prices, times or footnotes any more (they live in `#preise` / `#zeiten`). Station 2 no longer repeats "An 3 Wochentagen …" and station 3 uses the Praktischer-Unterricht text (U10) instead of the S6 sentence, because the full S6 paragraph is now in Willkommen right above. Station 4 still quotes S6 – it is the only old-site text about the exam. Quotes are exact (with "…" marking a cut); nothing is reworded. After station 4 the seam leads into the first daylight section of the journey's end (prices).
 
 Reduced motion / no JS: plain numbered list with the same content.
 
@@ -290,7 +296,7 @@ PHONE: horizontal swipe, 1.3 doors visible       DESKTOP: row of doors, 4 per ro
 
 ### 4.5 Vehicles – "Der Showroom"
 
-A dark showroom stage (night section): CSS floor with a radial `--lapis` spotlight and a faint reflection line. One car at a time stands in the light; below it, the row of all 7 as small thumbnails, and a switch **Alle · Automatik · Schaltung** (filters by the "Getriebe" line of each car).
+A dark showroom stage (night section): CSS floor with a radial `--lapis` spotlight and a faint reflection line. **As built:** every car in its own lit bay with all its text always visible (grid: 4 per row on desktop, 2 on tablet, a swipe row on phones), and a switch **Alle · Automatik · Schaltung** (filters by the "Getriebe" line of each car; shown only because every car states its transmission clearly). Cars whose text is completely identical share one card with all their original photos: today the three automatic VW T-Roc (05, 06, 07). The manual VW T-Roc (03) has different text ("mit manueller Schaltung ausgestattet", "Manuelles Getriebe") and keeps its own card. (The original idea below – one car at a time + thumbnails – was not built.)
 
 ```
 PHONE                                    DESKTOP
@@ -347,7 +353,9 @@ PHONE (toggle)                         DESKTOP (side by side)
 
 **Times (`#zeiten`, footer, "Zeiten" sheet):**
 
-Week strip Mo–Sa, each day's blocks as bars on a 14:00–21:00 axis (Büro = `--tinte` outline, Theorie = `--kd-blau` fill), with the exact times written in each bar – text is the information, bars only help scanning. Headings as on the old site: "Bürozeiten", "Theoriezeiten", "Praxiszeiten" + "nach Vereinbarung".
+**As built:** three number-plate-style cards with the exact old-site wording – "Bürozeiten" (+ the phone button), "Theoriezeiten", "Praxiszeiten" / "nach Vereinbarung" – at every width. The week strip described below was built for desktop first and then removed, because it repeated the cards; the cards are clearer (exact wording, readable by screen readers, phone next to the office hours). `#zeiten` is the one main place for the full office hours on the homepage.
+
+(Original idea, not used:) Week strip Mo–Sa, each day's blocks as bars on a 14:00–21:00 axis (Büro = `--tinte` outline, Theorie = `--kd-blau` fill), with the exact times written in each bar – text is the information, bars only help scanning. Headings as on the old site: "Bürozeiten", "Theoriezeiten", "Praxiszeiten" + "nach Vereinbarung".
 
 ```
 Mo  ▕ Büro 16:30 Uhr bis 19:30 Uhr ▏
@@ -397,10 +405,10 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 | G1 | Navigation: Willkommen, Team, Unterricht, Theoretischer Unterricht, Praktischer Unterricht, Fahrzeuge, Ausbildungsfahrschule, Kontakt | Header nav (phase 1 links → placeholder until pages exist); Ausbildungsfahrschule in footer | 1 | ✅ |
 | G2 | Mobile menu (same links; logo → broken `index-1.html`) | Phone menu, logo → `/` | 1 | ✅ |
 | G3 | Address "Friedrich-Ebert-Straße 11/15, 28199 Bremen" + map link | Footer, question block on `/`; later Kontakt, Impressum, Datenschutz | 1 | ✅ |
-| G4 | "Telefon: 01 76 - 70 386 440" (tel:+4917670386440) | Footer, bottom bar "Anrufen", question block, form notice | 1 | ✅ |
+| G4 | "Telefon: 01 76 - 70 386 440" (tel:+4917670386440) | Footer, bottom bar "Anrufen", `#zeiten` (next to the office hours), question block, form result | 1 | ✅ |
 | G5 | Footer "Infos": Team, Unterricht, Fahrzeuge, Preise | Footer | 1 | ✅ |
-| G6 | Footer "Bürozeiten" Mo / Fr / Sa | Footer, header chip, Zeiten sheet, `#zeiten`, form result | 1 | ✅ |
-| G7 | Footer "Theoriezeiten" Di, Mi, Do | Footer, journey 2, `#zeiten`, form step 3 | 1 | ✅ |
+| G6 | Footer "Bürozeiten" Mo / Fr / Sa | `#zeiten` (main place), footer, form result; question block and bottom bar link to `#zeiten` | 1 | ✅ |
+| G7 | Footer "Theoriezeiten" Di, Mi, Do | `#zeiten`, footer; journey 2 links to `#zeiten` | 1 | ✅ |
 | G8 | Instagram link + `instagram-button.png` | Footer: icon + text link (outbound only) | 1 | ↻ |
 | G9 | "© 2026/2027 \| Programmiert durch KS Design." + link | Footer, word for word | 1 | ✅ |
 | G10 | Footer links Kontakt, Impressum, Datenschutzerklärung, Cookie-Einstellungen | Footer | 1 | ✅ |
@@ -416,9 +424,9 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 | S3 | "Dein Weg zum / Führerschein Klasse B" | Hero subline | 1 | ✅ |
 | S4 | "Willkommen in der Fahrschule Kickdown" | H2 Willkommen | 1 | ✅ |
 | S5 | "Nicht nur im Privatleben, auch im Beruf…Kickstart." | Willkommen | 1 | ✅ |
-| S6 | "Wir zeigen dir, worauf es im Straßenverkehr ankommt…4 Themen an." | Willkommen; excerpts in journey 2, 3, 4 | 1 | ✅ |
+| S6 | "Wir zeigen dir, worauf es im Straßenverkehr ankommt…4 Themen an." | Willkommen (complete); end of one sentence also in journey 4 | 1 | ✅ |
 | S7 | "Du hast Fragen zu Führerschein und Fahrschule?" | H2 question block | 1 | ✅ |
-| S8 | "Wir stehen dir gern als Ansprechpartner zur Verfügung…Wir freuen uns auf dich!" | Question block (word for word; no e-mail address shown); excerpt in journey 1 | 1 | ✅ |
+| S8 | "Wir stehen dir gern als Ansprechpartner zur Verfügung…Wir freuen uns auf dich!" | Question block `#kontakt` (daylight; word for word; no e-mail address shown); first sentence in journey 1 | 1 | ✅ |
 
 ### 5.3 Team
 
@@ -442,14 +450,14 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 | U1 | `<title>` "Theorieunterricht Fahrschule Bremen" | `/unterricht` title | 2 | ✅ |
 | U2 | `<title>` "Führerschein in Bremen - praktischer Fahrschulunterricht" | `/unterricht` meta description | 2 | ✅ |
 | U3 | "Theoretischer Unterricht" | H2 `#theorie` | 2 | ✅ |
-| U4 | "Unser Theorieunterricht findet in Form von Kursen statt…abschließen kannst." | Journey 2 (excerpt) / `#theorie` (full) | 1 / 2 | ✅ |
+| U4 | "Unser Theorieunterricht findet in Form von Kursen statt…abschließen kannst." | Journey 2 (complete) / later `#theorie` | 1 / 2 | ✅ |
 | U5 | "Unterrichtsform" + two links | Tab switch on `/unterricht` | 2 | ↻ |
 | U6 | "Theoriezeiten" block | `#zeiten` on `/`; `/unterricht` | 1 | ✅ |
 | U7 | "Bürozeiten" block | `#zeiten` on `/`; `/unterricht` | 1 | ✅ |
 | U8 | "Praktischer Unterricht" | H2 `#praxis` | 2 | ✅ |
 | U9 | "Du möchtest den Führerschein machen?" | `#praxis` | 2 | ✅ |
-| U10 | "Wir bereiten dich zu fairen Preisen…an deine Bedürfnisse." | `#praxis`, word for word | 2 | ✅ |
-| U11 | "Praxiszeiten" "nach Vereinbarung" | `#zeiten` on `/`, journey 3, form step 3; `#praxis` | 1 | ✅ |
+| U10 | "Wir bereiten dich zu fairen Preisen…an deine Bedürfnisse." | Journey 3 (complete, word for word); later `#praxis` | 1 / 2 | ✅ |
+| U11 | "Praxiszeiten" "nach Vereinbarung" | `#zeiten` on `/`; later `#praxis` | 1 | ✅ |
 
 ### 5.5 Fahrzeuge
 
@@ -457,9 +465,9 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 |---|---|---|---|---|
 | F1 | `<title>` "Fahrschulfahrzeuge" | `/fahrzeuge` | 2 | ✅ |
 | F2 | "Unsere Fahrzeuge" | H2 showroom on `/`, H1 `/fahrzeuge` | 1 | ✅ |
-| F3 | VW T-Roc – mit Automatikschaltung ausgestattet – 110 kW / 150 PS – Automatikgetriebe – Vorderradantrieb (05) | Showroom car 1 | 1 | ✅ |
-| F4 | VW T-Roc – same (06) | Showroom car 2 | 1 | ✅ |
-| F5 | VW T-Roc – same (07) | Showroom car 3 | 1 | ✅ |
+| F3 | VW T-Roc – mit Automatikschaltung ausgestattet – 110 kW / 150 PS – Automatikgetriebe – Vorderradantrieb (05) | Showroom card 1 (shared with F4/F5: identical text) | 1 | ✅ |
+| F4 | VW T-Roc – same (06) | Showroom card 1, photo 2 of 3 | 1 | ✅ |
+| F5 | VW T-Roc – same (07) | Showroom card 1, photo 3 of 3 | 1 | ✅ |
 | F6 | VW Golf VI – mit manueller Schaltung ausgestattet – 59 kW / 80 PS – Manuelles Getriebe – Vorderradantrieb (01) | Showroom car 4 | 1 | ✅ |
 | F7 | Audi Q2 – mit Automatikschaltung ausgestattet – 110 kW / 150 PS – Automatikgetriebe – Vorderradantrieb (02) | Showroom car 5 | 1 | ✅ |
 | F8 | VW T-Roc – mit manueller Schaltung ausgestattet – 110 kW / 150 PS – Manuelles Getriebe – Vorderradantrieb (03) | Showroom car 6 | 1 | ✅ |
@@ -480,11 +488,11 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 |---|---|---|---|---|
 | P0 | `<title>` "Fahrschule Kickdown \| Preise"; "Preisliste für Klasse B" | H2 `#preise` on `/`; `/preise` | 1 | ✅ |
 | P1 | "MIT SCHÜLER/STUDENTEN AKTION" | Column / toggle label, as written | 1 | ✅ |
-| P2 | Grundbetrag inkl. Lehrmaterial – 300 € | `#preise`, journey 1 | 1 | ✅ |
-| P3 | Übungsfahrt (45 Min.) – 65 € | `#preise`, journey 3 | 1 | ✅ |
-| P4 | Sonderfahrt (45 Min.) – 75 € | `#preise`, journey 3 | 1 | ✅ |
-| P5 | Vorstellung zur prakt. Prüfung* – 170 € | `#preise`, journey 4 | 1 | ✅ |
-| P6 | Vorstellung zur theor. Prüfung* – 30 € | `#preise`, journey 4 | 1 | ✅ |
+| P2 | Grundbetrag inkl. Lehrmaterial – 300 € | `#preise` only | 1 | ✅ |
+| P3 | Übungsfahrt (45 Min.) – 65 € | `#preise` only | 1 | ✅ |
+| P4 | Sonderfahrt (45 Min.) – 75 € | `#preise` only | 1 | ✅ |
+| P5 | Vorstellung zur prakt. Prüfung* – 170 € | `#preise` only | 1 | ✅ |
+| P6 | Vorstellung zur theor. Prüfung* – 30 € | `#preise` only (journey 4 links here) | 1 | ✅ |
 | P7 | "(ERSPARNIS VON 260 €)" | Under first list, as written | 1 | ✅ |
 | P8 | "OHNE AKTION" | Column / toggle label, as written | 1 | ✅ |
 | P9 | Grundbetrag – 500 € | `#preise`, journey 1 | 1 | ✅ |
@@ -500,12 +508,12 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 
 | # | Item | New location | Phase | |
 |---|---|---|---|---|
-| Z1 | Bürozeiten Montag 16:30 Uhr bis 19:30 Uhr | Footer, header chip, Zeiten sheet, `#zeiten`, form result | 1 | ✅ |
+| Z1 | Bürozeiten Montag 16:30 Uhr bis 19:30 Uhr | `#zeiten` (main place), footer, form step 2 + result | 1 | ✅ |
 | Z2 | Bürozeiten Freitag 16:00 Uhr bis 19:00 Uhr (as in footer) | Same places | 1 | ✅ |
 | Z3 | Bürozeiten Samstag 14:00 Uhr bis 17:30 Uhr | Same places | 1 | ✅ |
-| Z4 | Theorie Dienstag, Mittwoch und Donnerstag 17:00 Uhr bis 18:30 Uhr | Footer, journey 2, `#zeiten`, form step 3 | 1 | ✅ |
+| Z4 | Theorie Dienstag, Mittwoch und Donnerstag 17:00 Uhr bis 18:30 Uhr | `#zeiten`, footer | 1 | ✅ |
 | Z5 | Theorie … 19:00 Uhr bis 20:30 Uhr | Same places | 1 | ✅ |
-| Z6 | Praxiszeiten: nach Vereinbarung | `#zeiten`, journey 3, form step 3 | 1 | ✅ |
+| Z6 | Praxiszeiten: nach Vereinbarung | `#zeiten` | 1 | ✅ |
 
 ### 5.9 Contact details
 
@@ -548,7 +556,7 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 | B5 | `banner/s-1.jpg` | Not used (licence unconfirmed) → Three.js night stage | – | ⛔ |
 | B6 | `banner/s-2.jpg` | Not used (licence unconfirmed) → CSS night-to-day | – | ⛔ |
 | B7 | `banner/s-3.jpg` | Not used (licence unconfirmed) → CSS light streaks | – | ⛔ |
-| B8 | `start/01.jpg` (shop window) | Willkommen on `/` (max 580 CSS px); later Kontakt | 1 | ✅ |
+| B8 | `start/01.jpg` (shop window) | Willkommen on `/` (max 580 CSS px, complete, copyright notice untouched, demo note "muss vor der Veröffentlichung freigegeben werden"); later Kontakt. **Must be approved before going live (owner question 13).** | 1 | ✅ |
 | B9 | `ausbildungsfahrschule/01.jpg` (= B8) | `/ausbildungsfahrschule` | 2 | ✅ |
 | B10–B16 | `team/01.jpg`–`07.jpg` | Team windows (max 248 × 268 CSS px, no edits) | 1 | ✅ |
 | B17 | `unterricht/theorie/01.jpg` | **Cropped copy only** `public/demo/theorie-kalender.jpg`: keep the calendar grid (from the month header row "DEZEMBER '25 … JANUAR '27" down to the last day row); remove the top band (Vogel System logo, "Udo Gerstmann", address, phone/fax/mobile, e-mail, "2026") and the bottom band (Vogel System logo, www.vogel-system.de, small print). Crop with sharp/ImageMagick, checked visually; the original is never served. Shown on `/unterricht#theorie` max 580 CSS px | 2 | ✅ |
@@ -574,6 +582,8 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 ### 5.13 New UI words (not content, owner should approve)
 
 "Private Demo", demo notices of the form and cookie dialog, "Jetzt anmelden", "Anmelden", "Anrufen", "Zeiten", "Preise ansehen", "Route planen", "Anmeldung simulieren", "Ändern", "Schritt X von 4", step names (Über dich, Wunsch, Zeiten, Prüfen), form labels and error texts, "Wischen zum Drehen" / "Ziehen zum Drehen", section titles "Deine Strecke zum Führerschein", "Wer neben dir sitzt", "Der Showroom", journey station names (Anmeldung, Theorie, Fahrstunden, Prüfung), filter "Alle / Automatik / Schaltung", header chip "Büro heute …" / "Nächste Bürozeit …", placeholder text for unbuilt pages, alt texts.
+
+Added while building (all listed in OWNER-QUESTIONS.md, question 35): "Menü" (header button), "Hauptnavigation", "Schnellzugriff", "Rechtliches" (names for screen readers), section labels above the headings ("Willkommen", "Anmeldung · Theorie · Fahrstunden · Prüfung", "Preise", "Zeiten", "Wer neben dir sitzt", "Der Showroom", "Kontakt", "Simulation"), times heading "Bürozeiten, Theoriezeiten und Praxiszeiten", journey links "Theoriezeiten" and "Unsere Fahrzeuge" (old-site headings used as link text), "Demo-Hinweis: Dieses Foto muss vor der Veröffentlichung freigegeben werden.", alt texts "Schaufenster der Fahrschule Kickdown" and "(Foto 1 von 3)", "Zur Startseite", "(öffnet in neuem Tab)", sign-up questions, hints and error texts, "Simulation beendet – es wurde keine Anmeldung gesendet.", "Simulation neu starten".
 
 ---
 

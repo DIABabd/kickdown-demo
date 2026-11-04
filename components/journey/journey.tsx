@@ -1,4 +1,6 @@
 import type { CSSProperties } from "react";
+import { SectionHeading } from "@/components/site/section-heading";
+import { ui } from "@/content/start";
 import { strecke, type Station } from "@/content/strecke";
 import { JourneyCar } from "./journey-car";
 import { JourneyMotion } from "./journey-motion";
@@ -12,11 +14,9 @@ import styles from "./journey.module.css";
  */
 export function Journey() {
   return (
-    <section className={styles.journey} aria-labelledby="strecke-title">
+    <section id="strecke" className={styles.journey} aria-labelledby="strecke-title">
       <div className={styles.head}>
-        <h2 id="strecke-title" className={styles.title}>
-          {strecke.title}
-        </h2>
+        <SectionHeading id="strecke-title" eyebrow={ui.eyebrows.strecke} title={strecke.title} tone="night" />
       </div>
 
       <JourneyMotion className={styles.layout}>
@@ -45,9 +45,6 @@ export function Journey() {
           ))}
         </ol>
       </JourneyMotion>
-
-      {/* Night fades into daylight – the prices section will start in --tag. */}
-      <div className={styles.dawn} aria-hidden="true" />
     </section>
   );
 }
@@ -86,41 +83,10 @@ function StationItem({ station, index }: { station: Station; index: number }) {
           </p>
         ))}
 
-        {station.times && (
-          <div className={styles.times}>
-            <h4 className={styles.timesTitle}>{station.times.title}</h4>
-            {station.times.lines.map((line) => (
-              <p key={line}>{line}</p>
-            ))}
-          </div>
-        )}
-
-        {station.prices?.map((table, ti) => (
-          <table key={ti} className={styles.prices}>
-            {table.caption && <caption>{table.caption}</caption>}
-            <tbody>
-              {table.rows.map((r) => (
-                <tr key={r.label}>
-                  <th scope="row">{r.label}</th>
-                  <td>{r.price}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ))}
-
-        {station.notes?.map((n) => (
-          <p key={n} className={styles.note}>
-            {n}
-          </p>
-        ))}
-
-        {station.link && (
-          <a href={station.link.href} className={styles.link}>
-            {station.link.label}
-            <span aria-hidden="true">→</span>
-          </a>
-        )}
+        <a href={station.link.href} className={styles.link}>
+          {station.link.label}
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
     </li>
   );

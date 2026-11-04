@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { Footer } from "@/components/footer/footer";
-import headerStyles from "@/components/hero/hero.module.css";
+import { Seam } from "@/components/site/seam";
+import { SiteHeader } from "@/components/site/site-header";
 import { kontaktUi } from "@/content/kontakt";
-import { logoAlt, ui } from "@/content/start";
 import styles from "./platzhalter.module.css";
 
 // Shared placeholder for pages that are built after the homepage is approved
@@ -17,17 +16,7 @@ export const metadata: Metadata = {
 export default function Platzhalter() {
   return (
     <>
-      <header className={headerStyles.header}>
-        <div className={headerStyles.headerInner}>
-          <Link href="/" className={headerStyles.logo}>
-            <Image src="/old-site/logo/logo.png" alt={logoAlt} width={200} height={50} priority />
-          </Link>
-          <span className={headerStyles.demoPill}>
-            {ui.privateDemo}
-            <span className="sr-only"> – {ui.privateDemoHint}</span>
-          </span>
-        </div>
-      </header>
+      <SiteHeader />
       <main className={styles.main}>
         <div className={styles.inner}>
           <h1 className={styles.h1}>{kontaktUi.placeholder}</h1>
@@ -37,6 +26,7 @@ export default function Platzhalter() {
           </Link>
         </div>
       </main>
+      <Seam />
       <Footer />
     </>
   );

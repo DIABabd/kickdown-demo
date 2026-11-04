@@ -19,7 +19,8 @@ export function Footer() {
         <div className={styles.brand}>
           <div className={styles.logoRow}>
             <Link href="/" className={styles.logo}>
-              <Image src="/old-site/logo/f-logo.png" alt={logoAlt} width={200} height={50} />
+              {/* Original logo file, served unchanged (no re-encoding). */}
+              <Image src="/old-site/logo/f-logo.png" alt={logoAlt} width={200} height={50} unoptimized />
             </Link>
             <span className={styles.demoPill}>
               {ui.privateDemo}
