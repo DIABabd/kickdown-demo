@@ -1,11 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { logoAlt, start, ui } from "@/content/start";
 import { CarStill } from "./car-still";
 import { HeroStage } from "./hero-stage";
 import styles from "./hero.module.css";
 
-export function Hero() {
+/** `children`: the homepage sections that follow the hero, inside the same <main>. */
+export function Hero({ children }: { children?: ReactNode }) {
   const [subTop, subBottom] = start.heroSubline;
 
   return (
@@ -41,6 +43,7 @@ export function Hero() {
             </a>
           </div>
         </section>
+        {children}
       </main>
     </>
   );

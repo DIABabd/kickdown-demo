@@ -1,0 +1,377 @@
+/* Scroll journey – night road seen from above (DESIGN.md 4.3). */
+
+.journey {
+  position: relative;
+  padding-top: 72px;
+  background: var(--nacht);
+  color: var(--markierung);
+}
+
+.head,
+.layout {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-variation-settings: "wdth" 110;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+}
+
+/* ---------- Road (sticky, decorative) ---------- */
+
+.roadCol {
+  position: relative;
+}
+
+.road {
+  position: sticky;
+  top: 80px; /* 64px header + 16px */
+  height: calc(100svh - 112px);
+  min-height: 360px;
+}
+
+.roadSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  --road: 24px;
+}
+
+.roadSvg path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+}
+
+.glow {
+  stroke: color-mix(in srgb, var(--lapis) 55%, transparent);
+  stroke-width: calc(var(--road) + 18px);
+  filter: blur(6px);
+}
+
+.edge {
+  stroke: color-mix(in srgb, var(--markierung) 35%, transparent);
+  stroke-width: calc(var(--road) + 3px);
+}
+
+.asphalt {
+  stroke: #1a222c;
+  stroke-width: var(--road);
+}
+
+.lane {
+  stroke: color-mix(in srgb, var(--markierung) 85%, transparent);
+  stroke-width: 1.5px;
+  stroke-dasharray: 9 13;
+  stroke-linecap: butt !important;
+}
+
+.marker {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  translate: -50% -50%;
+  border: 2px solid color-mix(in srgb, var(--markierung) 55%, transparent);
+  border-radius: 50%;
+  background: var(--nacht);
+  color: var(--markierung);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  transition:
+    background-color 200ms ease-out,
+    border-color 200ms ease-out,
+    color 200ms ease-out,
+    box-shadow 200ms ease-out;
+}
+
+.marker[data-reached] {
+  border-color: var(--kd-blau);
+  background: var(--kd-blau);
+  color: var(--nacht);
+}
+
+.marker[data-current] {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--kd-blau) 30%, transparent),
+    0 0 18px 2px color-mix(in srgb, var(--kd-blau) 60%, transparent);
+}
+
+.car {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 0;
+  width: 22px;
+  translate: none;
+  transform: translate(-50%, -50%) rotate(180deg);
+  will-change: transform;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--kd-blau) 60%, transparent));
+}
+
+.car svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- Stations ---------- */
+
+.stations {
+  margin: 0;
+  padding: 0 0 24px;
+  list-style: none;
+}
+
+.station {
+  position: relative;
+  isolation: isolate;
+  padding-block: 32px 48px;
+}
+
+.stationBody {
+  max-width: 64ch;
+  transition:
+    opacity 450ms ease-out,
+    translate 450ms ease-out;
+}
+
+/* Hidden only while the scroll animation runs (JS + motion allowed). */
+.layout[data-motion="on"] .station:not([data-reached]) .stationBody {
+  opacity: 0;
+  translate: 0 24px;
+}
+
+.stationTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.stationNum {
+  font-weight: 800;
+  font-variation-settings: "wdth" 125;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--kd-blau);
+  font-variant-numeric: tabular-nums;
+}
+
+.text {
+  margin: 0 0 16px;
+  color: color-mix(in srgb, var(--markierung) 90%, var(--nacht));
+}
+
+.times {
+  margin: 0 0 16px;
+}
+
+.times p {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.timesTitle {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--kd-blau);
+}
+
+.prices {
+  width: 100%;
+  max-width: 30rem;
+  margin: 0 0 16px;
+  border-collapse: collapse;
+}
+
+.prices caption {
+  padding-bottom: 4px;
+  text-align: left;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: normal;
+  color: color-mix(in srgb, var(--markierung) 72%, var(--nacht));
+}
+
+.prices th,
+.prices td {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--asphalt);
+  vertical-align: baseline;
+}
+
+.prices th {
+  padding-right: 16px;
+  text-align: left;
+  font-weight: 400;
+}
+
+.prices td {
+  text-align: right;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  margin: 0 0 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--markierung) 72%, var(--nacht));
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  color: var(--kd-blau);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Fahrstunden: city lights through a windscreen (DESIGN.md 2.7), static. */
+.station[data-id="fahrstunden"]::before {
+  content: "";
+  position: absolute;
+  inset: 8px -12px 8px -24px;
+  z-index: -1;
+  border-radius: 16px;
+  /* Horizontal bands, like lights streaking past at night. */
+  background:
+    linear-gradient(178deg, transparent 18%, color-mix(in srgb, var(--kd-blau) 20%, transparent) 24%, transparent 30%),
+    linear-gradient(182deg, transparent 52%, color-mix(in srgb, #ffd9a0 10%, transparent) 56%, transparent 60%),
+    linear-gradient(176deg, transparent 78%, color-mix(in srgb, var(--lapis) 45%, transparent) 84%, transparent 90%);
+  filter: blur(10px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ---------- Night → daylight ---------- */
+
+.dawn {
+  height: 40svh;
+  min-height: 220px;
+  background: linear-gradient(
+    to bottom,
+    var(--nacht) 0%,
+    color-mix(in srgb, var(--lapis) 55%, var(--nacht)) 35%,
+    color-mix(in srgb, var(--kd-blau) 35%, var(--tag)) 70%,
+    var(--tag) 100%
+  );
+}
+
+/* ---------- Reduced motion: a plain numbered list ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .roadCol {
+    display: none;
+  }
+  .station {
+    padding-left: 20px;
+    border-left: 2px solid var(--asphalt);
+  }
+  .stationBody,
+  .marker {
+    transition: none;
+  }
+}
+
+/* ---------- Tablet / desktop ---------- */
+
+@media (min-width: 640px) {
+  .layout {
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 32px;
+  }
+  .roadSvg {
+    --road: 34px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .journey {
+    padding-top: 112px;
+  }
+  .title {
+    font-size: 43px;
+    line-height: 1.05;
+  }
+  .layout {
+    grid-template-columns: minmax(260px, 5fr) minmax(0, 7fr);
+    gap: 48px;
+    margin-top: 48px;
+  }
+  .road {
+    top: 96px; /* 72px header + 24px */
+    height: calc(100svh - 144px);
+  }
+  .roadSvg {
+    --road: 56px;
+  }
+  .lane {
+    stroke-width: 2px;
+    stroke-dasharray: 16 18;
+  }
+  .marker {
+    width: 36px;
+    height: 36px;
+    font-size: 17px;
+  }
+  .car {
+    width: 34px;
+  }
+  .station {
+    min-height: 64svh;
+    padding-block: 48px;
+  }
+  .stationTitle {
+    font-size: 28px;
+  }
+  .stationNum {
+    font-size: 64px;
+  }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: reduce) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .station {
+    min-height: 0;
+    padding-block: 32px;
+  }
+}
