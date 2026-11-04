@@ -1,0 +1,587 @@
+# Fahrschule Kickdown – Design Plan (Private Demo)
+
+Status: Konzept, noch nichts gebaut. Quelle aller Inhalte: `CONTENT.md` (Stand 2026-11-04) und die Bilder in `public/old-site/`.
+Sprache der Website: Deutsch (du-Form, wie bisher). Dieses Dokument ist auf Englisch, alle Beispiel-Texte für die Seite auf Deutsch.
+Fragen an den Inhaber: siehe `OWNER-QUESTIONS.md`.
+
+---
+
+## 0. The idea in one paragraph
+
+**"Nachtfahrt & Tageslicht."** Kickdown's own material already tells the story: a speedometer needle in the logo, a fleet of mostly lapis-blue cars wrapped in white and red, and old banners that are all night drives through a city. The new site borrows that: emotional moments (hero, the journey, the showroom) happen **at night** – dark blue asphalt, headlight glow, the car on a turntable. Everything a learner or parent has to *read and decide on* (prices, times, the form) happens **in daylight** – a cool white like a number plate, black text, big tabular numbers. The switch between night and day is the structure of the site, not decoration: night tells you how it feels, day tells you what it costs and when.
+
+The one bold thing is the **3D car + scroll journey on the start page**. Everything else stays calm, exact and easy to scan.
+
+---
+
+## 1. DEMO RULES (apply to everything below)
+
+These decisions are fixed for the private demo and override anything else in this document.
+
+### 1.1 Content
+- All **visible** old-site text and facts are used **word for word**: no rewriting, no grammar or spelling fixes, original capitalisation kept (e.g. "MIT SCHÜLER/STUDENTEN AKTION", "(ERSPARNIS VON 260 €)", "OHNE AKTION", "Automatik Getriebe", "einen passendes Theorie-Angebot").
+- **Friday office hours** are shown as in the footer ("Freitag: 16:00 Uhr bis 19:00 Uhr") everywhere office hours appear. The Kontakt page sentence (Montag + Samstag only) stays word for word as its own text. The conflict is an owner question.
+- **Never shown:** hidden phone number (+49 1525 6751996), the hidden e-mail address, the hidden student-offer popup, the Fahrlehrerverband membership, promotions (Christmas Deal), old course dates and the old Intensivkurs texts.
+- All **7 vehicles** exactly as on the old site (names, "mit … ausgestattet" lines, every spec line, same order).
+- **Inna Korobova** keeps the empty-window card with her name and role.
+- **No new content:** no Sehtest, Erste Hilfe, other licence classes, reviews, pass rates, instructor details or prices that are not in CONTENT.md. New words are limited to UI labels (buttons, form labels, hints, demo notices – listed in 5.13).
+
+### 1.2 Images
+- Real team and car photos are shown **only at sizes where they stay sharp** (rules in 2.5). Never upscaled, not even by CSS.
+- **No AI editing or AI upscaling** of photos of real people (or any old-site photo). Allowed: plain cropping, CSS frames/masks and CSS overlays that don't change the pixels of a face.
+- **Theory photo** (`unterricht/theorie/01.jpg`) is used only as a **cropped copy** that removes the supplier's name, address, phone numbers, e-mail and website (details in 4.7).
+- **Old background photos are not used** (`banner/s-1.jpg`, `s-2.jpg`, `s-3.jpg`, `brt-1.jpg`) because their licence is not confirmed (Impressum lists "© Adobe Stock Fotos"). All backgrounds are built with **CSS or Three.js**.
+
+### 1.3 Demo safety
+- The **sign-up form is a simulation**. It sends nothing (no `fetch`, no form `action`, no server route), stores nothing (no `localStorage`, `sessionStorage`, cookies or IndexedDB; inputs use `autocomplete="off"`), and says so clearly on every step and on the result screen.
+- **noindex everywhere:** `metadata.robots = { index: false, follow: false }` in the root layout, `app/robots.ts` with `Disallow: /`, and an `X-Robots-Tag: noindex, nofollow` header in `next.config.ts`.
+- A small, clear **"Private Demo"** label on every page (see 2.6).
+- **No third-party requests** at runtime: fonts self-hosted, no Google Maps iframe, no analytics, no external scripts. The Instagram and map links are plain outbound links the visitor must click.
+- **Nothing is published.** The demo runs only locally (`next dev` / `next start`). No deployment, no hosting, no shared links.
+
+### 1.4 Budget and scope
+- **Free tools and assets only:** OFL fonts, CC0 (or self-built) 3D model, free software (Blender, glTF-Transform, sharp/ImageMagick for the crop).
+- **3D car:** a generic model with **no real brand logos** – no car-maker badges, no grille logo, no real number plate.
+- **Phase 1 = homepage only.** All other pages are built only after the homepage is approved (see section 3).
+
+---
+
+## 2. STYLE
+
+### 2.1 Colors
+
+Taken from the logo (`logo/logo.png`, sampled) and the real fleet photos (`fahrzeuge/*.jpg`).
+
+| Token | Hex | Source | Use |
+|---|---|---|---|
+| `--kd-blau` | `#009CDC` | Logo, "KICKDOWN" lettering | Brand color. Buttons and highlights **on dark**, focus rings, active states. |
+| `--kd-blau-text` | `#0072A8` | Darker step of logo blue | Links and blue text **on light** (logo blue on white is only ~3:1 – too weak for text). ≥ 4.8:1 on `--tag`. |
+| `--tacho-rot` | `#E63A3C` | Logo, speedometer needle; red wrap on the cars | Only for "the needle": the active step in the form gauge, required-field marks, error text. Never a big surface, never the main button. |
+| `--lapis` | `#1D4FA6` | Paint of the T-Roc / Q2 fleet | Deep brand blue for night surfaces with color (journey gradient, showroom floor light, footer). |
+| `--nacht` | `#0C1824` | Night mood of the old site (blue-black, not grey-black) | Night page background. |
+| `--asphalt` | `#2A3440` | – | Panels on night sections, dividers on dark, base of the CSS road texture. |
+| `--tag` | `#F4F6F8` | "Daylight", cool white like a number plate | Light page background. |
+| `--tinte` | `#121A22` | – | Body text on light. |
+| `--grau` | `#5B6875` | – | Secondary text on light (≥ 5:1 on `--tag`). |
+| `--markierung` | `#FFFFFF` | Road marking | Text on night, the dashed lane line. |
+
+Rules
+- Night sections: `--nacht` background, `--markierung` text, `--kd-blau` accents.
+- Day sections: `--tag` background (white `#FFFFFF` for tables on it), `--tinte` text, `--kd-blau-text` links.
+- Red appears at most once per screen.
+- All pairs checked against WCAG AA (4.5:1 text, 3:1 UI).
+
+### 2.2 Fonts
+
+| Role | Font (free, OFL) | Why |
+|---|---|---|
+| Display (headlines, prices, times, numbers) | **Archivo** (variable, `wdth` 62–125, `wght` 100–900) | The logo is a wide, heavy sans. Archivo at `wdth 125`, `wght 800` gives the same "car badge" stance; the width axis lets headlines go wide on desktop and slightly narrower on phones. Tabular figures for prices/times. |
+| Body, form, UI | **Atkinson Hyperlegible Next** | Built for legibility (clear `I/l/1`, open shapes). Audience: 17-year-olds on phones and parents reading prices. Clearly different from Archivo. |
+
+- Both self-hosted through `next/font` (no request to Google at runtime).
+- Full German character set (ä ö ü ß, „ “ – €).
+- Our own UI labels are never set in all caps. Old-site text keeps its original capitalisation (rule 1.1) – the all-caps price labels are shown as written, in Archivo 700 at small size with normal letter-spacing so they don't shout.
+- Prices and times always use `font-variant-numeric: tabular-nums`.
+
+Type scale (ratio 1.25 on phones, 1.333 from 1024 px):
+
+| Step | Phone | Desktop | Font / weight |
+|---|---|---|---|
+| Hero | 44 px / 1.0 | 96 px / 0.95 | Archivo 800, wdth 125 |
+| H1 | 35 px / 1.05 | 64 px / 1.0 | Archivo 800, wdth 115 |
+| H2 | 28 px / 1.1 | 43 px / 1.05 | Archivo 700, wdth 110 |
+| H3 | 22 px / 1.2 | 28 px / 1.15 | Archivo 700, wdth 100 |
+| Price / time numbers | 28 px | 36 px | Archivo 700, tabular |
+| Body | 17 px / 1.55 | 18 px / 1.6 | Atkinson 400 |
+| Small | 15 px / 1.5 | 15 px / 1.5 | Atkinson 400 |
+
+Text blocks max. 64 characters wide. Left aligned everywhere (centered only for the hero headline on phones).
+
+### 2.3 Spacing and layout
+
+- 4 px base. Scale: 4 · 8 · 12 · 16 · 24 · 32 · 48 · 72 · 112.
+- Phone gutter 20 px; tablet 32 px; desktop 48 px. Content max 1200 px, text max 64ch.
+- Section padding: 72 px phone, 112 px desktop.
+- Radius has meaning: **0** for photos cut into shapes (windows, showroom), **8 px** for inputs and buttons, **16 px** only for the price panels.
+- Tap targets ≥ 48 px. Phone layout first, then widen at 640 / 1024 / 1440.
+
+### 2.4 Motion
+
+GSAP + ScrollTrigger (installed), React Three Fiber + drei for 3D.
+
+- **One orchestrated moment on load:** the hero. Headlights fade on (0.6 s), the car turns once into a three-quarter view (1.2 s), headline appears. Then nothing moves on its own.
+- **One scroll-driven moment:** the journey (4.3), scrubbed to scroll position.
+- Everything else is **response motion only**: switching a showroom car, the form needle moving to the next step, the simulated result. 150–250 ms, `ease-out`.
+- No fade-and-slide-up on every section, no hover wiggles.
+- `prefers-reduced-motion: reduce` → no intro, no scrub (journey becomes a numbered list), still image instead of 3D, instant transitions.
+
+### 2.5 Photo sizes (sharpness rules)
+
+Native sizes: team and car photos **370 × 400 px**; shop window **870 × 470**; praxis **870 × 390**; theory crop **870 × ~370**.
+
+- A photo is never shown wider than its native pixel width (no upscaling at any screen density).
+- Target ≥ 1.5 image pixels per CSS pixel so photos stay sharp on most phones (DPR 2–3 will be slightly soft, never blurry):
+  - Team and car photos: **max 248 × 268 CSS px**.
+  - Wide photos (shop window, praxis, theory crop): **max 580 CSS px wide**.
+- Served with `next/image` and fixed `sizes` so the browser never requests or scales beyond the original; `unoptimized` is not needed, but quality ≥ 85 to avoid extra artefacts on already small JPEGs.
+- The layouts in section 4 are designed around these sizes: the drama comes from the CSS/Three.js stage around the photo, not from making the photo big.
+
+### 2.6 "Private Demo" label
+
+- A small pill **"Private Demo"** inside the sticky header, right next to the logo – visible on every page and at every scroll position, never covered by the phone bottom bar.
+- Style: `--tacho-rot` 1 px outline, white text on night / `--tinte` text on day, 13 px Atkinson 700. Not dismissible.
+- `aria-label="Private Demo – keine echte Website der Fahrschule"`.
+- The page `<title>` gets the suffix " – Private Demo".
+
+### 2.7 Backgrounds without old photos
+
+| Old background | Replacement |
+|---|---|
+| `brt-1.jpg` asphalt (subpage headers, journey road) | CSS asphalt: `--asphalt` base + SVG `feTurbulence` grain (inline, ~1 KB) + dashed `--markierung` center line via `repeating-linear-gradient`. |
+| `s-1.jpg` car at night (old hero) | The Three.js hero scene itself (night stage, rim light, wet-floor reflection). |
+| `s-3.jpg` cockpit at night (journey "Fahrstunden") | CSS: blurred streaks of light (`linear-gradient` bands with `filter: blur`) moving toward the viewer on scroll, like city lights through a windshield. |
+| `s-2.jpg` people in front of Bremen Rathaus (journey "Prüfung") | CSS: the night gradient brightens into `--tag` daylight – the "road ends in daylight" moment. No people, no landmarks. |
+
+---
+
+## 3. SCOPE AND SITE MAP
+
+### 3.1 Phase 1 – homepage (build now, after this plan is approved)
+
+Sections on `/`, in order:
+
+1. Header (logo, "Private Demo" pill, nav, "Anmelden" button) + phone bottom bar
+2. Hero with 3D car (4.1)
+3. Willkommen text + shop-window photo (4.2)
+4. Scroll journey Anmeldung → Theorie → Fahrstunden → Prüfung (4.3)
+5. Preise – full "Preisliste für Klasse B" with both lists and all footnotes (4.6)
+6. Zeiten – Bürozeiten, Theoriezeiten, Praxiszeiten (4.6)
+7. Showroom – all 7 vehicles (4.5)
+8. Team – all 8 people incl. Inna Korobova (4.4)
+9. "Du hast Fragen zu Führerschein und Fahrschule?" block with phone and address
+10. Anmeldung – 4-step simulated form (4.7)
+11. Footer
+
+Prices, times, showroom, team and form are full versions on the homepage so the demo shows every main idea in one page. Later subpages reuse the same components.
+
+Nav links to pages that don't exist yet go to one shared placeholder: "Diese Seite wird nach Freigabe der Startseite gebaut." with a link back. Header "Anmelden" scrolls to `#anmeldung`.
+
+### 3.2 Phase 2 – other pages (only after the homepage is approved)
+
+All 10 old pages keep their content. Theorie and Praxis become one page (`/unterricht`) with two sections (both repeated the same times and "Unterrichtsform" links). Old `.html` URLs map to the new routes.
+
+| New URL | Replaces | Content |
+|---|---|---|
+| `/` Start | `index.html` | Phase 1 (above). |
+| `/unterricht` | `theoretischer-unterricht.html`, `praktischer-unterricht.html` | `#theorie`: cropped theory photo, course text, Theoriezeiten. `#praxis`: praxis photo, text, "Praxiszeiten: nach Vereinbarung". `#zeiten`: full week table. "Unterrichtsform" links become a tab switch. |
+| `/preise` | `preise.html` | Same price component as homepage. |
+| `/fahrzeuge` | `fahrzeuge.html` | Same showroom component. |
+| `/team` | `team.html` | Same team component + link to `/ausbildungsfahrschule`. |
+| `/ausbildungsfahrschule` | `ausbildungsfahrschule.html` | Heading, the one sentence, shop-window photo, phone/address. |
+| `/kontakt` | `kontakt.html` | Contact text (word for word), address, phone, office hours, shop-window photo, a static CSS map card with address + outbound link "Route planen" (goo.gl link). **No Google Maps iframe in the demo.** |
+| `/anmeldung` | – | Optional: same simulated form as homepage section. |
+| `/impressum` | `impressum.html` | All text word for word. |
+| `/datenschutz` | `datenschutz.html` | All text word for word. (Must be reviewed by the owner before any real launch – see owner questions.) |
+| Cookie dialog | Cookie banner | The demo sets no cookies and loads no third parties, so the banner does not pop up. "Cookie-Einstellungen" in the footer opens the dialog with all original texts as a design preview; choices are not saved, and the dialog shows "Demo: Auswahl wird nicht gespeichert." |
+
+Old URL mapping (for a real launch later): `index.html`, `index-1.html` → `/`; `team.html` → `/team`; `theoretischer-unterricht.html` → `/unterricht#theorie`; `praktischer-unterricht.html` → `/unterricht#praxis`; `fahrzeuge.html` → `/fahrzeuge`; `ausbildungsfahrschule.html` → `/ausbildungsfahrschule`; `preise.html` → `/preise`; `kontakt.html` → `/kontakt`; `impressum.html` → `/impressum`; `datenschutz.html` → `/datenschutz`.
+
+### 3.3 Global elements
+
+- Header: logo · "Private Demo" · Unterricht · Preise · Fahrzeuge · Team · Kontakt · button "Anmelden". A status chip shows the next office time computed from the footer Bürozeiten (e.g. "Büro heute 16:30–19:30 Uhr" / "Nächste Bürozeit: Samstag 14:00 Uhr"). On phones the chip moves into the "Zeiten" sheet.
+- Phone: compact header (logo + demo pill + menu) and a **fixed bottom bar**: "Anrufen" (tel:+4917670386440) · "Zeiten" (sheet with all times) · "Anmelden".
+- Footer: logo, address (map link), phone, Infos (Team, Unterricht, Fahrzeuge, Preise), Bürozeiten, Theoriezeiten, Instagram (icon + text link), Kontakt · Impressum · Datenschutzerklärung · Cookie-Einstellungen, copyright line as on the old site.
+
+---
+
+## 4. MAIN IDEAS
+
+### 4.1 Hero – the car on the turntable
+
+```
+PHONE (390 px)                       DESKTOP (1440 px)
+┌──────────────────────┐             ┌──────────────────────────────────────────────┐
+│ [logo][Private Demo][≡]│           │ [logo][Private Demo] Unterricht Preise … [Anmelden] │
+│                      │             │                                              │
+│  Deine Fahrschule    │             │  Deine Fahrschule           ╭────────────╮   │
+│  Kickdown in Bremen  │             │  Kickdown in Bremen        ╱   3D CAR     ╲  │
+│                      │             │                           │  (drag to     │  │
+│   ╭──────────────╮   │             │  Dein Weg zum              ╲  rotate)    ╱   │
+│  ╱    3D CAR      ╲  │             │  Führerschein Klasse B      ╰────────────╯   │
+│ │  ⟲ wischen zum   │ │             │                           ═══ turntable ═══  │
+│  ╲    Drehen      ╱  │             │  [Jetzt anmelden] [Preise ansehen]            │
+│   ╰══ turntable ═╯   │             │                                              │
+│ Dein Weg zum         │             │  Büro heute 16:30–19:30 Uhr                  │
+│ Führerschein Klasse B│             └──────────────────────────────────────────────┘
+│ [Jetzt anmelden]     │
+├──────────────────────┤
+│ Anrufen  Zeiten  Anmelden │  ← fixed bottom bar
+└──────────────────────┘
+```
+
+- Night scene built in Three.js: `--nacht` fog, a low round platform with a soft `--kd-blau` rim light, reflective floor like wet asphalt. No photo background.
+- **The car:** a generic compact-SUV shape, free:
+  - Option A (preferred): a **CC0** low-poly model (e.g. from Kenney, Quaternius or Poly Pizza CC0 assets) – licence and source written to `public/demo/3d/CREDITS.txt`.
+  - Option B (fallback): built in code from Three.js primitives/extrusions (simple, stylised, fully ours).
+  - Painted in fleet lapis blue `--lapis` with an abstract white-and-red side stripe in Kickdown colors. **No logos of any brand** (no car-maker badge, no grille emblem, no Kickdown logo on the car), and a **blank number plate**.
+- Interaction: drag left/right rotates around the vertical axis; light inertia; returns to the three-quarter view after 4 s idle. On touch, `touch-action: pan-y`, so vertical swipes still scroll – only horizontal drags rotate. Keyboard: canvas focusable, ← → rotate. Hint "Wischen zum Drehen" / "Ziehen zum Drehen", hidden after first use.
+- **Fallback (simple image):** a still render of the same car on the same stage (`public/demo/hero-car.avif` + `.webp`, ~120 KB, made with Blender or a three.js screenshot – free) is the hero image and the LCP element. The canvas loads after the page is idle and replaces the still only if:
+  - WebGL2 is available,
+  - not `prefers-reduced-motion`,
+  - not `navigator.connection.saveData`,
+  - `navigator.deviceMemory` ≥ 4 (where available) and `hardwareConcurrency` ≥ 4,
+  - a 1-second frame probe stays above ~45 fps – otherwise it silently switches back to the still.
+- Budget: model ≤ 1.5 MB (glTF + meshopt/Draco via glTF-Transform), `dpr` clamped to [1, 1.5] on phones, `frameloop="demand"`, paused when out of view.
+
+### 4.2 Willkommen
+
+Day section. "Willkommen in der Fahrschule Kickdown" + both paragraphs word for word, left column 64ch. Right (desktop) / below (phone): shop-window photo `start/01.jpg` at max 580 CSS px wide, no filter.
+
+### 4.3 Scroll journey – "Deine Strecke zum Führerschein"
+
+A real sequence, so numbered markers are justified.
+
+The section turns into a road seen from above: the **CSS asphalt** band (2.7) with a white dashed center line. As you scroll, the line "drives" toward you and a small top-down car silhouette (SVG, same stripe as the hero car, no logos) moves from station to station. Each station: big number + heading + only quotes and facts from CONTENT.md + one link.
+
+```
+PHONE                                   DESKTOP (road left, sticky; text right)
+┌──────────────────────┐                ┌───────────────┬──────────────────────────┐
+│   ┊     1 Anmeldung  │                │  ┊            │ 1  Anmeldung             │
+│   ┊     text…        │                │  ┊   🚗       │    text… [Anmelden]      │
+│   🚗                  │                │  ┊  (sticky   │                          │
+│   ┊     2 Theorie    │                │  ┊   road,    │ 2  Theorie …             │
+│   ┊     Di–Do 17:00… │                │  ┊   car      │ 3  Fahrstunden …         │
+│   ┊                  │                │  ┊   moves)   │ 4  Prüfung …             │
+└──────────────────────┘                └───────────────┴──────────────────────────┘
+```
+
+| Station | Content (word for word from CONTENT.md) | Link | Background |
+|---|---|---|---|
+| 1 Anmeldung | "…beraten dich vom ersten Antrag bis zur praktischen Prüfung…"; Grundbetrag inkl. Lehrmaterial 300 € (MIT SCHÜLER/STUDENTEN AKTION) / Grundbetrag 500 € (OHNE AKTION) | `#anmeldung`, `#preise` | Night |
+| 2 Theorie | "Unser Theorieunterricht findet in Form von Kursen statt…"; Dienstag, Mittwoch und Donnerstag: 17:00 Uhr bis 18:30 Uhr und 19:00 Uhr bis 20:30 Uhr; "An 3 Wochentagen bieten wir 4 Themen an." | `#zeiten` | Night |
+| 3 Fahrstunden | "Ob Automatik oder Schaltung, Stadt, Landstraße oder Autobahn…"; Übungsfahrt (45 Min.) 65 €, Sonderfahrt (45 Min.) 75 €; Praxiszeiten: nach Vereinbarung | `#zeiten`, `#fahrzeuge` | CSS light streaks |
+| 4 Prüfung | "…und bereiten dich auf die praktische Prüfung vor."; Vorstellung zur theor. Prüfung* 30 €, Vorstellung zur prakt. Prüfung* 170 €; the "*Die amtlichen Gebühren…" footnote | `#preise` | Night fades to daylight |
+
+Quotes are exact excerpts (with "…" marking the cut); nothing is reworded. Station 4 ends in daylight: the price section below is the first `--tag` section.
+
+Reduced motion / no JS: plain numbered list with the same content.
+
+### 4.4 Team – "Wer neben dir sitzt"
+
+Each portrait is cut into the shape of a **car side window** (CSS `clip-path` – the image pixels stay untouched). All photos get the same frame and the same dark door panel around them; **no color grading, no filters, no AI** on faces.
+
+```
+PHONE: horizontal swipe, 1.3 doors visible       DESKTOP: row of doors, 4 per row
+┌──────────────────────┐                          ┌──────┬──────┬──────┬──────┐
+│  ╭─────────────╮ ╭── │                          │ ╭──╮ │ ╭──╮ │ ╭──╮ │ ╭──╮ │
+│ ╱  photo       │╱    │                          │╱ ph │ │╱ ph │ ...         │
+│ │  ≤248×268 px │ │   │                          │name │ │name │             │
+│ └──────────────┘ └── │                          │role │ │role │             │
+│ Mahmoud Shehada      │                          └──────┴──────┴──────┴──────┘
+│ Inhaber / Fahrlehrer │
+└──────────────────────┘
+```
+
+- Photo window max **248 × 268 CSS px** (2.5). The door panel around it can be larger – it's CSS, so it stays sharp.
+- Name (Archivo H3) and role exactly as on the old site. Nothing else.
+- Order exactly as on the old page: Mahmoud Shehada, Ralph Dölling, Ralf Jürgensen, Sarah Pendzich, Penelope Röper, Zulquarnain Khan, Khaled Abu Al-Assal, Inna Korobova. Heading "Unser Team".
+- **Inna Korobova:** same window frame, empty glass with a soft CSS reflection; name "Inna Korobova", role "Bürofachangestellte". No silhouette, no stock or AI image.
+- Interaction: tapping a window "rolls it down" (the frame's glass edge slides, the photo itself doesn't scale).
+
+### 4.5 Vehicles – "Der Showroom"
+
+A dark showroom stage (night section): CSS floor with a radial `--lapis` spotlight and a faint reflection line. One car at a time stands in the light; below it, the row of all 7 as small thumbnails, and a switch **Alle · Automatik · Schaltung** (filters by the "Getriebe" line of each car).
+
+```
+PHONE                                    DESKTOP
+┌──────────────────────┐                 ┌──────────────────────────────────────────┐
+│ [Alle][Automatik][Schaltung]           │ [Alle][Automatik][Schaltung]             │
+│     ╲ spotlight ╱    │                 │        ╲ spotlight ╱       VW T-Roc       │
+│    ┌──────────┐      │                 │       ┌──────────┐         mit Automatik- │
+│    │ photo    │      │                 │       │ photo    │         schaltung      │
+│    │ ≤248×268 │      │                 │       │ ≤248×268 │         ausgestattet   │
+│    └──────────┘      │                 │       └──────────┘         Technische     │
+│ VW T-Roc             │                 │    ── floor reflection ──  Details: …     │
+│ mit Automatikschaltung ausgestattet    │                            Perfekt für …  │
+│ Technische Details:  │                 │ [▢][▢][▢][▢][▢][▢][▢]  ← all 7 cars       │
+│ Leistung: 110 kW / 150 PS              └──────────────────────────────────────────┘
+│ Getriebe: Automatikgetriebe
+│ Antrieb: Vorderradantrieb
+│ Perfekt für Fahrschüler/ Fahranfänger geeignet.
+│ ◀ [▢][▢][▢][▢] ▶     │
+└──────────────────────┘
+```
+
+- Photo in the spotlight max **248 × 268 CSS px**; thumbnails smaller (downscaled = sharp). The spotlight, floor and frame are CSS, so the stage can be big while the photo stays small and sharp.
+- The edges of each photo fade into the floor with a CSS mask on the frame edge only (photo pixels unchanged).
+- Text exactly as on the old site, every line, for all 7 cars, in the old order: VW T-Roc (05), VW T-Roc (06), VW T-Roc (07), VW Golf VI (01), Audi Q2 (02), VW T-Roc manuell (03), Audi A4 (04) – including "Automatik Getriebe" for the A4.
+- Spec lines styled like a dashboard display (Archivo tabular numbers, thin `--kd-blau` lines) – styling only, words unchanged.
+- Swipe on phone, arrow keys on desktop; filter changes the row with a short reorder.
+
+### 4.6 Prices and times – the daylight sections
+
+**Prices (`#preise`):**
+
+```
+PHONE (toggle)                         DESKTOP (side by side)
+┌──────────────────────┐               ┌───────────────────────┬───────────────────────┐
+│ Preisliste für Klasse B              │ MIT SCHÜLER/STUDENTEN │ OHNE AKTION           │
+│ [MIT SCHÜLER/STUDENTEN AKTION|OHNE AKTION]│ AKTION           │                       │
+│ Grundbetrag inkl.    │               │ Grundbetrag inkl.      │ Grundbetrag     500 € │
+│ Lehrmaterial   300 € │               │ Lehrmaterial     300 € │ Lehrmaterial 90 €¹/60 €²│
+│ Übungsfahrt (45 Min.) 65 €           │ Übungsfahrt (45 Min.) 65 €│ Übungsfahrt (45 Min.) 65 €│
+│ Sonderfahrt (45 Min.) 75 €           │ Sonderfahrt (45 Min.) 75 €│ Sonderfahrt (45 Min.) 75 €│
+│ Vorstellung zur prakt. Prüfung* 170 €│ Vorstellung … prakt.* 170 €│ … prakt.* 170 €      │
+│ Vorstellung zur theor. Prüfung* 30 € │ Vorstellung … theor.* 30 € │ … theor.* 30 €       │
+│ (ERSPARNIS VON 260 €)│               │ (ERSPARNIS VON 260 €)  │                       │
+│ ¹ Mit Drivers Cam, ² Ohne Drivers Cam│ ¹ Mit Drivers Cam, ² Ohne Drivers Cam          │
+│ *Die amtlichen Gebühren …            │ *Die amtlichen Gebühren …                      │
+└──────────────────────┘               └────────────────────────────────────────────────┘
+```
+
+- All labels, prices and footnotes word for word and in original capitalisation.
+- Real `<table>` with row headers; prices right-aligned, tabular.
+- Rows that differ between the two lists (Grundbetrag, Lehrmaterial) are subtly highlighted.
+- Phone: segmented toggle between the two lists, default first list (as on the old page); footnotes always visible.
+- Data in one file (`content/preise.ts`), reused by the journey and later `/preise`.
+
+**Times (`#zeiten`, footer, "Zeiten" sheet):**
+
+Week strip Mo–Sa, each day's blocks as bars on a 14:00–21:00 axis (Büro = `--tinte` outline, Theorie = `--kd-blau` fill), with the exact times written in each bar – text is the information, bars only help scanning. Headings as on the old site: "Bürozeiten", "Theoriezeiten", "Praxiszeiten" + "nach Vereinbarung".
+
+```
+Mo  ▕ Büro 16:30 Uhr bis 19:30 Uhr ▏
+Di          ▕ Theorie 17:00 Uhr bis 18:30 Uhr ▏ ▕ 19:00 Uhr bis 20:30 Uhr ▏
+Mi          ▕ Theorie 17:00 Uhr bis 18:30 Uhr ▏ ▕ 19:00 Uhr bis 20:30 Uhr ▏
+Do          ▕ Theorie 17:00 Uhr bis 18:30 Uhr ▏ ▕ 19:00 Uhr bis 20:30 Uhr ▏
+Fr  ▕ Büro 16:00 Uhr bis 19:00 Uhr ▏      ← as in footer
+Sa  ▕ Büro 14:00 Uhr bis 17:30 Uhr ▏
+Praxiszeiten: nach Vereinbarung
+```
+
+Data in one file (`content/zeiten.ts`), used by header chip, footer, journey and form.
+
+### 4.7 Sign-up – 4-step simulated form with the speedometer
+
+The logo's gauge is the progress indicator: a half-circle tachometer (SVG). Each completed step moves the needle one segment; step 4 is the red zone. Below it, the step name in text ("Schritt 2 von 4: Wunsch").
+
+**Demo notice** – a fixed, clearly visible box at the top of every step (not small print):
+> **Demo – dieses Formular ist nur eine Simulation.** Deine Eingaben werden nicht gesendet und nicht gespeichert. Für eine echte Anmeldung ruf uns an: 01 76 - 70 386 440.
+
+| Step | Fields | Notes |
+|---|---|---|
+| 1 Über dich | Vorname, Nachname, Geburtsdatum, Telefon, E-Mail | Client-side validation only. Clear error texts ("Bitte gib deine Telefonnummer ein."). |
+| 2 Wunsch | Führerschein Klasse B (fixed, only class on the site); Getriebe: Automatik · Schaltung · noch unsicher; Preisliste: MIT SCHÜLER/STUDENTEN AKTION · OHNE AKTION (labels word for word from the price list) | No eligibility text (not on the site). |
+| 3 Zeiten | Theory slot: 17:00 Uhr bis 18:30 Uhr · 19:00 Uhr bis 20:30 Uhr · egal; free text for Fahrstunden ("Praxiszeiten: nach Vereinbarung") | Options from `content/zeiten.ts`. |
+| 4 Prüfen | Summary with "Ändern" links; button **"Anmeldung simulieren"** | No Datenschutz consent checkbox needed because nothing is processed – the notice explains it. |
+
+Result screen: "**Simulation beendet – es wurde nichts gesendet oder gespeichert.** Für eine echte Anmeldung ruf uns während der Bürozeiten an." + Bürozeiten + phone.
+
+Technical guarantees (checked in code review before showing the demo):
+- No `action`/`method` on the `<form>`; submit handler calls `preventDefault()` and only switches the view.
+- No `fetch`, server action, API route or third-party script in the form code.
+- State only in React memory; cleared on reload. No web storage, no cookies. `autocomplete="off"` on all inputs.
+- Without JavaScript: the form shows the demo notice and the submit button is disabled.
+
+---
+
+## 5. CONTENT CHECKLIST
+
+Every item from CONTENT.md and where it goes. Text is used word for word.
+Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same function. **Phase** = 1 (homepage) or 2 (after approval).
+
+### 5.1 Shared elements
+
+| # | Item | New location | Phase | |
+|---|---|---|---|---|
+| G1 | Navigation: Willkommen, Team, Unterricht, Theoretischer Unterricht, Praktischer Unterricht, Fahrzeuge, Ausbildungsfahrschule, Kontakt | Header nav (phase 1 links → placeholder until pages exist); Ausbildungsfahrschule in footer | 1 | ✅ |
+| G2 | Mobile menu (same links; logo → broken `index-1.html`) | Phone menu, logo → `/` | 1 | ✅ |
+| G3 | Address "Friedrich-Ebert-Straße 11/15, 28199 Bremen" + map link | Footer, question block on `/`; later Kontakt, Impressum, Datenschutz | 1 | ✅ |
+| G4 | "Telefon: 01 76 - 70 386 440" (tel:+4917670386440) | Footer, bottom bar "Anrufen", question block, form notice | 1 | ✅ |
+| G5 | Footer "Infos": Team, Unterricht, Fahrzeuge, Preise | Footer | 1 | ✅ |
+| G6 | Footer "Bürozeiten" Mo / Fr / Sa | Footer, header chip, Zeiten sheet, `#zeiten`, form result | 1 | ✅ |
+| G7 | Footer "Theoriezeiten" Di, Mi, Do | Footer, journey 2, `#zeiten`, form step 3 | 1 | ✅ |
+| G8 | Instagram link + `instagram-button.png` | Footer: icon + text link (outbound only) | 1 | ↻ |
+| G9 | "© 2026/2027 \| Programmiert durch KS Design." + link | Footer, word for word | 1 | ✅ |
+| G10 | Footer links Kontakt, Impressum, Datenschutzerklärung, Cookie-Einstellungen | Footer | 1 | ✅ |
+| G11 | Cookie banner text + "Alle Akzeptieren & Schließen" + "Cookie Einstellungen" | Shown inside the Cookie dialog preview (banner doesn't auto-open, no cookies in demo) | 1 | ✅ |
+| G12 | Cookie dialog: all headings, texts, links, buttons | Cookie dialog preview from footer link, choices not saved | 1 | ✅ |
+
+### 5.2 Start page
+
+| # | Item | New location | Phase | |
+|---|---|---|---|---|
+| S1 | `<title>` "Fahrschule Bremen \| Fahrschule Kickdown Mahmoud Shehada" | `/` title + " – Private Demo" | 1 | ✅ |
+| S2 | "Deine Fahrschule Kickdown in Bremen" | Hero headline | 1 | ✅ |
+| S3 | "Dein Weg zum / Führerschein Klasse B" | Hero subline | 1 | ✅ |
+| S4 | "Willkommen in der Fahrschule Kickdown" | H2 Willkommen | 1 | ✅ |
+| S5 | "Nicht nur im Privatleben, auch im Beruf…Kickstart." | Willkommen | 1 | ✅ |
+| S6 | "Wir zeigen dir, worauf es im Straßenverkehr ankommt…4 Themen an." | Willkommen; excerpts in journey 2, 3, 4 | 1 | ✅ |
+| S7 | "Du hast Fragen zu Führerschein und Fahrschule?" | H2 question block | 1 | ✅ |
+| S8 | "Wir stehen dir gern als Ansprechpartner zur Verfügung…Wir freuen uns auf dich!" | Question block (word for word; no e-mail address shown); excerpt in journey 1 | 1 | ✅ |
+
+### 5.3 Team
+
+| # | Item | New location | Phase | |
+|---|---|---|---|---|
+| T1 | `<title>` "Fahrschullehrer Team Fahrschule Kickdown" | `/team` | 2 | ✅ |
+| T2 | "Unser Team" | H2 team section on `/`, H1 `/team` | 1 | ✅ |
+| T3 | Mahmoud Shehada – Inhaber / Fahrlehrer | Team window 1 | 1 | ✅ |
+| T4 | Ralph Dölling – Fahrlehrer | Team | 1 | ✅ |
+| T5 | Ralf Jürgensen – Fahrlehrer | Team | 1 | ✅ |
+| T6 | Sarah Pendzich – Bürofachangestellte | Team | 1 | ✅ |
+| T7 | Penelope Röper – Fahrlehrerin / Büroleitung | Team | 1 | ✅ |
+| T8 | Zulquarnain Khan – Fahrlehrer | Team | 1 | ✅ |
+| T9 | Khaled Abu Al-Assal – Fahrlehrer | Team | 1 | ✅ |
+| T10 | Inna Korobova – Bürofachangestellte (no photo) | Team, empty-window card | 1 | ✅ |
+
+### 5.4 Theoretischer / Praktischer Unterricht
+
+| # | Item | New location | Phase | |
+|---|---|---|---|---|
+| U1 | `<title>` "Theorieunterricht Fahrschule Bremen" | `/unterricht` title | 2 | ✅ |
+| U2 | `<title>` "Führerschein in Bremen - praktischer Fahrschulunterricht" | `/unterricht` meta description | 2 | ✅ |
+| U3 | "Theoretischer Unterricht" | H2 `#theorie` | 2 | ✅ |
+| U4 | "Unser Theorieunterricht findet in Form von Kursen statt…abschließen kannst." | Journey 2 (excerpt) / `#theorie` (full) | 1 / 2 | ✅ |
+| U5 | "Unterrichtsform" + two links | Tab switch on `/unterricht` | 2 | ↻ |
+| U6 | "Theoriezeiten" block | `#zeiten` on `/`; `/unterricht` | 1 | ✅ |
+| U7 | "Bürozeiten" block | `#zeiten` on `/`; `/unterricht` | 1 | ✅ |
+| U8 | "Praktischer Unterricht" | H2 `#praxis` | 2 | ✅ |
+| U9 | "Du möchtest den Führerschein machen?" | `#praxis` | 2 | ✅ |
+| U10 | "Wir bereiten dich zu fairen Preisen…an deine Bedürfnisse." | `#praxis`, word for word | 2 | ✅ |
+| U11 | "Praxiszeiten" "nach Vereinbarung" | `#zeiten` on `/`, journey 3, form step 3; `#praxis` | 1 | ✅ |
+
+### 5.5 Fahrzeuge
+
+| # | Item | New location | Phase | |
+|---|---|---|---|---|
+| F1 | `<title>` "Fahrschulfahrzeuge" | `/fahrzeuge` | 2 | ✅ |
+| F2 | "Unsere Fahrzeuge" | H2 showroom on `/`, H1 `/fahrzeuge` | 1 | ✅ |
+| F3 | VW T-Roc – mit Automatikschaltung ausgestattet – 110 kW / 150 PS – Automatikgetriebe – Vorderradantrieb (05) | Showroom car 1 | 1 | ✅ |
+| F4 | VW T-Roc – same (06) | Showroom car 2 | 1 | ✅ |
+| F5 | VW T-Roc – same (07) | Showroom car 3 | 1 | ✅ |
+| F6 | VW Golf VI – mit manueller Schaltung ausgestattet – 59 kW / 80 PS – Manuelles Getriebe – Vorderradantrieb (01) | Showroom car 4 | 1 | ✅ |
+| F7 | Audi Q2 – mit Automatikschaltung ausgestattet – 110 kW / 150 PS – Automatikgetriebe – Vorderradantrieb (02) | Showroom car 5 | 1 | ✅ |
+| F8 | VW T-Roc – mit manueller Schaltung ausgestattet – 110 kW / 150 PS – Manuelles Getriebe – Vorderradantrieb (03) | Showroom car 6 | 1 | ✅ |
+| F9 | Audi A4 – mit Automatikschaltung ausgestattet – 140 kW / 190 PS – Automatik Getriebe – Vorderradantrieb (04) | Showroom car 7 | 1 | ✅ |
+| F10 | "Technische Details:" + "Perfekt für Fahrschüler/ Fahranfänger geeignet." | Every car | 1 | ✅ |
+
+### 5.6 Ausbildungsfahrschule
+
+| # | Item | New location | Phase | |
+|---|---|---|---|---|
+| A1 | `<title>` "Fahrschule Kickdown \| Ausbildungsfahrschule" | `/ausbildungsfahrschule` | 2 | ✅ |
+| A2 | "Ausbildungsfahrschule" | H1 | 2 | ✅ |
+| A3 | "Für Fahrlehrer in der Ausbildung bieten wir einen Ausbildungsplatz an." | Page body (+ link from team later) | 2 | ✅ |
+
+### 5.7 Preise (all prices)
+
+| # | Item | New location | Phase | |
+|---|---|---|---|---|
+| P0 | `<title>` "Fahrschule Kickdown \| Preise"; "Preisliste für Klasse B" | H2 `#preise` on `/`; `/preise` | 1 | ✅ |
+| P1 | "MIT SCHÜLER/STUDENTEN AKTION" | Column / toggle label, as written | 1 | ✅ |
+| P2 | Grundbetrag inkl. Lehrmaterial – 300 € | `#preise`, journey 1 | 1 | ✅ |
+| P3 | Übungsfahrt (45 Min.) – 65 € | `#preise`, journey 3 | 1 | ✅ |
+| P4 | Sonderfahrt (45 Min.) – 75 € | `#preise`, journey 3 | 1 | ✅ |
+| P5 | Vorstellung zur prakt. Prüfung* – 170 € | `#preise`, journey 4 | 1 | ✅ |
+| P6 | Vorstellung zur theor. Prüfung* – 30 € | `#preise`, journey 4 | 1 | ✅ |
+| P7 | "(ERSPARNIS VON 260 €)" | Under first list, as written | 1 | ✅ |
+| P8 | "OHNE AKTION" | Column / toggle label, as written | 1 | ✅ |
+| P9 | Grundbetrag – 500 € | `#preise`, journey 1 | 1 | ✅ |
+| P10 | Lehrmaterial – 90 € ¹ / 60 € ² | `#preise` | 1 | ✅ |
+| P11 | Übungsfahrt (45 Min.) – 65 € | `#preise` | 1 | ✅ |
+| P12 | Sonderfahrt (45 Min.) – 75 € | `#preise` | 1 | ✅ |
+| P13 | Vorstellung zur prakt. Prüfung* – 170 € | `#preise` | 1 | ✅ |
+| P14 | Vorstellung zur theor. Prüfung* – 30 € | `#preise` | 1 | ✅ |
+| P15 | "¹ Mit Drivers Cam, ² Ohne Drivers Cam" | Under tables | 1 | ✅ |
+| P16 | "*Die amtlichen Gebühren für die Fahrerlaubnisprüfungen sind hier nicht enthalten, und werden von der Prüfstelle extern berechnet." | Under tables, journey 4 | 1 | ✅ |
+
+### 5.8 Opening times
+
+| # | Item | New location | Phase | |
+|---|---|---|---|---|
+| Z1 | Bürozeiten Montag 16:30 Uhr bis 19:30 Uhr | Footer, header chip, Zeiten sheet, `#zeiten`, form result | 1 | ✅ |
+| Z2 | Bürozeiten Freitag 16:00 Uhr bis 19:00 Uhr (as in footer) | Same places | 1 | ✅ |
+| Z3 | Bürozeiten Samstag 14:00 Uhr bis 17:30 Uhr | Same places | 1 | ✅ |
+| Z4 | Theorie Dienstag, Mittwoch und Donnerstag 17:00 Uhr bis 18:30 Uhr | Footer, journey 2, `#zeiten`, form step 3 | 1 | ✅ |
+| Z5 | Theorie … 19:00 Uhr bis 20:30 Uhr | Same places | 1 | ✅ |
+| Z6 | Praxiszeiten: nach Vereinbarung | `#zeiten`, journey 3, form step 3 | 1 | ✅ |
+
+### 5.9 Contact details
+
+| # | Item | New location | Phase | |
+|---|---|---|---|---|
+| K0 | `<title>` "Fahrschule Kickdown \| Kontakt"; "Kontakt" | `/kontakt` | 2 | ✅ |
+| K1 | "Du hast Fragen zu unseren Leistungen…Montag:16:30 Uhr bis 19:30 Uhr und Samstag: 14:00 Uhr bis 17:30 Uhr." | `/kontakt` intro, word for word | 2 | ✅ |
+| K2 | "Fahrschule KICKDOWN" | `/kontakt` | 2 | ✅ |
+| K3 | Address + https://goo.gl/maps/rshBXagK5StX8Lgs8 | Footer (phase 1), `/kontakt` "Route planen" | 1 | ✅ |
+| K4 | 01 76 - 70 386 440 / tel:+4917670386440 | See G4 | 1 | ✅ |
+| K5 | Hidden second phone tel:+4915256751996 | Not shown | – | ⛔ |
+| K6 | Google Maps iframe | Replaced by static CSS map card + outbound link (no third-party request) | 2 | ↻ |
+| K7 | Hidden e-mail info@fahrschule-kickdown.de | Not shown | – | ⛔ |
+| K8 | Instagram | See G8 | 1 | ✅ |
+| K9 | Inhaber: Mahmoud Shehada | Team (phase 1), Impressum | 1 | ✅ |
+
+### 5.10 Impressum and Datenschutz
+
+| # | Item | New location | Phase | |
+|---|---|---|---|---|
+| L1 | Impressum: title, address, phone, Inhaber, Steuer Nr. 60/240/19002, USt-ID DE 316948289, Verantwortlich für den Inhalt | `/impressum` | 2 | ✅ |
+| L2 | Erlaubnisbehörde nach § 32 FahrlG (full block) | `/impressum` | 2 | ✅ |
+| L3 | Verbraucherstreitbeilegung/Universalschlichtungsstelle + text | `/impressum` | 2 | ✅ |
+| L4 | Bildquellen: © Fahrschule Kickdown, © Adobe Stock Fotos | `/impressum`, word for word | 2 | ✅ |
+| L5 | Programmierung: KS Design \| www.ks-media.de | `/impressum` | 2 | ✅ |
+| L6 | Datenschutz 1 "Datenschutz auf einen Blick" (all subsections) | `/datenschutz` | 2 | ✅ |
+| L7 | Datenschutz 2 "Hosting" (KS Design, Timme Hosting, Auftragsverarbeitung) | `/datenschutz` | 2 | ✅ |
+| L8 | Datenschutz 3 "Allgemeine Hinweise und Pflichtinformationen" (all subsections incl. Art. 21 caps text and 4 bullets) | `/datenschutz` | 2 | ✅ |
+| L9 | Datenschutz 4 "Datenerfassung auf dieser Website" (Cookies, Server-Log-Dateien + 6 bullets, Kontaktformular, Anfrage per E-Mail…) | `/datenschutz` | 2 | ✅ |
+| L10 | Datenschutz 5 "Plugins und Tools" (Google Fonts, Google Maps, all links) | `/datenschutz` | 2 | ✅ |
+
+### 5.11 Images (all 28 files)
+
+| # | File | New location | Phase | |
+|---|---|---|---|---|
+| B1 | `logo/logo.png` | Header, phone menu (200 × 50 px: shown at max 200 × 50 CSS px) | 1 | ✅ |
+| B2 | `logo/f-logo.png` (= logo.png) | Footer (same file) | 1 | ✅ |
+| B3 | `instagram-button.png` | Replaced by icon + text link | 1 | ↻ |
+| B4 | `banner/brt-1.jpg` | Not used (licence unconfirmed) → CSS asphalt | – | ⛔ |
+| B5 | `banner/s-1.jpg` | Not used (licence unconfirmed) → Three.js night stage | – | ⛔ |
+| B6 | `banner/s-2.jpg` | Not used (licence unconfirmed) → CSS night-to-day | – | ⛔ |
+| B7 | `banner/s-3.jpg` | Not used (licence unconfirmed) → CSS light streaks | – | ⛔ |
+| B8 | `start/01.jpg` (shop window) | Willkommen on `/` (max 580 CSS px); later Kontakt | 1 | ✅ |
+| B9 | `ausbildungsfahrschule/01.jpg` (= B8) | `/ausbildungsfahrschule` | 2 | ✅ |
+| B10–B16 | `team/01.jpg`–`07.jpg` | Team windows (max 248 × 268 CSS px, no edits) | 1 | ✅ |
+| B17 | `unterricht/theorie/01.jpg` | **Cropped copy only** `public/demo/theorie-kalender.jpg`: keep the calendar grid (from the month header row "DEZEMBER '25 … JANUAR '27" down to the last day row); remove the top band (Vogel System logo, "Udo Gerstmann", address, phone/fax/mobile, e-mail, "2026") and the bottom band (Vogel System logo, www.vogel-system.de, small print). Crop with sharp/ImageMagick, checked visually; the original is never served. Shown on `/unterricht#theorie` max 580 CSS px | 2 | ✅ |
+| B18 | `unterricht/praxis/01.jpg` | `/unterricht#praxis` (max 580 CSS px) | 2 | ✅ |
+| B19–B25 | `fahrzeuge/01.jpg`–`07.jpg` | Showroom (max 248 × 268 CSS px, no edits) | 1 | ✅ |
+| B26 | `christmas-deal.jpg` | Not shown (promotion) | – | ⛔ |
+| B27 | `logo/fahrlehrerverband-bremen.jpg` | Not shown (hidden membership) | – | ⛔ |
+| B28 | `preloader.gif` | Not used – no preloader, hero still loads instantly | – | ↻ |
+
+### 5.12 Hidden content (HTML comments) – none of it is shown
+
+| # | Item | Decision |
+|---|---|---|
+| H1 | Commented-out nav item "Preise" | Preise is reachable in the main nav because the visible footer already linked it; the hidden item itself is not restored as content. |
+| H2 | Old slider text "Deine Fahrschule in Bremen / Fahrschule KICKDOWN" | ⛔ |
+| H3 | "Im März 2021 bieten wir euch einen Intensivkurs für Theorie an…" | ⛔ |
+| H4 | "Theorie-Intensivkurs…", dates 27.12.2019–04.01.2020 | ⛔ |
+| H5 | Popup "Schüler und Studenten Aktion…" | ⛔ |
+| H6 | Popup "Christmas Deal" | ⛔ |
+| H7 | E-mail info@fahrschule-kickdown.de | ⛔ |
+| H8 | "Wir sind Mitglied im Fahrlehrerverband Bremen e. V." + logo | ⛔ |
+
+### 5.13 New UI words (not content, owner should approve)
+
+"Private Demo", demo notices of the form and cookie dialog, "Jetzt anmelden", "Anmelden", "Anrufen", "Zeiten", "Preise ansehen", "Route planen", "Anmeldung simulieren", "Ändern", "Schritt X von 4", step names (Über dich, Wunsch, Zeiten, Prüfen), form labels and error texts, "Wischen zum Drehen" / "Ziehen zum Drehen", section titles "Deine Strecke zum Führerschein", "Wer neben dir sitzt", "Der Showroom", journey station names (Anmeldung, Theorie, Fahrstunden, Prüfung), filter "Alle / Automatik / Schaltung", header chip "Büro heute …" / "Nächste Bürozeit …", placeholder text for unbuilt pages, alt texts.
+
+---
+
+## 6. Build notes (for later, not now)
+
+- Next.js 16.4 in this repo has breaking changes – read `node_modules/next/dist/docs/` before writing code (see `AGENTS.md`).
+- Content in typed data files (`content/preise.ts`, `content/zeiten.ts`, `content/team.ts`, `content/fahrzeuge.ts`, `content/kontakt.ts`), copied word for word from CONTENT.md, so every fact exists once.
+- 3D: `@react-three/fiber` + `drei` via `next/dynamic` (`ssr: false`) after idle; hero still is the server-rendered LCP.
+- Accessibility floor: visible focus ring (`--kd-blau`, 3 px), skip link, landmarks, real tables, form labels and error summaries, `lang="de"`, reduced motion respected.
+- Performance targets on a mid-range phone over 4G: LCP < 2.5 s, CLS < 0.05, no 3D download when the device check fails.
+- Demo check before showing it to anyone: network tab shows no third-party requests and no request on form submit; Application tab shows no cookies or storage; `noindex` present in HTML and response headers; "Private Demo" visible on every route.
