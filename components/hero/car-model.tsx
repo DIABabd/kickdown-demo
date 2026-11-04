@@ -18,6 +18,7 @@ import {
   WINDOW_LINE,
   type Pt,
 } from "./car-profile";
+import { DoorDecals, Plates } from "./car-livery";
 
 /* Colours from DESIGN.md (2.1). */
 export const KD_BLAU = "#009CDC";
@@ -173,7 +174,6 @@ export function CarModel({
       headBar: new THREE.BoxGeometry(0.02, 0.01, 0.82),
       grille: new THREE.BoxGeometry(0.04, 0.14, 1.06),
       tailBar: new THREE.BoxGeometry(0.03, 0.04, 1.46),
-      plate: new THREE.BoxGeometry(0.02, 0.11, 0.46),
     };
   }, []);
 
@@ -207,7 +207,6 @@ export function CarModel({
       gloss: new THREE.MeshStandardMaterial({ color: "#06090d", roughness: 0.18, metalness: 0.5 }),
       tyre: new THREE.MeshStandardMaterial({ color: "#0a0c0f", roughness: 0.85 }),
       rim: new THREE.MeshStandardMaterial({ color: "#6b7a8c", roughness: 0.35, metalness: 0.7 }),
-      plate: new THREE.MeshStandardMaterial({ color: "#2a3440", roughness: 0.6 }),
       blue: {
         core: new THREE.MeshBasicMaterial({ color: "#7fdcff", toneMapped: false }),
         halo: additive(KD_BLAU, 0.28),
@@ -225,7 +224,10 @@ export function CarModel({
   return (
     <group>
       {/* Sculpted body and glasshouse */}
-      <mesh geometry={geo.body} material={mats.paint} />
+      <mesh geometry={geo.body} material={mats.paint}>
+        {/* Door sign with the Kickdown logo + red/white graphic, projected onto the body */}
+        <DoorDecals />
+      </mesh>
       <mesh geometry={geo.cabin} material={mats.glass} />
 
       {sides.map((s) => (
@@ -256,9 +258,11 @@ export function CarModel({
       <mesh geometry={geo.headBar} material={mats.blue.core} position={[LIGHTS.head.x + 0.006, LIGHTS.head.y - 0.01, 0]} />
       <mesh geometry={geo.grille} material={mats.gloss} position={[2.225, 0.5, 0]} />
 
-      {/* Rear: full-width taillight and a blank plate */}
+      {/* Rear: full-width taillight */}
       <mesh geometry={geo.tailBar} material={mats.tail} position={[LIGHTS.tail.x, LIGHTS.tail.y, 0]} />
-      <mesh geometry={geo.plate} material={mats.plate} position={[-2.185, 0.6, 0]} />
+
+      {/* Blank number plates, no registration */}
+      <Plates />
 
       {/* Lights that actually illuminate the road */}
       <object3D ref={headTarget} position={[7, 0, 0]} />

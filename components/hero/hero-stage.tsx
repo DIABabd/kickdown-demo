@@ -7,38 +7,26 @@ import styles from "./hero.module.css";
 // Three.js + R3F are only downloaded when the 3D scene is actually used.
 const CarScene = dynamic(() => import("./car-scene"), { ssr: false });
 
-/** Temporary diagnostics label – compiled out of production builds. */
-const SHOW_STATUS = process.env.NODE_ENV === "development";
-
 const REDUCED = "(prefers-reduced-motion: reduce)";
 
 type Phase = "waiting" | "3d" | "still";
-
-type Status = {
-  webgl: "checking" | "yes" | "no";
-  /** WebGL works, but the browser flags it as slow (software renderer, blocklisted driver). */
-  caveat: boolean;
-  reason: string;
-  error: string;
-};
 
 type NavigatorHints = Navigator & {
   deviceMemory?: number;
   connection?: { saveData?: boolean };
 };
 
-function probeWebGL2(): Pick<Status, "webgl" | "caveat"> & { error: string } {
+/**
+ * WebGL2 support. A "major performance caveat" (software renderer) is not
+ * treated as a failure here – the frame-rate probe decides that.
+ */
+function hasWebGL2() {
   try {
     const gl = document.createElement("canvas").getContext("webgl2");
-    if (!gl) return { webgl: "no", caveat: false, error: "" };
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    const fast = document
-      .createElement("canvas")
-      .getContext("webgl2", { failIfMajorPerformanceCaveat: true });
-    fast?.getExtension("WEBGL_lose_context")?.loseContext();
-    return { webgl: "yes", caveat: !fast, error: "" };
-  } catch (e) {
-    return { webgl: "no", caveat: false, error: e instanceof Error ? e.message : String(e) };
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    return !!gl;
+  } catch {
+    return false;
   }
 }
 
@@ -69,7 +57,7 @@ class SceneBoundary extends Component<
   }
   componentDidCatch(error: Error, info: ErrorInfo) {
     this.props.onError(error.message || String(error));
-    if (SHOW_STATUS) console.error("[hero 3D]", error, info.componentStack);
+    if (process.env.NODE_ENV === "development") console.error("[hero 3D]", error, info.componentStack);
   }
   render() {
     return this.state.failed ? null : this.props.children;
@@ -90,17 +78,13 @@ export function HeroStage({ still }: { still: ReactNode }) {
   const [forced, setForced] = useState(false);
   const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [status, setStatus] = useState<Status>({
-    webgl: "checking",
-    caveat: false,
-    reason: "waiting for page idle",
-    error: "",
-  });
+  /** Why the still is shown – exposed as data-fallback for debugging. */
+  const [reason, setReason] = useState<string | null>(null);
 
-  const fallBack = (reason: string, error = "") => {
+  const fallBack = (why: string) => {
     setReady(false);
     setPhase("still");
-    setStatus((s) => ({ ...s, reason, error: error || s.error }));
+    setReason(why);
   };
 
   useEffect(() => {
@@ -112,16 +96,12 @@ export function HeroStage({ still }: { still: ReactNode }) {
 
     const start = () => {
       setReducedMotion(motion.matches);
-      const gl = probeWebGL2();
-      setStatus((s) => ({ ...s, webgl: gl.webgl, caveat: gl.caveat, error: gl.error }));
-
       if (flag === "0") return fallBack("URL flag ?hero3d=0");
-      if (gl.webgl === "no") return fallBack("WebGL2 not available");
-      const reason = hardReason(force);
-      if (reason) return fallBack(reason);
+      if (!hasWebGL2()) return fallBack("WebGL2 not available");
+      const hard = hardReason(force);
+      if (hard) return fallBack(hard);
 
       setForced(force);
-      setStatus((s) => ({ ...s, reason: "loading 3D…" }));
       setPhase("3d");
     };
 
@@ -141,44 +121,19 @@ export function HeroStage({ still }: { still: ReactNode }) {
   }, []);
 
   return (
-    <div className={styles.stage} data-ready={ready || undefined}>
+    <div className={styles.stage} data-ready={ready || undefined} data-fallback={reason ?? undefined}>
       <div className={styles.still}>{still}</div>
       {phase === "3d" && (
         <div className={styles.live}>
-          <SceneBoundary onError={(message) => fallBack("3D error", message)}>
+          <SceneBoundary onError={(message) => fallBack(`3D error: ${message}`)}>
             <CarScene
               forced={forced}
               reducedMotion={reducedMotion}
-              onReady={() => {
-                setReady(true);
-                setStatus((s) => ({ ...s, reason: "none" }));
-              }}
+              onReady={() => setReady(true)}
               onFallback={(reason) => fallBack(reason)}
             />
           </SceneBoundary>
         </div>
-      )}
-
-      {SHOW_STATUS && (
-        <dl className={styles.devStatus} aria-hidden="true">
-          <dt>WebGL available</dt>
-          <dd>
-            {status.webgl}
-            {status.caveat ? " (browser flags it as slow)" : ""}
-          </dd>
-          <dt>Renderer active</dt>
-          <dd>{ready ? "yes" : "no"}</dd>
-          <dt>Fallback reason</dt>
-          <dd>{ready ? "none" : status.reason}</dd>
-          <dt>3D error</dt>
-          <dd>{status.error || "none"}</dd>
-          {reducedMotion && (
-            <>
-              <dt>Reduced motion</dt>
-              <dd>on – 3D shown without automatic motion</dd>
-            </>
-          )}
-        </dl>
       )}
     </div>
   );

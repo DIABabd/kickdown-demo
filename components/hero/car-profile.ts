@@ -153,6 +153,55 @@ export const LIGHTS = {
   tail: { x: -2.155, y: 0.95 },
 } as const;
 
+/* ------------------------------------------------------------------ */
+/* Kickdown livery (side view, same coordinates as the outlines)       */
+/* ------------------------------------------------------------------ */
+
+/** The original logo file, used unchanged. */
+export const LOGO_SRC = "/old-site/logo/logo.png";
+/** Native pixel size of the logo file. */
+export const LOGO_PX = { w: 200, h: 50 } as const;
+
+/**
+ * White door sign the logo sits on (centre x/y, size, corner radius).
+ * The logo has dark-blue lettering on a transparent background, which
+ * would disappear on blue paint; a white sign keeps it readable without
+ * touching the file – like the magnetic signs on driving-school cars.
+ */
+export const DOOR_SIGN = { x: -0.08, y: 0.78, w: 0.74, h: 0.23, r: 0.035 } as const;
+
+/**
+ * Logo size on the door, exactly the file's 4 : 1 ratio (never stretched).
+ * 0.60 m keeps it at or below the file's 200 px on screen at the hero's
+ * largest size and a pixel ratio of 2, so it is never magnified.
+ */
+export const LOGO_SIZE = { w: 0.6, h: 0.6 * (LOGO_PX.h / LOGO_PX.w) } as const;
+
+/** Area on each side that the red/white graphic is drawn into. */
+export const STRIPE_BOX = { x0: -0.8, x1: 0.8, y0: 0.4, y1: 0.62 } as const;
+
+/**
+ * Red band low on the doors, leaning forward like it's moving (front = +x).
+ * Inspired by the red elements of the real fleet, not a copy of the wrap.
+ */
+export const RED_BAND: Pt[] = [
+  [-0.7, 0.44],
+  [0.66, 0.44],
+  [0.73, 0.53],
+  [-0.62, 0.53],
+];
+
+/** Thin white pinstripe above the band, same lean. */
+export const WHITE_STRIPE: Pt[] = [
+  [-0.6, 0.566],
+  [0.7, 0.566],
+  [0.714, 0.584],
+  [-0.586, 0.584],
+];
+
+/** Number plates: plain white, no registration (520 × 110 mm). */
+export const PLATE = { w: 0.52, h: 0.11 } as const;
+
 /** Arch geometry, shared with the arch trim. */
 export const ARCH = { r: ARCH_R, start: ARCH_END, end: Math.PI - ARCH_END } as const;
 
