@@ -1,26 +1,75 @@
 @import "tailwindcss";
 
+/* Design tokens – DESIGN.md 2.1 */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --kd-blau: #009cdc;
+  --kd-blau-text: #0072a8;
+  --tacho-rot: #e63a3c;
+  --lapis: #1d4fa6;
+  --nacht: #0c1824;
+  --asphalt: #2a3440;
+  --tag: #f4f6f8;
+  --tinte: #121a22;
+  --grau: #5b6875;
+  --markierung: #ffffff;
+
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-body: var(--font-atkinson), system-ui, sans-serif;
+
+  --gutter: 20px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (min-width: 640px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --gutter: 32px;
   }
 }
 
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 48px;
+  }
+}
+
+@theme inline {
+  --color-kd-blau: var(--kd-blau);
+  --color-kd-blau-text: var(--kd-blau-text);
+  --color-tacho-rot: var(--tacho-rot);
+  --color-lapis: var(--lapis);
+  --color-nacht: var(--nacht);
+  --color-asphalt: var(--asphalt);
+  --color-tag: var(--tag);
+  --color-tinte: var(--tinte);
+  --color-grau: var(--grau);
+  --color-markierung: var(--markierung);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--nacht);
+  color: var(--markierung);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (min-width: 1024px) {
+  body {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+}
+
+/* Visible focus everywhere (DESIGN.md 6) */
+:focus-visible {
+  outline: 3px solid var(--kd-blau);
+  outline-offset: 2px;
 }
