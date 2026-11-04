@@ -1,10 +1,11 @@
 import { Hero } from "@/components/hero/hero";
 import { Journey } from "@/components/journey/journey";
 import { Showroom } from "@/components/showroom/showroom";
+import { Team } from "@/components/team/team";
 import { Preise } from "@/components/tageslicht/preise";
 import { Zeiten } from "@/components/tageslicht/zeiten";
 
-// Phase 1: hero, scroll journey, prices, times and showroom so far (DESIGN.md 3.1).
+// Phase 1: hero, scroll journey, prices, times, showroom and team so far (DESIGN.md 3.1).
 export default function Home() {
   return (
     <Hero>
@@ -12,6 +13,7 @@ export default function Home() {
       <Preise />
       <Zeiten />
       <Showroom />
+      <Team />
     </Hero>
   );
 }

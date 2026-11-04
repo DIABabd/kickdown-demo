@@ -29,4 +29,6 @@ export const ui = {
   filterAlle: "Alle",
   filterAutomatik: "Automatik",
   filterSchaltung: "Schaltung",
+  /** Team eyebrow (UI words from DESIGN.md 5.13). */
+  teamEyebrow: "Wer neben dir sitzt",
 } as const;
