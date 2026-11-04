@@ -10,17 +10,21 @@ type List = { label: string; rows: readonly PriceRow[] };
  * Both lists are real tables. Desktop: side by side. Phones: a two-option
  * toggle (native radio buttons + CSS, works without JavaScript; without
  * :has() support both lists simply stay visible).
+ *
+ * `labelledBy`: on the /preise page the page heading (<h1>) names the list,
+ * so the section skips its own heading and points to that one instead.
  */
-export function Preise() {
+export function Preise({ labelledBy }: { labelledBy?: string } = {}) {
   const { mitAktion: mit, ohneAktion: ohne } = preise;
+  const label = labelledBy ?? "preise-title";
 
   return (
-    <section id="preise" className={styles.day} aria-labelledby="preise-title">
+    <section id="preise" className={styles.day} aria-labelledby={label}>
       <div className={styles.inner}>
-        <SectionHeading id="preise-title" eyebrow={ui.eyebrows.preise} title={preise.title} tone="day" />
+        {!labelledBy && <SectionHeading id="preise-title" eyebrow={ui.eyebrows.preise} title={preise.title} tone="day" />}
 
         <div className={styles.lists}>
-          <div className={styles.toggle} role="radiogroup" aria-labelledby="preise-title">
+          <div className={styles.toggle} role="radiogroup" aria-labelledby={label}>
             <input type="radio" id="preisliste-mit" name="preisliste" value="mit" defaultChecked />
             <label htmlFor="preisliste-mit">{mit.label}</label>
             <input type="radio" id="preisliste-ohne" name="preisliste" value="ohne" />

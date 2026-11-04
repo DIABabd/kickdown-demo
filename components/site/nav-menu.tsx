@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ui } from "@/content/start";
 import styles from "./site.module.css";
@@ -15,6 +16,7 @@ import styles from "./site.module.css";
 export function NavMenu() {
   const [open, setOpen] = useState(false);
   const button = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!open) return;
@@ -46,7 +48,12 @@ export function NavMenu() {
       <ul id="site-nav-links" className={styles.navLinks} data-open={open || undefined}>
         {ui.nav.links.map((l) => (
           <li key={l.href}>
-            <Link href={l.href} className={styles.navLink} onClick={close}>
+            <Link
+              href={l.href}
+              className={styles.navLink}
+              aria-current={pathname === l.href ? "page" : undefined}
+              onClick={close}
+            >
               {l.label}
             </Link>
           </li>

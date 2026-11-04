@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { BayRow } from "@/components/showroom/bay-row";
 import { SectionHeading } from "@/components/site/section-heading";
 import { ui } from "@/content/start";
@@ -22,9 +23,14 @@ const CLIP_ID = "kd-team-window";
  * no tint over faces; the only overlay is a light streak that crosses the
  * glass on hover / keyboard focus (removed with reduced motion).
  */
-export function Team() {
+/**
+ * `labelledBy`: on /team the page heading (<h1>) replaces the section
+ * heading; `children` are shown below the doors (the page adds its link to
+ * /ausbildungsfahrschule there).
+ */
+export function Team({ labelledBy, children }: { labelledBy?: string; children?: ReactNode } = {}) {
   return (
-    <section id="team" className={styles.team} aria-labelledby="team-title">
+    <section id="team" className={styles.team} aria-labelledby={labelledBy ?? "team-title"}>
       {/* Shared clip shape for all windows */}
       <svg className={styles.defs} aria-hidden="true" focusable="false">
         <clipPath id={CLIP_ID} clipPathUnits="objectBoundingBox">
@@ -33,13 +39,14 @@ export function Team() {
       </svg>
 
       <div className={styles.inner}>
-        <SectionHeading id="team-title" eyebrow={ui.eyebrows.team} title={team.title} tone="night" />
+        {!labelledBy && <SectionHeading id="team-title" eyebrow={ui.eyebrows.team} title={team.title} tone="night" />}
 
         <BayRow className={styles.doors}>
           {team.members.map((m, i) => (
             <Door key={m.name} member={m} index={i} />
           ))}
         </BayRow>
+        {children}
       </div>
     </section>
   );

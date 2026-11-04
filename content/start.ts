@@ -38,10 +38,11 @@ export const ui = {
     label: "Hauptnavigation",
     menu: "Menü",
     links: [
-      { label: "Preise", href: "/#preise" },
-      { label: "Fahrzeuge", href: "/#fahrzeuge" },
-      { label: "Team", href: "/#team" },
-      { label: "Kontakt", href: "/#kontakt" },
+      { label: "Unterricht", href: "/unterricht" },
+      { label: "Preise", href: "/preise" },
+      { label: "Fahrzeuge", href: "/fahrzeuge" },
+      { label: "Team", href: "/team" },
+      { label: "Kontakt", href: "/kontakt" },
     ],
     signUp: { label: "Anmelden", href: "/#anmeldung" },
   },
@@ -75,4 +76,20 @@ export const ui = {
   filterAlle: "Alle",
   filterAutomatik: "Automatik",
   filterSchaltung: "Schaltung",
+
+  /** Subpages: label above every page heading (the school's real name). */
+  pageEyebrow: "Fahrschule Kickdown",
+  /** Required note at the top of Impressum and Datenschutzerklärung. */
+  legalNote:
+    "Demo-Hinweis: Dieser Rechtstext stammt von der bisherigen Website und muss vor der Veröffentlichung geprüft und angepasst werden.",
+  /** Cookie preview page. */
+  cookieNote:
+    "Demo: Diese Demo setzt keine Cookies und speichert nichts. Unten siehst du nur als Vorschau, wie der Cookie-Hinweis der bisherigen Website aussah – die Schaltflächen sind ohne Funktion.",
+  cookieNoSave: "Demo: Auswahl wird nicht gespeichert.",
+  cookieBannerLabel: "Vorschau: Cookie-Hinweis der bisherigen Website",
+  cookieDialogLabel: "Vorschau: Dialog „Cookie Einstellungen“ der bisherigen Website",
+  /** Alt texts – only what the old site says about these photos. */
+  theoryPhotoAlt: "Foto zum Theorieunterricht (Ausschnitt eines Kalenders)",
+  praxisPhotoAlt: "Foto zum praktischen Unterricht",
+  ausbildungPhotoAlt: "Schaufenster der Fahrschule Kickdown",
 } as const;

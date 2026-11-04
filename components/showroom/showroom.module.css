@@ -15,6 +15,11 @@
   padding-inline: var(--gutter);
 }
 
+/* On its own page (/fahrzeuge) it follows the page header: needs top room. */
+.onPage {
+  padding-top: 32px;
+}
+
 /* ---------- Filter (native radios) ---------- */
 
 .filter {

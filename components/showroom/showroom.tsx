@@ -43,18 +43,22 @@ function groupIdentical(list: readonly Vehicle[]): Group[] {
   return groups;
 }
 
-export function Showroom() {
+/** `labelledBy`: on /fahrzeuge the page heading (<h1>) replaces the section heading. */
+export function Showroom({ labelledBy }: { labelledBy?: string } = {}) {
   const groups = groupIdentical(fahrzeuge.list);
   const showFilter = groups.every((g) => g.getriebe !== null);
+  const label = labelledBy ?? "fahrzeuge-title";
 
   return (
-    <section id="fahrzeuge" className={styles.showroom} aria-labelledby="fahrzeuge-title">
+    <section id="fahrzeuge" className={labelledBy ? `${styles.showroom} ${styles.onPage}` : styles.showroom} aria-labelledby={label}>
       <div className={styles.inner}>
-        <SectionHeading id="fahrzeuge-title" eyebrow={ui.eyebrows.showroom} title={fahrzeuge.title} tone="night" />
+        {!labelledBy && (
+          <SectionHeading id="fahrzeuge-title" eyebrow={ui.eyebrows.showroom} title={fahrzeuge.title} tone="night" />
+        )}
 
         <div className={styles.room}>
           {showFilter && (
-            <div className={styles.filter} role="radiogroup" aria-labelledby="fahrzeuge-title">
+            <div className={styles.filter} role="radiogroup" aria-labelledby={label}>
               <FilterOption value="alle" label={ui.filterAlle} defaultChecked />
               <FilterOption value="automatik" label={ui.filterAutomatik} />
               <FilterOption value="schaltung" label={ui.filterSchaltung} />

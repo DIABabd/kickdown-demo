@@ -171,6 +171,14 @@
   background: rgb(255 255 255 / 0.08);
 }
 
+/* Current page */
+.navLink[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-color: var(--kd-blau);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 8px;
+}
+
 .navCta {
   justify-content: center;
   margin-top: 4px;
@@ -335,7 +343,7 @@
   }
   .navLink {
     min-height: 44px;
-    padding: 0 12px;
+    padding: 0 10px;
   }
   .navCta {
     min-height: 44px;
