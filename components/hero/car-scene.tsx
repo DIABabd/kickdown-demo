@@ -86,9 +86,11 @@ const INTRO = {
   turnDur: 1.2,
 } as const;
 
-const IDLE_RETURN_MS = 4000;
 const KEY_STEP = Math.PI / 12; // 15°
 const DRAG_SPEED = 0.0085; // rad per CSS px
+/** Steady idle turn (rad/s), same direction as the intro turn. The car
+ * never just sits still – a drag only interrupts it, never stops it. */
+const AUTO_SPIN_VEL = -0.15;
 
 /**
  * Frame-rate probe. Warm-up frames are skipped (first shader compiles on
@@ -345,12 +347,16 @@ function Rig({
       }
       busy = true;
     } else if (c.mode === "free") {
-      if (c.calm) c.vel = 0;
-      if (Math.abs(c.vel) > 0.002) {
+      if (c.calm) {
+        // Reduced motion: hold still until dragged again – no auto-spin.
+        c.vel = 0;
+      } else {
+        // Ease whatever a drag left behind (or 0, right after the intro)
+        // toward the steady idle spin, so the car always keeps turning.
+        c.vel += (AUTO_SPIN_VEL - c.vel) * (1 - Math.exp(-2.2 * dt));
         c.angle += c.vel * dt;
-        c.vel *= Math.exp(-3.2 * dt);
         busy = true;
-      } else c.vel = 0;
+      }
     } else if (c.mode === "target") {
       const diff = c.target - c.angle;
       if (!c.calm && Math.abs(diff) > 0.0005) {
@@ -497,7 +503,6 @@ export default function CarScene({
   const inView = useRef(true);
   const invalidateRef = useRef<() => void>(() => {});
   const drag = useRef<{ id: number; x: number; t: number } | null>(null);
-  const idleTimer = useRef<number | undefined>(undefined);
 
   const [used, setUsed] = useState(false);
   const [deg, setDeg] = useState(Math.round(THREE.MathUtils.radToDeg(-REST_ANGLE)));
@@ -518,36 +523,17 @@ export default function CarScene({
     return () => io.disconnect();
   }, []);
 
-  useEffect(() => () => window.clearTimeout(idleTimer.current), []);
-
   // Reduced motion can be switched while the page is open.
   useEffect(() => {
     const c = ctrl.current;
     c.calm = reducedMotion;
-    if (reducedMotion) {
-      settle(c);
-      window.clearTimeout(idleTimer.current);
-    }
+    if (reducedMotion) settle(c);
     invalidateRef.current();
   }, [reducedMotion]);
 
   const reportAngle = (rad: number) => {
     const d = Math.round(THREE.MathUtils.radToDeg(-rad)) % 360;
     setDeg(d < 0 ? d + 360 : d);
-  };
-
-  /** After 4 s without input the car glides back to the three-quarter view. */
-  const scheduleReturn = () => {
-    window.clearTimeout(idleTimer.current);
-    if (ctrl.current.calm) return; // reduced motion: no automatic movement
-    idleTimer.current = window.setTimeout(() => {
-      const c = ctrl.current;
-      if (c.mode === "drag" || c.calm) return;
-      c.vel = 0;
-      c.target = nearest(c.angle, REST_ANGLE);
-      c.mode = "target";
-      invalidateRef.current();
-    }, IDLE_RETURN_MS);
   };
 
   const firstUse = () => {
@@ -560,7 +546,6 @@ export default function CarScene({
     // Touch: don't capture yet – the browser may still decide this is a
     // vertical scroll (touch-action: pan-y) and send pointercancel.
     if (e.pointerType === "mouse") e.currentTarget.setPointerCapture(e.pointerId);
-    window.clearTimeout(idleTimer.current);
   };
 
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
@@ -595,7 +580,6 @@ export default function CarScene({
       c.vel = clamp(c.vel, -9, 9);
       c.mode = "free";
       reportAngle(c.angle);
-      scheduleReturn();
       invalidateRef.current();
     }
   };
@@ -613,7 +597,6 @@ export default function CarScene({
     c.mode = "target";
     reportAngle(target);
     firstUse();
-    scheduleReturn();
     invalidateRef.current();
   };
 

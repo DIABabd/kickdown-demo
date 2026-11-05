@@ -18,7 +18,7 @@ export function Zeiten() {
   return (
     <section id="zeiten" className={`${styles.day} ${styles.dayTimes}`} aria-labelledby="zeiten-title">
       <div className={styles.inner}>
-        <SectionHeading id="zeiten-title" eyebrow={ui.eyebrows.zeiten} title={ui.zeitenTitle} tone="day" />
+        <SectionHeading id="zeiten-title" title={ui.zeitenTitle} tone="day" />
 
         <div className={styles.blocks}>
           <div className={styles.block}>

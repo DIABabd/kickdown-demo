@@ -17,7 +17,7 @@ export function Kontakt() {
     <section id="kontakt" className={styles.kontakt} aria-labelledby="kontakt-title">
       <div className={styles.inner}>
         <div className={styles.intro}>
-          <SectionHeading id="kontakt-title" eyebrow={ui.eyebrows.kontakt} title={fragen.title} tone="day" />
+          <SectionHeading id="kontakt-title" title={fragen.title} tone="day" />
           <p className={styles.text}>{fragen.text}</p>
         </div>
 

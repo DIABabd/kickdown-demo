@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { SiteHeader } from "@/components/site/site-header";
+import { telefon } from "@/content/kontakt";
 import { start, ui } from "@/content/start";
 import { CarStill } from "./car-still";
 import { HeroStage } from "./hero-stage";
@@ -27,8 +28,8 @@ export function Hero({ children }: { children?: ReactNode }) {
           </p>
 
           <div className={styles.cta}>
-            <a href="#anmeldung" className={styles.button}>
-              {ui.signUp}
+            <a href={telefon.href} className={styles.button}>
+              {ui.callNow}
             </a>
           </div>
         </section>

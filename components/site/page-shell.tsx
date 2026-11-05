@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { Footer } from "@/components/footer/footer";
-import { ui } from "@/content/start";
 import { Seam } from "./seam";
 import { SiteHeader } from "./site-header";
 import styles from "./page.module.css";
@@ -9,10 +8,10 @@ import styles from "./page.module.css";
 export const PAGE_TITLE_ID = "page-title";
 
 /**
- * Frame for every subpage: site header, a night page header (same heading
- * pattern as the homepage: small label + heading, here the <h1>), the page
- * content, the footer. `content` says whether the content starts / ends in
- * a day or night section, so the night ↔ day seams sit in the right places.
+ * Frame for every subpage: site header, a night page header (just the
+ * <h1>, no eyebrow label), the page content, the footer. `content` says
+ * whether the content starts / ends in a day or night section, so the
+ * night ↔ day seams sit in the right places.
  */
 export function PageShell({
   title,
@@ -33,7 +32,6 @@ export function PageShell({
       <main>
         <section className={styles.pageHeader} aria-labelledby={PAGE_TITLE_ID}>
           <div className={styles.inner}>
-            <p className={styles.eyebrow}>{ui.pageEyebrow}</p>
             <h1 id={PAGE_TITLE_ID} className={styles.h1}>
               {title}
             </h1>

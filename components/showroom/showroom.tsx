@@ -53,7 +53,7 @@ export function Showroom({ labelledBy }: { labelledBy?: string } = {}) {
     <section id="fahrzeuge" className={labelledBy ? `${styles.showroom} ${styles.onPage}` : styles.showroom} aria-labelledby={label}>
       <div className={styles.inner}>
         {!labelledBy && (
-          <SectionHeading id="fahrzeuge-title" eyebrow={ui.eyebrows.showroom} title={fahrzeuge.title} tone="night" />
+          <SectionHeading id="fahrzeuge-title" title={fahrzeuge.title} tone="night" />
         )}
 
         <div className={styles.room}>

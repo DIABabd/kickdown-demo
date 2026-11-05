@@ -271,23 +271,6 @@
   margin-bottom: 24px;
 }
 
-.eyebrow {
-  margin: 0 0 6px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 1.3;
-  letter-spacing: normal;
-}
-
-.heading[data-tone="night"] .eyebrow {
-  color: var(--kd-blau); /* 6.6 : 1 on --nacht */
-}
-
-.heading[data-tone="day"] .eyebrow {
-  color: var(--kd-blau-text); /* 4.9 : 1 on --tag */
-}
-
 .h2 {
   margin: 0;
   font-family: var(--font-display);

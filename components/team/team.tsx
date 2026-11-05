@@ -2,7 +2,6 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import { BayRow } from "@/components/showroom/bay-row";
 import { SectionHeading } from "@/components/site/section-heading";
-import { ui } from "@/content/start";
 import { team, type Member } from "@/content/team";
 import styles from "./team.module.css";
 
@@ -39,7 +38,7 @@ export function Team({ labelledBy, children }: { labelledBy?: string; children?:
       </svg>
 
       <div className={styles.inner}>
-        {!labelledBy && <SectionHeading id="team-title" eyebrow={ui.eyebrows.team} title={team.title} tone="night" />}
+        {!labelledBy && <SectionHeading id="team-title" title={team.title} tone="night" />}
 
         <BayRow className={styles.doors}>
           {team.members.map((m, i) => (

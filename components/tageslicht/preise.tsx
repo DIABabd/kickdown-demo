@@ -1,6 +1,5 @@
 import { SectionHeading } from "@/components/site/section-heading";
 import { preise, type PriceRow } from "@/content/preise";
-import { ui } from "@/content/start";
 import styles from "./tageslicht.module.css";
 
 type List = { label: string; rows: readonly PriceRow[] };
@@ -21,7 +20,7 @@ export function Preise({ labelledBy }: { labelledBy?: string } = {}) {
   return (
     <section id="preise" className={styles.day} aria-labelledby={label}>
       <div className={styles.inner}>
-        {!labelledBy && <SectionHeading id="preise-title" eyebrow={ui.eyebrows.preise} title={preise.title} tone="day" />}
+        {!labelledBy && <SectionHeading id="preise-title" title={preise.title} tone="day" />}
 
         <div className={styles.lists}>
           <div className={styles.toggle} role="radiogroup" aria-labelledby={label}>

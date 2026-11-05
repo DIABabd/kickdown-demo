@@ -12,6 +12,8 @@ Fragen an den Inhaber: siehe `OWNER-QUESTIONS.md`.
 
 The one bold thing is the **3D car + scroll journey on the start page**. Everything else stays calm, exact and easy to scan.
 
+**Update (post-launch revision):** the homepage is now short on purpose – hero, a short welcome, prices and times, and a way to get in touch. The one bold thing left is the **3D car**, which now keeps turning on its own instead of sitting still between drags. The scroll journey ("Deine Strecke zum Führerschein") and the simulated 4-step sign-up form were both removed; "Anmelden" is a real phone call now, not a form. Team and vehicles moved off the homepage onto their own full pages (`/team`, `/fahrzeuge`) – see 3.1 and 4.3/4.7 for what changed and why.
+
 ---
 
 ## 1. DEMO RULES (apply to everything below)
@@ -109,11 +111,11 @@ Text blocks max. 64 characters wide. Left aligned everywhere (centered only for 
 
 GSAP + ScrollTrigger (installed), React Three Fiber + drei for 3D.
 
-- **One orchestrated moment on load:** the hero. Headlights fade on (0.6 s), the car turns once into a three-quarter view (1.2 s), headline appears. Then nothing moves on its own.
-- **One scroll-driven moment:** the journey (4.3), scrubbed to scroll position.
-- Everything else is **response motion only**: switching a showroom car, the form needle moving to the next step, the simulated result. 150–250 ms, `ease-out`.
+- **One orchestrated moment on load:** the hero. Headlights fade on (0.6 s), the car turns once into a three-quarter view (1.2 s), headline appears.
+- **Update:** after that intro the car does not just sit still – it keeps turning on its own, slowly and continuously, like a turntable. A drag still rotates it freely; on release it eases back into the same steady spin rather than snapping back to a fixed angle. (The scroll journey that used to be the one scroll-driven moment was removed – see 4.3.)
+- Everything else is **response motion only**: switching a showroom car, hover/press feedback. 150–250 ms, `ease-out`.
 - No fade-and-slide-up on every section, no hover wiggles.
-- `prefers-reduced-motion: reduce` → no intro, no scrub (journey becomes a numbered list), still image instead of 3D, instant transitions.
+- `prefers-reduced-motion: reduce` → no intro, no auto-spin (the car can still be dragged, but never moves by itself), still image instead of 3D, instant transitions.
 
 ### 2.5 Photo sizes (sharpness rules)
 
@@ -148,7 +150,9 @@ Native sizes: team and car photos **370 × 400 px**; shop window **870 × 470**;
 
 ### 3.1 Phase 1 – homepage (build now, after this plan is approved)
 
-Sections on `/`, in order:
+**Update (post-launch revision): the homepage was shortened.** Team, the showroom, the scroll journey and the sign-up simulation were removed from `/` – see "As revised" below for why and where that content lives now. The numbered list right below is the **original** Phase-1 plan, kept for history; it no longer matches the built site.
+
+Sections on `/`, in order (original plan):
 
 1. Header (logo, "Private Demo" pill, nav Preise · Fahrzeuge · Team · Kontakt + "Anmelden" button; "Menü" panel below 1024 px) + phone bottom bar (Anrufen · Zeiten · Anmelden, below 640 px)
 2. Hero with 3D car (4.1) – night
@@ -162,11 +166,23 @@ Sections on `/`, in order:
 10. Anmeldung – 4-step simulated form (4.7) – day
 11. Footer – night
 
-Section pattern: every section opens with the same heading block (small label + H2, `components/site/section-heading.tsx`). Every night ↔ day switch is marked by the same crisp seam – a short asphalt strip with a dashed white road line (`components/site/seam.tsx`) – instead of soft gradient bands.
+**As revised, sections on `/` are:**
 
-No repetition: prices appear only in the price list; full office hours only in `#zeiten` (plus footer and the sign-up result screen); other places link to `#zeiten`. Every fact still appears at least once.
+1. Header (logo, "Private Demo" pill, nav Unterricht · Preise · Fahrzeuge · Team · Kontakt + "Anrufen" button; "Menü" panel below 1024 px) + phone bottom bar (Anrufen · Zeiten · Kontakt, below 640 px)
+2. Hero with 3D car (4.1) – night
+3. Willkommen text + shop-window photo (4.2) – day
+4. Preise – full "Preisliste für Klasse B" with both lists and all footnotes (4.6) – day
+5. Zeiten – Bürozeiten, Theoriezeiten, Praxiszeiten (4.6) – day; the one main place for the full office hours
+6. "Du hast Fragen zu Führerschule und Fahrschule?" contact block with phone, link to the office hours, address – day
+7. Footer – night
 
-Prices, times, showroom, team and form are full versions on the homepage so the demo shows every main idea in one page. Later subpages reuse the same components.
+Reasons: a learner deciding whether to call shouldn't have to scroll past a full team roster and vehicle fleet first – those matter once someone is already interested, so they live on their own pages (`/team`, `/fahrzeuge`), reachable from the header nav and footer on every page, same as before. The scroll journey repeated facts the price/times sections already state and added a second big motion set-piece competing with the hero; its own text was never unique to it (see 4.3). The sign-up simulation added a whole flow for something that was never going to be real in the demo; a phone number is a clearer, more honest call to action (see 4.7).
+
+Section pattern: every section opens with just its H2 (`components/site/section-heading.tsx`) – no small eyebrow label above it any more, on this page or on any subpage (removed sitewide as an unnecessary repeated decoration). Night ↔ day switches are still marked by the same crisp seam – a short asphalt strip with a dashed white road line (`components/site/seam.tsx`) – but there are only two of them now (into Willkommen, out of Kontakt) instead of five.
+
+No repetition: prices appear only in the price list; full office hours only in `#zeiten` (plus footer); other places link to `#zeiten`. Every fact still appears at least once, on the homepage or on a subpage.
+
+Prices and times are full versions on the homepage; team and the showroom are full versions on their own pages. Later subpages reuse the same components either way.
 
 Nav links to pages that don't exist yet go to one shared placeholder: "Diese Seite wird nach Freigabe der Startseite gebaut." with a link back. Header "Anmelden" scrolls to `#anmeldung`.
 
@@ -183,17 +199,18 @@ All 10 old pages keep their content. Theorie and Praxis become one page (`/unter
 | `/team` | `team.html` | Same team component + link to `/ausbildungsfahrschule`. |
 | `/ausbildungsfahrschule` | `ausbildungsfahrschule.html` | Heading, the one sentence, shop-window photo, phone/address. |
 | `/kontakt` | `kontakt.html` | Contact text (word for word), address, phone, office hours, shop-window photo, a static CSS map card with address + outbound link "Route planen" (goo.gl link). **No Google Maps iframe in the demo.** |
-| `/anmeldung` | – | Optional: same simulated form as homepage section. |
 | `/impressum` | `impressum.html` | All text word for word. |
 | `/datenschutz` | `datenschutz.html` | All text word for word. (Must be reviewed by the owner before any real launch – see owner questions.) |
 | Cookie dialog | Cookie banner | The demo sets no cookies and loads no third parties, so the banner does not pop up. "Cookie-Einstellungen" in the footer opens the dialog with all original texts as a design preview; choices are not saved, and the dialog shows "Demo: Auswahl wird nicht gespeichert." |
+
+**Update:** the optional `/anmeldung` route (same simulated form as the homepage section) was never built, and the homepage's own sign-up simulation was later removed entirely (4.7). There is no sign-up route or form anywhere in the demo; every "Anmelden" action is now a phone call or a link to `/kontakt`.
 
 Old URL mapping (for a real launch later): `index.html`, `index-1.html` → `/`; `team.html` → `/team`; `theoretischer-unterricht.html` → `/unterricht#theorie`; `praktischer-unterricht.html` → `/unterricht#praxis`; `fahrzeuge.html` → `/fahrzeuge`; `ausbildungsfahrschule.html` → `/ausbildungsfahrschule`; `preise.html` → `/preise`; `kontakt.html` → `/kontakt`; `impressum.html` → `/impressum`; `datenschutz.html` → `/datenschutz`.
 
 ### 3.3 Global elements
 
-- Header (built): logo · "Private Demo" · Preise · Fahrzeuge · Team · Kontakt · button "Anmelden" (all link to the homepage sections, also from the placeholder page). "Unterricht" is not in the header yet (no page/section; it is in the footer → placeholder). Below 1024 px the links open from a "Menü" button (Escape closes, focus returns to the button). Not built: the office-time status chip.
-- Phone (built, below 640 px): compact header (logo + demo pill + "Menü") and a **fixed bottom bar**: "Anrufen" (tel:+4917670386440, the visible number) · "Zeiten" (link to `#zeiten`; no sheet) · "Anmelden". The page reserves the bar's height at the bottom and in scroll-padding, so the bar never covers content, buttons, the form or the footer; while a text field is focused (on-screen keyboard) the bar is hidden.
+- Header (built): logo · "Private Demo" · Unterricht · Preise · Fahrzeuge · Team · Kontakt · button "Anrufen" (a real `tel:` link; it was "Anmelden" → `#anmeldung` before the sign-up simulation was removed). Below 1024 px the links open from a "Menü" button (Escape closes, focus returns to the button). Not built: the office-time status chip.
+- Phone (built, below 640 px): compact header (logo + demo pill + "Menü") and a **fixed bottom bar**: "Anrufen" (tel:+4917670386440, the visible number) · "Zeiten" (link to `#zeiten`; no sheet) · "Kontakt" (link to `/kontakt`; was "Anmelden" before the sign-up simulation was removed). The page reserves the bar's height at the bottom and in scroll-padding, so the bar never covers content or the footer; while a text field is focused (on-screen keyboard) the bar is hidden.
 - Footer: logo, address (map link), phone, Infos (Team, Unterricht, Fahrzeuge, Preise), Bürozeiten, Theoriezeiten, Instagram (icon + text link), Kontakt · Impressum · Datenschutzerklärung · Cookie-Einstellungen, copyright line as on the old site.
 
 ---
@@ -205,21 +222,21 @@ Old URL mapping (for a real launch later): `index.html`, `index-1.html` → `/`;
 ```
 PHONE (390 px)                       DESKTOP (1440 px)
 ┌──────────────────────┐             ┌──────────────────────────────────────────────┐
-│ [logo][Private Demo][≡]│           │ [logo][Private Demo] Unterricht Preise … [Anmelden] │
+│ [logo][Private Demo][≡]│           │ [logo][Private Demo] Unterricht Preise … [Anrufen] │
 │                      │             │                                              │
 │  Deine Fahrschule    │             │  Deine Fahrschule           ╭────────────╮   │
 │  Kickdown in Bremen  │             │  Kickdown in Bremen        ╱   3D CAR     ╲  │
-│                      │             │                           │  (drag to     │  │
-│   ╭──────────────╮   │             │  Dein Weg zum              ╲  rotate)    ╱   │
-│  ╱    3D CAR      ╲  │             │  Führerschein Klasse B      ╰────────────╯   │
-│ │  ⟲ wischen zum   │ │             │                           ═══ turntable ═══  │
-│  ╲    Drehen      ╱  │             │  [Jetzt anmelden] [Preise ansehen]            │
+│                      │             │                           │  (always      │  │
+│   ╭──────────────╮   │             │  Dein Weg zum              ╲  turning;    ╱   │
+│  ╱    3D CAR      ╲  │             │  Führerschein Klasse B      ╰─ drag too)─╯   │
+│ │  ⟲ ziehen zum    │ │             │                           ═══ turntable ═══  │
+│  ╲    Drehen      ╱  │             │  [Jetzt anrufen] [Preise ansehen]             │
 │   ╰══ turntable ═╯   │             │                                              │
 │ Dein Weg zum         │             │  Büro heute 16:30–19:30 Uhr                  │
 │ Führerschein Klasse B│             └──────────────────────────────────────────────┘
-│ [Jetzt anmelden]     │
+│ [Jetzt anrufen]      │
 ├──────────────────────┤
-│ Anrufen  Zeiten  Anmelden │  ← fixed bottom bar
+│ Anrufen  Zeiten  Kontakt │  ← fixed bottom bar
 └──────────────────────┘
 ```
 
@@ -228,7 +245,7 @@ PHONE (390 px)                       DESKTOP (1440 px)
   - Option A (preferred): a **CC0** low-poly model (e.g. from Kenney, Quaternius or Poly Pizza CC0 assets) – licence and source written to `public/demo/3d/CREDITS.txt`.
   - Option B (fallback): built in code from Three.js primitives/extrusions (simple, stylised, fully ours).
   - Painted in fleet lapis blue `--lapis` with an abstract white-and-red side stripe in Kickdown colors. **No logos of any brand** (no car-maker badge, no grille emblem, no Kickdown logo on the car), and a **blank number plate**.
-- Interaction: drag left/right rotates around the vertical axis; light inertia; returns to the three-quarter view after 4 s idle. On touch, `touch-action: pan-y`, so vertical swipes still scroll – only horizontal drags rotate. Keyboard: canvas focusable, ← → rotate. Hint "Wischen zum Drehen" / "Ziehen zum Drehen", hidden after first use.
+- Interaction: the car turns on its own, slowly and continuously, from the moment the intro ends. Drag left/right overrides that and rotates around the vertical axis with light inertia; on release, instead of snapping back to the three-quarter rest pose, the car eases from whatever speed the drag left into the same steady auto-spin – it never just stops. On touch, `touch-action: pan-y`, so vertical swipes still scroll – only horizontal drags rotate. Keyboard: canvas focusable, ← → nudges the angle, Home eases back to the rest pose (then auto-spin resumes from there). Hint "Wischen zum Drehen" / "Ziehen zum Drehen", hidden after first use. `prefers-reduced-motion: reduce`: no intro, no auto-spin – the car sits at the rest pose and only turns while actively dragged.
 - **Fallback (simple image):** a still render of the same car on the same stage (`public/demo/hero-car.avif` + `.webp`, ~120 KB, made with Blender or a three.js screenshot – free) is the hero image and the LCP element. The canvas loads after the page is idle and replaces the still only if:
   - WebGL2 is available,
   - not `prefers-reduced-motion`,
@@ -243,7 +260,23 @@ Day section. "Willkommen in der Fahrschule Kickdown" + both paragraphs word for 
 
 **As built:** the photo is the original file, shown complete – no crop, no rounded corners, no mask, no overlay – so the visible copyright notice ("© Copyright … Werbegestaltung", bottom-right) is not cut off, covered or edited. Under the photo a visible demo note: "Demo-Hinweis: Dieses Foto muss vor der Veröffentlichung freigegeben werden." **The photo must be approved before going live (owner question 13 stays open).**
 
-### 4.3 Scroll journey – "Deine Strecke zum Führerschein"
+### 4.3 Scroll journey – "Deine Strecke zum Führerschein" (REMOVED)
+
+**Update: this section was built, then removed, to shorten the homepage and cut a second big motion set-piece that competed with the hero.** What follows below is the original plan, kept for history.
+
+Every piece of its text was already duplicated elsewhere by design (see the table), so removing it loses no old-site content:
+
+| Station text | Where it still lives |
+|---|---|
+| S8, first sentence ("Wir stehen dir gern als Ansprechpartner …") | `#kontakt` on the homepage (`content/kontakt.ts`, `fragen.text`) – the full S7/S8 passage, word for word |
+| U4, complete ("Unser Theorieunterricht findet in Form von Kursen …") | `/unterricht#theorie` (`content/unterricht.ts`) |
+| U10, complete ("Wir bereiten dich zu fairen Preisen …") | `/unterricht#praxis` (`content/unterricht.ts`) |
+| S6, end of sentence ("… und bereiten dich auf die praktische Prüfung vor.") | Willkommen on the homepage (`content/start.ts`, `willkommen.text`) – already part of the same S4–S6 paragraph shown there |
+
+`content/strecke.ts` and `components/journey/*` were deleted.
+
+<details>
+<summary>Original plan (not current)</summary>
 
 A real sequence, so numbered markers are justified.
 
@@ -272,7 +305,11 @@ Each station: its real text and ONE link – no prices, times or footnotes any m
 
 Reduced motion / no JS: plain numbered list with the same content.
 
+</details>
+
 ### 4.4 Team – "Wer neben dir sitzt"
+
+**Update: moved off the homepage onto its own page, `/team`.** Everything below is unchanged otherwise – same component, same content, just reached via the header nav / footer instead of a homepage section.
 
 Each portrait is cut into the shape of a **car side window** (CSS `clip-path` – the image pixels stay untouched). All photos get the same frame and the same dark door panel around them; **no color grading, no filters, no AI** on faces.
 
@@ -295,6 +332,8 @@ PHONE: horizontal swipe, 1.3 doors visible       DESKTOP: row of doors, 4 per ro
 - Interaction: tapping a window "rolls it down" (the frame's glass edge slides, the photo itself doesn't scale).
 
 ### 4.5 Vehicles – "Der Showroom"
+
+**Update: moved off the homepage onto its own page, `/fahrzeuge`.** Everything below is unchanged otherwise – same component, same content, just reached via the header nav / footer instead of a homepage section.
 
 A dark showroom stage (night section): CSS floor with a radial `--lapis` spotlight and a faint reflection line. **As built:** every car in its own lit bay with all its text always visible (grid: 4 per row on desktop, 2 on tablet, a swipe row on phones), and a switch **Alle · Automatik · Schaltung** (filters by the "Getriebe" line of each car; shown only because every car states its transmission clearly). Cars whose text is completely identical share one card with all their original photos: today the three automatic VW T-Roc (05, 06, 07). The manual VW T-Roc (03) has different text ("mit manueller Schaltung ausgestattet", "Manuelles Getriebe") and keeps its own card. (The original idea below – one car at a time + thumbnails – was not built.)
 
@@ -349,7 +388,7 @@ PHONE (toggle)                         DESKTOP (side by side)
 - Real `<table>` with row headers; prices right-aligned, tabular.
 - Rows that differ between the two lists (Grundbetrag, Lehrmaterial) are subtly highlighted.
 - Phone: segmented toggle between the two lists, default first list (as on the old page); footnotes always visible.
-- Data in one file (`content/preise.ts`), reused by the journey and later `/preise`.
+- Data in one file (`content/preise.ts`), reused by `/preise`.
 
 **Times (`#zeiten`, footer, "Zeiten" sheet):**
 
@@ -367,9 +406,14 @@ Sa  ▕ Büro 14:00 Uhr bis 17:30 Uhr ▏
 Praxiszeiten: nach Vereinbarung
 ```
 
-Data in one file (`content/zeiten.ts`), used by header chip, footer, journey and form.
+Data in one file (`content/zeiten.ts`), used by header chip and footer.
 
-### 4.7 Sign-up – 4-step simulated form with the speedometer
+### 4.7 Sign-up – 4-step simulated form with the speedometer (REMOVED)
+
+**Update: this whole flow was removed.** It was never going to be real in the demo, and a form that exists only to say "this isn't real, call us instead" was more flow than the message needed. Every "Anmelden" button and link in the site is now a direct `tel:` call or a link to `/kontakt` – see 3.1, 3.3 and 4.1. `components/anmeldung/*` and `content/anmeldung.ts` were deleted. No replacement form was added (none of the removed content was unique to the form – it was new UI copy, not old-site content, so nothing needed to move elsewhere). What follows is the original plan, kept for history.
+
+<details>
+<summary>Original plan (not current)</summary>
 
 The logo's gauge is the progress indicator: a half-circle tachometer (SVG). Each completed step moves the needle one segment; step 4 is the red zone. Below it, the step name in text ("Schritt 2 von 4: Wunsch").
 
@@ -391,6 +435,8 @@ Technical guarantees (checked in code review before showing the demo):
 - State only in React memory; cleared on reload. No web storage, no cookies. `autocomplete="off"` on all inputs.
 - Without JavaScript: the form shows the demo notice and the submit button is disabled.
 
+</details>
+
 ---
 
 ## 5. CONTENT CHECKLIST
@@ -407,8 +453,8 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 | G3 | Address "Friedrich-Ebert-Straße 11/15, 28199 Bremen" + map link | Footer, question block on `/`; later Kontakt, Impressum, Datenschutz | 1 | ✅ |
 | G4 | "Telefon: 01 76 - 70 386 440" (tel:+4917670386440) | Footer, bottom bar "Anrufen", `#zeiten` (next to the office hours), question block, form result | 1 | ✅ |
 | G5 | Footer "Infos": Team, Unterricht, Fahrzeuge, Preise | Footer | 1 | ✅ |
-| G6 | Footer "Bürozeiten" Mo / Fr / Sa | `#zeiten` (main place), footer, form result; question block and bottom bar link to `#zeiten` | 1 | ✅ |
-| G7 | Footer "Theoriezeiten" Di, Mi, Do | `#zeiten`, footer; journey 2 links to `#zeiten` | 1 | ✅ |
+| G6 | Footer "Bürozeiten" Mo / Fr / Sa | `#zeiten` (main place), footer; question block and bottom bar link to `#zeiten` | 1 | ✅ |
+| G7 | Footer "Theoriezeiten" Di, Mi, Do | `#zeiten`, footer | 1 | ✅ |
 | G8 | Instagram link + `instagram-button.png` | Footer: icon + text link (outbound only) | 1 | ↻ |
 | G9 | "© 2026/2027 \| Programmiert durch KS Design." + link | Footer, word for word | 1 | ✅ |
 | G10 | Footer links Kontakt, Impressum, Datenschutzerklärung, Cookie-Einstellungen | Footer | 1 | ✅ |
@@ -424,9 +470,9 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 | S3 | "Dein Weg zum / Führerschein Klasse B" | Hero subline | 1 | ✅ |
 | S4 | "Willkommen in der Fahrschule Kickdown" | H2 Willkommen | 1 | ✅ |
 | S5 | "Nicht nur im Privatleben, auch im Beruf…Kickstart." | Willkommen | 1 | ✅ |
-| S6 | "Wir zeigen dir, worauf es im Straßenverkehr ankommt…4 Themen an." | Willkommen (complete); end of one sentence also in journey 4 | 1 | ✅ |
+| S6 | "Wir zeigen dir, worauf es im Straßenverkehr ankommt…4 Themen an." | Willkommen, complete | 1 | ✅ |
 | S7 | "Du hast Fragen zu Führerschein und Fahrschule?" | H2 question block | 1 | ✅ |
-| S8 | "Wir stehen dir gern als Ansprechpartner zur Verfügung…Wir freuen uns auf dich!" | Question block `#kontakt` (daylight; word for word; no e-mail address shown); first sentence in journey 1 | 1 | ✅ |
+| S8 | "Wir stehen dir gern als Ansprechpartner zur Verfügung…Wir freuen uns auf dich!" | Question block `#kontakt` (daylight; word for word; no e-mail address shown) | 1 | ✅ |
 
 ### 5.3 Team
 
@@ -450,13 +496,13 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 | U1 | `<title>` "Theorieunterricht Fahrschule Bremen" | `/unterricht` title | 2 | ✅ |
 | U2 | `<title>` "Führerschein in Bremen - praktischer Fahrschulunterricht" | `/unterricht` meta description | 2 | ✅ |
 | U3 | "Theoretischer Unterricht" | H2 `#theorie` | 2 | ✅ |
-| U4 | "Unser Theorieunterricht findet in Form von Kursen statt…abschließen kannst." | Journey 2 (complete) / later `#theorie` | 1 / 2 | ✅ |
+| U4 | "Unser Theorieunterricht findet in Form von Kursen statt…abschließen kannst." | `#theorie` | 2 | ✅ |
 | U5 | "Unterrichtsform" + two links | Tab switch on `/unterricht` | 2 | ↻ |
 | U6 | "Theoriezeiten" block | `#zeiten` on `/`; `/unterricht` | 1 | ✅ |
 | U7 | "Bürozeiten" block | `#zeiten` on `/`; `/unterricht` | 1 | ✅ |
 | U8 | "Praktischer Unterricht" | H2 `#praxis` | 2 | ✅ |
 | U9 | "Du möchtest den Führerschein machen?" | `#praxis` | 2 | ✅ |
-| U10 | "Wir bereiten dich zu fairen Preisen…an deine Bedürfnisse." | Journey 3 (complete, word for word); later `#praxis` | 1 / 2 | ✅ |
+| U10 | "Wir bereiten dich zu fairen Preisen…an deine Bedürfnisse." | `#praxis` | 2 | ✅ |
 | U11 | "Praxiszeiten" "nach Vereinbarung" | `#zeiten` on `/`; later `#praxis` | 1 | ✅ |
 
 ### 5.5 Fahrzeuge
@@ -492,17 +538,17 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 | P3 | Übungsfahrt (45 Min.) – 65 € | `#preise` only | 1 | ✅ |
 | P4 | Sonderfahrt (45 Min.) – 75 € | `#preise` only | 1 | ✅ |
 | P5 | Vorstellung zur prakt. Prüfung* – 170 € | `#preise` only | 1 | ✅ |
-| P6 | Vorstellung zur theor. Prüfung* – 30 € | `#preise` only (journey 4 links here) | 1 | ✅ |
+| P6 | Vorstellung zur theor. Prüfung* – 30 € | `#preise` only | 1 | ✅ |
 | P7 | "(ERSPARNIS VON 260 €)" | Under first list, as written | 1 | ✅ |
 | P8 | "OHNE AKTION" | Column / toggle label, as written | 1 | ✅ |
-| P9 | Grundbetrag – 500 € | `#preise`, journey 1 | 1 | ✅ |
+| P9 | Grundbetrag – 500 € | `#preise` | 1 | ✅ |
 | P10 | Lehrmaterial – 90 € ¹ / 60 € ² | `#preise` | 1 | ✅ |
 | P11 | Übungsfahrt (45 Min.) – 65 € | `#preise` | 1 | ✅ |
 | P12 | Sonderfahrt (45 Min.) – 75 € | `#preise` | 1 | ✅ |
 | P13 | Vorstellung zur prakt. Prüfung* – 170 € | `#preise` | 1 | ✅ |
 | P14 | Vorstellung zur theor. Prüfung* – 30 € | `#preise` | 1 | ✅ |
 | P15 | "¹ Mit Drivers Cam, ² Ohne Drivers Cam" | Under tables | 1 | ✅ |
-| P16 | "*Die amtlichen Gebühren für die Fahrerlaubnisprüfungen sind hier nicht enthalten, und werden von der Prüfstelle extern berechnet." | Under tables, journey 4 | 1 | ✅ |
+| P16 | "*Die amtlichen Gebühren für die Fahrerlaubnisprüfungen sind hier nicht enthalten, und werden von der Prüfstelle extern berechnet." | Under tables | 1 | ✅ |
 
 ### 5.8 Opening times
 
@@ -584,6 +630,8 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 "Private Demo", demo notices of the form and cookie dialog, "Jetzt anmelden", "Anmelden", "Anrufen", "Zeiten", "Preise ansehen", "Route planen", "Anmeldung simulieren", "Ändern", "Schritt X von 4", step names (Über dich, Wunsch, Zeiten, Prüfen), form labels and error texts, "Wischen zum Drehen" / "Ziehen zum Drehen", section titles "Deine Strecke zum Führerschein", "Wer neben dir sitzt", "Der Showroom", journey station names (Anmeldung, Theorie, Fahrstunden, Prüfung), filter "Alle / Automatik / Schaltung", header chip "Büro heute …" / "Nächste Bürozeit …", placeholder text for unbuilt pages, alt texts.
 
 Added while building (all listed in OWNER-QUESTIONS.md, question 35): "Menü" (header button), "Hauptnavigation", "Schnellzugriff", "Rechtliches" (names for screen readers), section labels above the headings ("Willkommen", "Anmeldung · Theorie · Fahrstunden · Prüfung", "Preise", "Zeiten", "Wer neben dir sitzt", "Der Showroom", "Kontakt", "Simulation"), times heading "Bürozeiten, Theoriezeiten und Praxiszeiten", journey links "Theoriezeiten" and "Unsere Fahrzeuge" (old-site headings used as link text), "Demo-Hinweis: Dieses Foto muss vor der Veröffentlichung freigegeben werden.", alt texts "Schaufenster der Fahrschule Kickdown" and "(Foto 1 von 3)", "Zur Startseite", "(öffnet in neuem Tab)", sign-up questions, hints and error texts, "Simulation beendet – es wurde keine Anmeldung gesendet.", "Simulation neu starten".
+
+**Update:** the sign-up form, its step names, hints and error texts, the journey section and its station names/links, and the per-section eyebrow labels above headings ("Willkommen", "Anmeldung · Theorie · Fahrstunden · Prüfung", "Preise", "Zeiten", "Wer neben dir sitzt", "Der Showroom", "Kontakt", "Simulation", and the "Fahrschule Kickdown" label above every subpage's `<h1>`) no longer exist – none of that text needs owner approval any more. New word added instead: **"Jetzt anrufen"** (hero button and highlighted nav action; both now call `tel:+4917670386440` directly), and the phone bottom bar's third slot changed from "Anmelden" to **"Kontakt"** (links to `/kontakt`).
 
 ---
 

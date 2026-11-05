@@ -12,14 +12,6 @@
   padding-inline: var(--gutter);
 }
 
-.eyebrow {
-  margin: 0 0 6px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--kd-blau); /* 6.6 : 1 on --nacht */
-}
-
 .h1 {
   margin: 0;
   max-width: 24ch;

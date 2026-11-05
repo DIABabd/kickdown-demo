@@ -59,9 +59,9 @@ export function NavMenu() {
           </li>
         ))}
         <li>
-          <Link href={ui.nav.signUp.href} className={styles.navCta} onClick={close}>
-            {ui.nav.signUp.label}
-          </Link>
+          <a href={ui.nav.contact.href} className={styles.navCta} onClick={close}>
+            {ui.nav.contact.label}
+          </a>
         </li>
       </ul>
     </nav>

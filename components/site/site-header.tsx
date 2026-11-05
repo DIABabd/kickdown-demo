@@ -50,11 +50,11 @@ export function SiteHeader() {
           </svg>
           {ui.bottomBar.times.label}
         </Link>
-        <Link href={ui.bottomBar.signUp.href} className={`${styles.barItem} ${styles.barPrimary}`}>
+        <Link href={ui.bottomBar.contact.href} className={`${styles.barItem} ${styles.barPrimary}`}>
           <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
             <path d="M5 12h12M12 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          {ui.bottomBar.signUp.label}
+          {ui.bottomBar.contact.label}
         </Link>
       </nav>
     </>

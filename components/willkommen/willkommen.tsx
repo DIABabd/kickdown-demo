@@ -19,7 +19,7 @@ export function Willkommen() {
     <section id="willkommen" className={styles.willkommen} aria-labelledby="willkommen-title">
       <div className={styles.inner}>
         <div className={styles.text}>
-          <SectionHeading id="willkommen-title" eyebrow={ui.eyebrows.willkommen} title={w.title} tone="day" />
+          <SectionHeading id="willkommen-title" title={w.title} tone="day" />
           {w.text.map((p) => (
             <p key={p.slice(0, 20)}>{p}</p>
           ))}

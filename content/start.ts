@@ -1,3 +1,5 @@
+import { telefon } from "./kontakt";
+
 /**
  * Start page texts – copied word for word from CONTENT.md
  * ("Seite: Startseite (Willkommen)"). Do not reword.
@@ -31,7 +33,8 @@ export const logoAlt = "Logo Fahrschule Kickdown";
 export const ui = {
   privateDemo: "Private Demo",
   privateDemoHint: "keine echte Website der Fahrschule",
-  signUp: "Jetzt anmelden",
+  /** Hero's primary action – a real phone call, not a sign-up form. */
+  callNow: "Jetzt anrufen",
 
   /** Header navigation (DESIGN.md 3.3) and phone bottom bar. */
   nav: {
@@ -44,26 +47,17 @@ export const ui = {
       { label: "Team", href: "/team" },
       { label: "Kontakt", href: "/kontakt" },
     ],
-    signUp: { label: "Anmelden", href: "/#anmeldung" },
+    /** Highlighted nav action: calling, not a sign-up simulation. */
+    contact: { label: "Anrufen", href: telefon.href },
   },
   bottomBar: {
     label: "Schnellzugriff",
     call: "Anrufen",
     times: { label: "Zeiten", href: "/#zeiten" },
-    signUp: { label: "Anmelden", href: "/#anmeldung" },
+    /** Third bar slot: the contact page (the call action already sits first). */
+    contact: { label: "Kontakt", href: "/kontakt" },
   },
 
-  /** One heading pattern for every section: small label + heading. */
-  eyebrows: {
-    willkommen: "Willkommen",
-    strecke: "Anmeldung · Theorie · Fahrstunden · Prüfung",
-    preise: "Preise",
-    zeiten: "Zeiten",
-    team: "Wer neben dir sitzt",
-    showroom: "Der Showroom",
-    kontakt: "Kontakt",
-    anmeldung: "Simulation",
-  },
   /** Heading of the times section (the three old-site headings, joined). */
   zeitenTitle: "Bürozeiten, Theoriezeiten und Praxiszeiten",
 
@@ -77,8 +71,6 @@ export const ui = {
   filterAutomatik: "Automatik",
   filterSchaltung: "Schaltung",
 
-  /** Subpages: label above every page heading (the school's real name). */
-  pageEyebrow: "Fahrschule Kickdown",
   /** Required note at the top of Impressum and Datenschutzerklärung. */
   legalNote:
     "Demo-Hinweis: Dieser Rechtstext stammt von der bisherigen Website und muss vor der Veröffentlichung geprüft und angepasst werden.",
