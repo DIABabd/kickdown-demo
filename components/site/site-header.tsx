@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { HeaderTheme } from "@/components/hero/header-theme";
 import { telefon } from "@/content/kontakt";
 import { logoAlt, ui } from "@/content/start";
 import { pageId, type PageKey } from "./page-ids";
@@ -19,7 +18,6 @@ export function SiteHeader({ page }: { page: PageKey }) {
   return (
     <>
       <header className={styles.header} data-site-header>
-        <HeaderTheme />
         <div className={styles.headerInner}>
           <Link href="/" className={styles.logo}>
             {/* Original logo file, served unchanged (no re-encoding). */}

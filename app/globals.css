@@ -13,6 +13,22 @@
   --grau: #5b6875;
   --markierung: #ffffff;
 
+  /* Dark cinematic system (Nov 2026): near-black, charcoal, graphite and
+     deep blue surfaces; Kickdown blue and a little red as the only accents. */
+  --ink: #05070a; /* near-black: hero, page headers, footer */
+  --charcoal: #0b0e12; /* main reading surface */
+  --graphite: #12161c; /* raised areas */
+  --deep: #081226; /* deep blue tone */
+  --surface: #151a21; /* small panels on charcoal */
+  --surface-2: #1b2129;
+  --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.18);
+  --text: #eef1f4; /* 17:1 on --charcoal */
+  --text-2: #b9c2cc; /* 10:1 */
+  --text-3: #8f9aa6; /* 6.4:1 */
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 30px 60px -40px rgb(0 0 0 / 0.9);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
   --font-display: var(--font-archivo), system-ui, sans-serif;
   --font-body: var(--font-atkinson), system-ui, sans-serif;
 
@@ -75,8 +91,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--nacht);
-  color: var(--markierung);
+  background: var(--ink);
+  color: var(--text);
   font-family: var(--font-body);
   font-size: 17px;
   line-height: 1.55;
@@ -94,4 +110,24 @@ body {
 :focus-visible {
   outline: 2px solid var(--kd-blau);
   outline-offset: 3px;
+}
+
+/* ---------- Scroll reveal (SiteMotion) ----------
+   Only blocks below the fold at load get "pending"; reduced motion or a
+   changed setting always shows them. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal="pending"] {
+    opacity: 0;
+    translate: 0 24px;
+  }
+  [data-reveal="in"] {
+    transition:
+      opacity 900ms var(--ease-out),
+      translate 1000ms var(--ease-out);
+  }
+}
+
+::selection {
+  background: rgb(0 156 220 / 0.35);
+  color: #fff;
 }

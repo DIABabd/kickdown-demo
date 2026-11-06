@@ -39,8 +39,8 @@
 }
 
 .day {
-  background: var(--tag);
-  color: var(--tinte);
+  background: var(--charcoal);
+  color: var(--text);
 }
 
 .night {
@@ -104,8 +104,8 @@
   padding: 6px 10px;
   border: 1px solid var(--tacho-rot);
   border-radius: 6px;
-  background: #fff;
-  color: var(--tinte);
+  background: var(--surface);
+  color: var(--text);
   font-size: 14px;
   font-weight: 700;
   line-height: 1.4;
@@ -115,11 +115,11 @@
 .card {
   position: relative;
   padding: 24px 24px 24px 36px;
-  border: 1px solid #dde3e9;
+  border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
-  color: var(--tinte);
-  box-shadow: 0 1px 2px rgb(18 26 34 / 0.04), 0 12px 32px -20px rgb(18 26 34 / 0.25);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
   overflow: hidden;
 }
 
@@ -128,7 +128,7 @@
   position: absolute;
   inset: 0 auto 0 0;
   width: 10px;
-  background: var(--kd-blau-text);
+  background: var(--kd-blau);
 }
 
 .night .card {
@@ -156,7 +156,7 @@
 .plate {
   display: inline-block;
   padding: 3px 10px;
-  border: 1px solid var(--tinte);
+  border: 1px solid var(--line-strong);
   border-radius: 5px;
   font-family: var(--font-display);
   font-weight: 600;
@@ -171,19 +171,20 @@
   min-height: 48px;
   padding: 6px 22px;
   border-radius: 999px;
-  background: var(--tinte);
-  color: #fff;
+  background: var(--text);
+  color: var(--ink);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   text-decoration: none;
 }
 
 .button:hover {
-  background: #26323e;
+  background: var(--kd-blau);
+  color: var(--ink);
 }
 
 .link {
-  color: var(--kd-blau-text);
+  color: var(--kd-blau);
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -215,20 +216,20 @@
   align-items: center;
   min-height: 44px;
   padding: 0 18px;
-  border: 1px solid #c9d1d9;
+  border: 1px solid var(--line-strong);
   border-radius: 999px;
-  background: #fff;
-  color: var(--tinte);
+  background: var(--surface);
+  color: var(--text);
   font-weight: 700;
   text-decoration: none;
 }
 
 .jump a:hover {
-  background: color-mix(in srgb, var(--kd-blau) 9%, #fff);
+  background: color-mix(in srgb, var(--kd-blau) 12%, transparent);
 }
 
 .jump a:focus-visible {
-  outline: 3px solid var(--kd-blau);
+  outline: 2px solid var(--kd-blau);
   outline-offset: 2px;
 }
 
@@ -238,10 +239,10 @@
   max-width: 72ch;
   margin: 0 0 32px;
   padding: 14px 18px;
-  border: 1px solid #e3cf8a;
+  border: 1px solid rgb(227 190 90 / 0.45);
   border-radius: 10px;
-  background: #fff6d6;
-  color: var(--tinte);
+  background: rgb(227 190 90 / 0.07);
+  color: var(--text);
   font-weight: 700;
   line-height: 1.45;
 }
@@ -305,16 +306,16 @@
   max-width: 72ch;
   margin: 0 0 32px;
   padding: 20px;
-  border: 2px dashed var(--grau);
+  border: 2px dashed var(--text-3);
   border-radius: 8px;
-  background: #fff;
+  background: var(--surface);
 }
 
 .previewLabel {
   margin: 0 0 12px;
   font-size: 15px;
   font-weight: 700;
-  color: var(--grau);
+  color: var(--text-3);
 }
 
 .previewButtons {
@@ -327,10 +328,10 @@
 .previewButtons button {
   min-height: 48px;
   padding: 0 16px;
-  border: 2px solid var(--grau);
+  border: 2px solid var(--text-3);
   border-radius: 8px;
-  background: var(--tag);
-  color: var(--grau);
+  background: var(--charcoal);
+  color: var(--text-3);
   font: inherit;
   font-weight: 700;
   cursor: not-allowed;
@@ -338,7 +339,7 @@
 
 .details {
   margin: 0 0 12px;
-  border-top: 1px solid #d5dbe1;
+  border-top: 1px solid var(--line);
   padding-top: 8px;
 }
 
@@ -347,12 +348,12 @@
   align-items: center;
   min-height: 44px;
   font-weight: 700;
-  color: var(--kd-blau-text);
+  color: var(--kd-blau);
   cursor: pointer;
 }
 
 .details summary:focus-visible {
-  outline: 3px solid var(--kd-blau);
+  outline: 2px solid var(--kd-blau);
   outline-offset: 2px;
 }
 
@@ -394,5 +395,109 @@
   }
   .prose h2 {
     font-size: 26px;
+  }
+}
+
+/* ========== Dark cinematic layer (Nov 2026) ========== */
+.pageHeader {
+  position: relative;
+  padding-block: 64px 56px;
+  background:
+    radial-gradient(55% 140% at 88% 0%, rgb(18 46 104 / 0.55), transparent 65%),
+    linear-gradient(to bottom, var(--ink) 50%, var(--charcoal));
+  color: var(--text);
+  overflow: hidden;
+}
+.h1 {
+  max-width: 18ch;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+.intro {
+  color: var(--text-2);
+}
+.day {
+  background: var(--charcoal);
+  color: var(--text);
+}
+.night {
+  background: linear-gradient(to bottom, var(--charcoal), var(--graphite) 35%, var(--graphite) 70%, var(--charcoal));
+  color: var(--text);
+}
+.text p,
+.prose p,
+.prose li {
+  color: var(--text-2);
+}
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: var(--text);
+}
+.card {
+  background: var(--surface);
+  border-color: var(--line);
+}
+.card::before {
+  width: 3px;
+}
+.night .card {
+  border-color: var(--line);
+}
+.figure {
+  padding: 10px;
+  background: var(--graphite);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.photo {
+  outline: none;
+}
+.approval {
+  background: transparent;
+  border-color: rgb(230 58 60 / 0.6);
+  color: var(--text);
+}
+.plate {
+  border-color: var(--line-strong);
+}
+.link {
+  text-decoration-color: rgb(0 156 220 / 0.45);
+  transition: text-decoration-color 200ms ease-out;
+}
+.link:hover {
+  text-decoration-color: currentColor;
+}
+.jump a {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--text);
+  transition:
+    background-color 200ms ease-out,
+    border-color 200ms ease-out;
+}
+.jump a:hover {
+  background: rgb(255 255 255 / 0.06);
+  border-color: rgb(255 255 255 / 0.4);
+}
+.details {
+  border-top-color: var(--line);
+}
+.preview {
+  border-color: var(--text-3);
+}
+@media (min-width: 640px) {
+  .h1 {
+    font-size: 56px;
+  }
+}
+@media (min-width: 1024px) {
+  .pageHeader {
+    padding-block: 128px 104px;
+  }
+  .h1 {
+    font-size: clamp(64px, 6vw, 96px);
+    line-height: 0.96;
   }
 }

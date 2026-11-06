@@ -79,8 +79,7 @@ function Wheel({ x }: { x: number }) {
   );
 }
 
-/** `reflection`: the road copy – no logo, so it never shows up flipped. */
-function Car({ reflection = false }: { reflection?: boolean }) {
+function Car() {
   return (
     <g>
       {/* Glasshouse first, the body overlaps its base */}
@@ -119,7 +118,7 @@ function Car({ reflection = false }: { reflection?: boolean }) {
         strokeWidth={0.09}
       />
       <rect x={-0.81} y={0.285} width={1.62} height={0.11} fill="#0b0f14" />
-      <Livery withLogo={!reflection} />
+      <Livery withLogo />
       <Wheel x={WHEEL.x} />
       <Wheel x={-WHEEL.x} />
       {/* Mirror */}
@@ -154,11 +153,11 @@ export function CarStill() {
   return (
     <svg
       className="kd-car-still"
-      // y is flipped below: SVG y -1.85…1.15 shows road reflection to roof.
-      viewBox="-3.1 -1.85 6.2 2.85"
+      // y is flipped below: SVG y -1.9…0.2 shows the roof down to the shadow.
+      viewBox="-2.6 -1.9 5.2 2.1"
       preserveAspectRatio="xMidYMid meet"
       role="img"
-      aria-label="Stilisiertes Auto auf einer Drehscheibe bei Nacht"
+      aria-label="Stilisiertes Auto bei Nacht"
     >
       <defs>
         <linearGradient id="kd-paint" x1="0" y1="1" x2="0" y2="0">
@@ -171,27 +170,10 @@ export function CarStill() {
           <stop offset="0" stopColor="#1a2a40" />
           <stop offset="1" stopColor="#04070c" />
         </linearGradient>
-        <radialGradient id="kd-pool" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#1D4FA6" stopOpacity="0.18" />
-          <stop offset="1" stopColor="#1D4FA6" stopOpacity="0" />
-        </radialGradient>
       </defs>
 
       {/* y-up coordinates, same as the 3D model */}
       <g transform="scale(1 -1)">
-        {/* Lapis glow behind the car */}
-        <ellipse cx="0" cy="1.0" rx="3.2" ry="1.6" fill="url(#kd-pool)" />
-        {/* Turntable rim */}
-        <ellipse
-          cx="0"
-          cy="0"
-          rx="2.75"
-          ry="0.52"
-          fill="none"
-          stroke="#6f9fc8"
-          strokeOpacity="0.25"
-          strokeWidth="0.008"
-        />
         {/* Contact shadow */}
         <ellipse
           cx="0"

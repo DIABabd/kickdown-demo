@@ -1,10 +1,10 @@
 import styles from "./site.module.css";
 
 /**
- * The crisp night ↔ day transition: a short strip of asphalt with a
- * dashed road line, used wherever the page switches between night and
- * daylight sections (replaces the earlier soft gradient bands).
+ * Transition between sections: a fine hairline that catches one soft light
+ * sweep when it scrolls into view (motion allowed only). Replaces the old
+ * road-line strips – the sections around it fade between dark tones.
  */
 export function Seam() {
-  return <div className={styles.seam} aria-hidden="true" />;
+  return <div className={styles.seam} data-sweep aria-hidden="true" />;
 }

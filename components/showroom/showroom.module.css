@@ -321,3 +321,49 @@
     grid-column: span 3;
   }
 }
+
+/* ========== Dark cinematic layer (Nov 2026) ========== */
+.showroom {
+  background: var(--charcoal);
+}
+.filter {
+  background: var(--graphite);
+  border-color: var(--line-strong);
+  border-radius: 14px;
+}
+.filter label {
+  border-radius: 10px;
+  color: var(--text-2);
+}
+.filter input:checked + label {
+  background: var(--text);
+  color: var(--ink);
+}
+.card {
+  border-color: var(--line);
+  background: linear-gradient(to bottom, var(--graphite), var(--charcoal));
+}
+.card:hover,
+.card:focus-visible {
+  border-color: var(--line-strong);
+}
+/* quieter spotlight and floor light */
+.stage {
+  background: radial-gradient(ellipse 75% 22% at 50% 82%, rgb(29 79 166 / 0.38), transparent 70%);
+}
+.stage::before {
+  opacity: 0.3;
+}
+.card:hover .stage::before,
+.card:focus-visible .stage::before {
+  opacity: 0.6;
+}
+.reflection {
+  border-top-color: var(--line);
+}
+.spec {
+  border-top-color: var(--line);
+}
+.ausstattung {
+  color: var(--text-2);
+}

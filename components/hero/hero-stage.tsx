@@ -123,7 +123,12 @@ export function HeroStage({ still }: { still: ReactNode }) {
   }, []);
 
   return (
-    <div className={styles.stage} data-ready={ready || undefined} data-fallback={reason ?? undefined}>
+    <div
+      className={styles.stage}
+      data-hero-stage
+      data-ready={ready || undefined}
+      data-fallback={reason ?? undefined}
+    >
       <div className={styles.still}>{still}</div>
       {phase === "3d" && (
         <div className={styles.live}>

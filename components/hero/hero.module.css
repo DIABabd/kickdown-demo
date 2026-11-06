@@ -1,139 +1,107 @@
-/* Hero – night section with the turning car (DESIGN.md 4.1).
-   Text and stage sit on the header grid (max 1200 px + --gutter). */
+/* Hero – full-screen, dark cinematic (DESIGN.md 4.1).
+   Layers: atmosphere → "KICKDOWN" lettering → transparent 3D canvas → text. */
 
-/* ---------- Layout ---------- */
+/* ---------- Frame ---------- */
 
 .hero {
+  /* Positioned + z-index: while scrolling out, the car layer may drive on
+     over the top of the next section (it fades out on the way). */
   position: relative;
-  background: var(--nacht);
-  color: var(--markierung);
-  overflow: clip;
+  z-index: 1;
+  /* Phones: header (56 + strip) and bottom bar (77) stay visible around it. */
+  height: max(600px, calc(100svh - 71px - 77px));
+  max-height: 940px;
+  background: var(--ink);
+  color: var(--text);
+  overflow-x: clip;
+  isolation: isolate;
 }
 
-.inner {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-areas:
-    "text"
-    "stage"
-    "cta";
-  max-width: 1200px;
-  margin-inline: auto;
-  padding: 40px var(--gutter) 48px;
+.atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    /* deep-blue air around the car */
+    radial-gradient(60% 46% at 50% 34%, rgb(18 46 104 / 0.55), transparent 70%),
+    /* the floor catching a little light */
+    radial-gradient(70% 22% at 50% 52%, rgb(120 150 200 / 0.08), transparent 70%),
+    /* vignette */
+    radial-gradient(120% 90% at 50% 40%, transparent 55%, rgb(0 0 0 / 0.6)),
+    var(--ink);
 }
 
-.text {
-  grid-area: text;
-  text-align: center;
-}
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 14px;
-  color: color-mix(in srgb, var(--markierung) 70%, var(--nacht));
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
-.eyebrow::before {
+/* Fade into the next section – no hard edge. */
+.hero::after {
   content: "";
-  display: none;
-  width: 18px;
-  height: 1.5px;
-  background: var(--kd-blau);
+  position: absolute;
+  inset: auto 0 0;
+  z-index: -1;
+  height: 22%;
+  background: linear-gradient(to bottom, transparent, var(--charcoal));
+  pointer-events: none;
 }
 
-.title {
-  margin: 0 auto;
-  max-width: 16ch;
+/* ---------- "KICKDOWN" background lettering ---------- */
+
+.word {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 13%;
+  margin: 0;
+  translate: -50% 0;
+  white-space: nowrap;
   font-family: var(--font-display);
-  font-weight: 600;
-  font-variation-settings: "wdth" 100;
-  font-size: 32px;
-  line-height: 1.1;
+  font-weight: 800;
+  font-variation-settings: "wdth" 112;
+  font-size: 13.6vw; /* the word is ~6.7 em wide → ~92 % of the screen */
+  line-height: 0.82;
   letter-spacing: -0.02em;
-  text-wrap: balance;
+  text-transform: uppercase;
+  color: transparent;
+  /* light band (for the opening sweep) over a quiet top-to-bottom fill */
+  background-image:
+    linear-gradient(100deg, transparent 42%, rgb(255 255 255 / 0.34) 50%, transparent 58%),
+    linear-gradient(to bottom, rgb(196 214 240 / 0.2), rgb(196 214 240 / 0.035) 88%);
+  background-size: 300% 100%, 100% 100%;
+  background-position: 0% 0, 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  user-select: none;
+  pointer-events: none;
 }
 
-.cta {
-  grid-area: cta;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 50px;
-  padding-inline: 24px 26px;
-  border-radius: 999px;
-  background: var(--kd-blau);
-  color: var(--nacht); /* 5.8 : 1 on --kd-blau */
-  font-family: var(--font-body);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  text-decoration: none;
-  box-shadow: 0 1px 0 rgb(255 255 255 / 0.25) inset, 0 10px 30px -14px rgb(0 156 220 / 0.7);
-  transition:
-    background-color 180ms ease-out,
-    box-shadow 180ms ease-out,
-    translate 180ms ease-out;
-}
-
-.button:hover {
-  background: #23b2ee;
-  box-shadow: 0 1px 0 rgb(255 255 255 / 0.3) inset, 0 14px 34px -14px rgb(0 156 220 / 0.85);
-}
-
-.phone {
-  color: color-mix(in srgb, var(--markierung) 72%, var(--nacht));
-  font-size: 15px;
-  letter-spacing: 0.02em;
-  text-decoration: none;
-}
-
-.phone:hover {
-  color: var(--markierung);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.button:focus-visible,
-.phone:focus-visible {
-  outline: 2px solid var(--kd-blau);
-  outline-offset: 3px;
-}
-
-/* ---------- Stage (still + 3D) ---------- */
+/* ---------- Stage: still image + 3D, covering the hero ---------- */
 
 .stage {
-  grid-area: stage;
-  position: relative;
-  width: 100%;
-  aspect-ratio: 5 / 4;
-  max-height: 54svh;
-  margin-block: 8px 4px;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  will-change: transform, opacity;
+}
+
+.stage[data-leaving] {
+  pointer-events: none;
+}
+
+/* the controls step back as soon as the hero starts to leave */
+.stage[data-scrolled] .hint,
+.stage[data-scrolled] .spinToggle {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .still,
 .live {
   position: absolute;
-  inset: 0;
 }
 
+/* The still sits where the 3D car will be (phones: upper part). */
 .still {
+  inset: 15% 3% auto;
+  height: 38%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,11 +114,9 @@
 }
 
 .live {
+  inset: 0;
   opacity: 0;
-  /* Blend the canvas edges into the night background. */
-  -webkit-mask-image: radial-gradient(ellipse 70% 64% at 50% 50%, #000 55%, transparent 100%);
-  mask-image: radial-gradient(ellipse 70% 64% at 50% 50%, #000 55%, transparent 100%);
-  transition: opacity 600ms ease-out;
+  transition: opacity 700ms ease-out;
 }
 
 .stage[data-ready] .still {
@@ -170,7 +136,6 @@
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
-  border-radius: 12px;
 }
 
 .interactive:active {
@@ -179,7 +144,7 @@
 
 .interactive:focus-visible {
   outline: 2px solid var(--kd-blau);
-  outline-offset: -2px;
+  outline-offset: -6px;
 }
 
 .canvas {
@@ -188,16 +153,17 @@
   inset: 0;
 }
 
+/* Phones: just under the car. */
 .hint {
   position: absolute;
   left: 50%;
-  bottom: 13%;
+  top: calc(34% + 24vw);
   translate: -50% 0;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   margin: 0;
-  color: color-mix(in srgb, var(--markierung) 66%, var(--nacht));
+  color: var(--text-3);
   font-family: var(--font-body);
   font-size: 13px;
   letter-spacing: 0.04em;
@@ -216,28 +182,30 @@
   opacity: 0;
 }
 
-/* Small, discreet pause/play control in the stage corner. */
+/* Small, discreet pause/play control. */
 .spinToggle {
   position: absolute;
-  right: 8px;
-  bottom: 10%;
-  z-index: 1;
+  right: var(--gutter);
+  top: calc(34% + 24vw - 8px);
+  z-index: 2;
   display: grid;
   place-items: center;
   width: 36px;
   height: 36px;
   padding: 0;
-  border: 1px solid rgb(255 255 255 / 0.18);
+  border: 1px solid var(--line-strong);
   border-radius: 50%;
-  background: rgb(12 24 36 / 0.6);
-  color: color-mix(in srgb, var(--markierung) 80%, var(--nacht));
+  background: rgb(5 7 10 / 0.55);
+  color: var(--text-2);
   cursor: pointer;
-  transition: border-color 160ms ease-out, color 160ms ease-out;
+  transition:
+    border-color 160ms ease-out,
+    color 160ms ease-out;
 }
 
 .spinToggle:hover {
-  border-color: rgb(255 255 255 / 0.45);
-  color: var(--markierung);
+  border-color: rgb(255 255 255 / 0.5);
+  color: var(--text);
 }
 
 .spinToggle:focus-visible {
@@ -245,15 +213,171 @@
   outline-offset: 2px;
 }
 
-/* ---------- Load motion: text appears once, nothing loops ---------- */
+/* ---------- Text ---------- */
+
+.content {
+  position: absolute;
+  z-index: 2;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 28px;
+  /* Clicks between the words go through to the car (drag anywhere). */
+  pointer-events: none;
+}
+
+.content a {
+  pointer-events: auto;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  color: var(--text-2);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: var(--tacho-rot);
+}
+
+.title {
+  margin: 0;
+  max-width: 12ch;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variation-settings: "wdth" 100;
+  font-size: clamp(40px, 11.5vw, 60px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  /* stays readable over the car at any angle */
+  text-shadow: 0 2px 30px rgb(0 0 0 / 0.55);
+}
+
+.sub {
+  margin: 14px 0 0;
+  color: var(--text-2);
+  font-size: 17px;
+  line-height: 1.45;
+  text-shadow: 0 1px 16px rgb(0 0 0 / 0.6);
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 22px;
+  margin-top: 24px;
+}
+
+.button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding-inline: 24px 28px;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    background-color 220ms ease-out,
+    color 220ms ease-out;
+}
+
+/* a thin light passes over the button on hover */
+.button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%);
+  translate: -120% 0;
+}
+
+.button:hover {
+  background: var(--kd-blau);
+  color: var(--ink); /* 6.3 : 1 */
+}
+
+.phone {
+  color: var(--text-2);
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 5px;
+  transition:
+    color 180ms ease-out,
+    text-decoration-color 180ms ease-out;
+}
+
+.phone:hover {
+  color: var(--text);
+  text-decoration-color: var(--kd-blau);
+}
+
+.button:focus-visible,
+.phone:focus-visible {
+  outline: 2px solid var(--kd-blau);
+  outline-offset: 3px;
+}
+
+/* ---------- Opening sequence (motion allowed only) ----------
+   The 3D car drives in and the light sweeps over its paint (car-scene.tsx);
+   the lettering settles and catches the same light; the text rises.
+   fill-mode "backwards": once done, GSAP's scroll styles take over. */
 
 @media (prefers-reduced-motion: no-preference) {
-  .text,
-  .cta {
-    animation: kd-rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  .word {
+    animation:
+      kd-word 1.6s var(--ease-out) backwards,
+      kd-sheen 2.6s cubic-bezier(0.45, 0, 0.2, 1) 0.5s backwards;
   }
-  .cta {
-    animation-delay: 120ms;
+  .content > * {
+    animation: kd-rise 900ms var(--ease-out) backwards;
+  }
+  .content > :nth-child(1) {
+    animation-delay: 0.55s;
+  }
+  /* the headline is the LCP element: it rises, but is never invisible */
+  .content > :nth-child(2) {
+    animation-name: kd-rise-solid;
+    animation-delay: 0s;
+  }
+  .content > :nth-child(3) {
+    animation-delay: 0.8s;
+  }
+  .content > :nth-child(4) {
+    animation-delay: 0.92s;
+  }
+  /* The still only appears if the 3D car hasn't arrived after 2.5 s
+     (or at once, below, when 3D isn't possible) – no image swap at load. */
+  .still {
+    animation: kd-fade-in 400ms ease-out 2.5s backwards;
+  }
+  .stage[data-fallback] .still {
+    animation: none;
+  }
+  .button:hover::after {
+    translate: 120% 0;
+    transition: translate 700ms var(--ease-out);
   }
 }
 
@@ -262,83 +386,121 @@
   .live,
   .hint,
   .button,
+  .phone,
   .spinToggle {
     transition: none;
+  }
+}
+
+@keyframes kd-word {
+  from {
+    opacity: 0;
+    scale: 1.08;
+    letter-spacing: 0.1em;
+  }
+}
+
+@keyframes kd-sheen {
+  from {
+    background-position: 100% 0, 0 0;
   }
 }
 
 @keyframes kd-rise {
   from {
     opacity: 0;
-    translate: 0 10px;
+    translate: 0 18px;
   }
-  to {
-    opacity: 1;
-    translate: 0 0;
+}
+
+@keyframes kd-rise-solid {
+  from {
+    translate: 0 14px;
+  }
+}
+
+@keyframes kd-fade-in {
+  from {
+    opacity: 0;
   }
 }
 
 /* ---------- Tablet ---------- */
 
 @media (min-width: 640px) {
-  .inner {
-    padding-block: 56px 64px;
+  .hero {
+    height: max(640px, calc(100svh - 71px));
   }
-  .stage {
-    aspect-ratio: 16 / 10;
+  .word {
+    top: 14%;
+  }
+  .still {
+    inset: 16% 6% auto;
+    height: 40%;
+  }
+  .hint {
+    top: calc(37% + 20vw);
+  }
+  .spinToggle {
+    top: calc(37% + 20vw - 8px);
+  }
+  .content {
+    bottom: 48px;
   }
   .title {
-    font-size: 40px;
+    font-size: 64px;
   }
 }
 
-/* ---------- Desktop: text left, stage right, same grid as the header ---------- */
+/* ---------- Desktop: text bottom-left, car centre-right ---------- */
 
 @media (min-width: 1024px) {
-  .inner {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    grid-template-rows: 1fr auto auto 1fr;
-    grid-template-areas:
-      ".    stage"
-      "text stage"
-      "cta  stage"
-      ".    stage";
-    column-gap: 24px;
-    min-height: min(680px, calc(100svh - 64px - var(--progress-h)));
-    padding-block: 24px;
+  .hero {
+    height: max(640px, calc(100svh - 79px));
+    max-height: 1080px;
   }
-
-  .text {
-    position: relative;
-    z-index: 1;
-    text-align: left;
+  .atmosphere {
+    background:
+      radial-gradient(46% 52% at 69% 44%, rgb(18 46 104 / 0.55), transparent 70%),
+      radial-gradient(42% 18% at 68% 60%, rgb(120 150 200 / 0.08), transparent 70%),
+      /* keeps the text column calm */
+      linear-gradient(to right, rgb(5 7 10 / 0.6), transparent 45%),
+      radial-gradient(120% 90% at 55% 45%, transparent 55%, rgb(0 0 0 / 0.65)),
+      var(--ink);
   }
-
-  .eyebrow::before {
-    display: block;
+  .word {
+    top: 47%;
+    font-size: min(13.2vw, 280px);
+    translate: -50% -100%;
   }
-
+  .still {
+    inset: 16% 1% 22% 38%;
+    height: auto;
+  }
+  .hint {
+    left: 68%;
+    top: auto;
+    bottom: 7%;
+  }
+  .spinToggle {
+    top: auto;
+    bottom: calc(7% - 8px);
+    right: max(var(--gutter), calc((100vw - 1200px) / 2 + var(--gutter)));
+  }
+  .content {
+    left: max(var(--gutter), calc((100vw - 1200px) / 2 + var(--gutter)));
+    right: auto;
+    bottom: 11%;
+    width: min(640px, 40vw);
+  }
   .title {
-    margin: 0;
-    max-width: 13ch;
-    font-size: clamp(42px, 3.6vw, 54px);
-    line-height: 1.06;
+    font-size: clamp(56px, 5.6vw, 92px);
+    line-height: 0.96;
   }
-
+  .sub {
+    font-size: 19px;
+  }
   .cta {
-    position: relative;
-    z-index: 1;
-    flex-direction: row;
-    justify-content: flex-start;
-    gap: 22px;
-    margin-top: 36px;
-  }
-
-  .stage {
-    aspect-ratio: auto;
-    max-height: none;
-    height: 100%;
-    min-height: 520px;
-    margin: 0;
+    margin-top: 32px;
   }
 }

@@ -1,6 +1,6 @@
 # Fahrschule Kickdown – Design Plan (Private Demo)
 
-Status: Konzept, noch nichts gebaut. Quelle aller Inhalte: `CONTENT.md` (Stand 2026-11-04) und die Bilder in `public/old-site/`.
+Status: gebaut (Private Demo, dunkles „cinematic" Design seit Nov 2026). Quelle aller Inhalte: `CONTENT.md` (Stand 2026-11-04) und die Bilder in `public/old-site/`.
 Sprache der Website: Deutsch (du-Form, wie bisher). Dieses Dokument ist auf Englisch, alle Beispiel-Texte für die Seite auf Deutsch.
 Fragen an den Inhaber: siehe `OWNER-QUESTIONS.md`.
 
@@ -13,6 +13,8 @@ Fragen an den Inhaber: siehe `OWNER-QUESTIONS.md`.
 The one bold thing is the **3D car + scroll journey on the start page**. Everything else stays calm, exact and easy to scan.
 
 **Update (post-launch revision):** the homepage is now short on purpose – hero, a short welcome, prices and times, and a way to get in touch. The one bold thing left is the **3D car**, which now keeps turning on its own instead of sitting still between drags. The scroll journey ("Deine Strecke zum Führerschein") and the simulated 4-step sign-up form were both removed; "Anmelden" is a real phone call now, not a form. Team and vehicles moved off the homepage onto their own full pages (`/team`, `/fahrzeuge`) – see 3.1 and 4.3/4.7 for what changed and why.
+
+**Update (Nov 2026) – dark cinematic redesign (current direction, supersedes "Tageslicht").** The whole site is now night: near-black, charcoal, graphite and deep blue, with Kickdown blue and a little red as the only accents. There are no full-width white sections any more – light fills only on small elements (the call buttons, the selected toggle segment, the white border of the blue address sign). Reading stays easy: body text is off-white (`--text`, 17 : 1) or soft grey (`--text-2`, 10 : 1) on charcoal. The homepage opens with a **full-screen hero**: the 3D car, very large on a transparent canvas, in front of a huge, quiet "KICKDOWN" lettering, with the headline "Dein Kickstart in Bremen" (new wording – owner question 39). On load the car drives in while a light sweeps across its paint; scrolling out of the hero (GSAP ScrollTrigger, scrubbed, never pinned) turns its nose toward the viewer, it grows and drives on into the next section. Sections fade between dark tones; the road-line seams became a hairline that catches one light sweep. Blocks below the fold rise in softly once. Details: 2.1 (tokens), 2.4 (motion), 4.1 (hero).
 
 ---
 
@@ -67,7 +69,23 @@ Taken from the logo (`logo/logo.png`, sampled) and the real fleet photos (`fahrz
 | `--grau` | `#5B6875` | – | Secondary text on light (≥ 5:1 on `--tag`). |
 | `--markierung` | `#FFFFFF` | Road marking | Text on night, the dashed lane line. |
 
-Rules
+**Dark cinematic system (current, Nov 2026)** – in `app/globals.css`. The day tokens above (`--tag`, `--tinte`, `--grau`, `--kd-blau-text`) are no longer used for surfaces or text.
+
+| Token | Value | Use |
+|---|---|---|
+| `--ink` | `#05070A` | Near-black: hero, page headers, header, footer |
+| `--charcoal` | `#0B0E12` | Main reading surface |
+| `--graphite` | `#12161C` | Raised bands (team, contact), photo mounts |
+| `--deep` | `#081226` | Deep-blue band (prices) |
+| `--surface` / `--surface-2` | `#151A21` / `#1B2129` | Small panels |
+| `--line` / `--line-strong` | white 8 % / 18 % | Hairlines, outlines |
+| `--text` / `--text-2` / `--text-3` | `#EEF1F4` / `#B9C2CC` / `#8F9AA6` | Headings and numbers / body and long text / small print (17 : 1 / 10 : 1 / 6.4 : 1 on charcoal) |
+
+- Accents: `--kd-blau` for links, focus rings, the number-plate bands and the active nav line (≥ 5.9 : 1 on the surfaces); `--tacho-rot` only as a hairline (hero small line, demo pill) and for the photo-approval frame.
+- Primary actions are light pills (`--text` on dark, `--ink` text) that turn Kickdown blue on hover.
+- Photos are shown complete and unchanged in a quiet passe-partout mount (graphite, 10 px, hairline) – no filter, mask or overlay on the pixels.
+
+Rules (first build, kept for reference)
 - Night sections: `--nacht` background, `--markierung` text, `--kd-blau` accents.
 - Day sections: `--tag` background (white `#FFFFFF` for tables on it), `--tinte` text, `--kd-blau-text` links.
 - Red appears at most once per screen.
@@ -116,10 +134,11 @@ GSAP + ScrollTrigger (installed), React Three Fiber + drei for 3D.
 
 - **One orchestrated moment on load:** the hero. Headlights fade on (0.6 s), the car turns once into a three-quarter view (1.2 s), headline appears.
 - **Update:** after that intro the car does not just sit still – it keeps turning on its own, slowly and continuously, like a turntable, with a very slight float (±1.2 cm, ~7 s period). A drag still rotates it freely at any time; on release it eases from the drag speed back into the same steady spin rather than snapping back to a fixed angle. A small, discreet **pause/play button** (bottom-right of the stage, "Drehung anhalten", `aria-pressed`) stops spin and float; dragging still works while paused (WCAG 2.2.2). (The scroll journey that used to be the one scroll-driven moment was removed – see 4.3.)
+- **Dark cinematic redesign (current):** opening – the car drives in from the left with turning wheels while the studio reflections rotate across its paint (a light sweep), then it turns into the three-quarter view (≈ 2.6 s); the "KICKDOWN" lettering settles and catches a sheen; the text rises. Scroll-out (GSAP ScrollTrigger, scrubbed 0.35 s, no pin, `components/hero/hero-motion.tsx`): the car turns toward the viewer, grows and drives forward while its layer lags behind the page and fades; the lettering drifts up, the text lifts away. Site-wide (`components/site/site-motion.tsx`): blocks below the fold fade and rise in once; section hairlines catch one light sweep; refined hovers (button light pass, panel lift, underline colour). All of it only with `prefers-reduced-motion: no-preference`.
 - Everything else is **response motion only**: switching a showroom car, hover/press feedback. 150–250 ms, `ease-out`.
 - No fade-and-slide-up on every section, no hover wiggles.
 - **Car scroll progress (every page, built):** the small top-down car from the former journey drives along a slim road strip at the bottom of the sticky header – forward when scrolling down, backward when scrolling up (3.3). With motion allowed it glides to its spot with a short exponential ease (no overshoot, no bounce); it never moves by itself.
-- `prefers-reduced-motion: reduce` → no intro, no auto-spin, no float and no pause button (nothing moves by itself, so there is nothing to pause); the 3D car is still shown and can still be dragged; instant transitions. The car progress indicator **stays visible** and its position is set directly from the scroll position (1:1, no smoothing, no automatic movement).
+- `prefers-reduced-motion: reduce` → same design and content, but no opening sequence, no scroll animation, no reveals or light sweeps; no intro, no auto-spin, no float and no pause button (nothing moves by itself, so there is nothing to pause); the 3D car is still shown and can still be dragged; instant transitions. The car progress indicator **stays visible** and its position is set directly from the scroll position (1:1, no smoothing, no automatic movement).
 
 ### 2.5 Photo sizes (sharpness rules)
 
@@ -182,7 +201,7 @@ Sections on `/`, in order (original plan):
 
 Reasons: a learner deciding whether to call shouldn't have to scroll past a full team roster and vehicle fleet first – those matter once someone is already interested, so they live on their own pages (`/team`, `/fahrzeuge`), reachable from the header nav and footer on every page, same as before. The scroll journey repeated facts the price/times sections already state and added a second big motion set-piece competing with the hero; its own text was never unique to it (see 4.3). The sign-up simulation added a whole flow for something that was never going to be real in the demo; a phone number is a clearer, more honest call to action (see 4.7).
 
-Section pattern: every section opens with just its H2 (`components/site/section-heading.tsx`) – no small eyebrow label above it any more, on this page or on any subpage (removed sitewide as an unnecessary repeated decoration). Night ↔ day switches are still marked by the same crisp seam – a short asphalt strip with a dashed white road line (`components/site/seam.tsx`) – but there are only two of them now (into Willkommen, out of Kontakt) instead of five.
+Section pattern: every section opens with just its H2 (`components/site/section-heading.tsx`) – no small eyebrow label above it any more, on this page or on any subpage (removed sitewide as an unnecessary repeated decoration). Night ↔ day switches are still marked by the same crisp seam – a short asphalt strip with a dashed white road line (`components/site/seam.tsx`) – but there are only two of them now (into Willkommen, out of Kontakt) instead of five. **Dark redesign:** the seam is now a fine hairline that catches one soft light sweep when it scrolls into view; the sections around it fade between dark tones (charcoal → deep blue → charcoal → graphite).
 
 No repetition: prices appear only in the price list; full office hours only in `#zeiten` (plus footer); other places link to `#zeiten`. Every fact still appears at least once, on the homepage or on a subpage.
 
@@ -245,14 +264,15 @@ PHONE (390 px)                       DESKTOP (1440 px)
 └──────────────────────┘
 ```
 
-- Layout (premium refinement): small line "Deine Fahrschule Kickdown in Bremen" (caps, 12 px) above one headline "Dein Weg zum Führerschein Klasse B" (no second giant headline), then "Jetzt anrufen" and the visible phone number. Desktop: text column 5/12 and stage 7/12 inside the same 1200 px grid as the header – no edge bleed, no empty left area on wide screens. Phone: text, car, button, centred.
-- Night studio built in Three.js: matte dark floor that fades into `--nacht` just behind the car (fog follows the camera distance), a soft light pool, one faint thin ring as the only accent, studio softbox reflections (local Lightformers, nothing downloaded) and a soft car-shaped contact shadow with darker tyre patches. The neon outlines, tick marks and wet-floor reflector of the first build were removed. No photo background.
+- Layout (dark cinematic redesign, current): a full-screen hero (phones: the space between header and bottom bar). Back to front: atmosphere gradients → the huge "KICKDOWN" lettering (Archivo 800, ~13 vw, white 3–20 %, decorative, `aria-hidden`) → the 3D car on a transparent canvas that covers the whole hero → the text. Text: small line "Deine Fahrschule Kickdown in Bremen" (old site), headline **"Dein Kickstart in Bremen"** (new, owner question 39), the old-site line "Dein Weg zum Führerschein Klasse B" (kept – old content is never removed), "Jetzt anrufen" and the visible phone number. Desktop: the car fills about half the width, centred at ~66 %, the text sits bottom-left on the header grid with a calm gradient behind it, so it stays readable at every car angle. Phones/tablets: the car spans ~92 % of the width in the upper part (in front of the lettering), the text and call button sit below it and are never covered at rest. The whole hero is the drag surface (links stay clickable).
+- Studio in Three.js: the canvas is transparent (no floor plane, no fog); a soft light pool and the car-shaped contact shadow sit on the "floor"; studio softbox reflections from local Lightformers (nothing downloaded). The camera uses a view offset to place the car per layout without changing the perspective.
+- Earlier (premium refinement): text column 5/12 + stage 7/12; matte floor with fog and one faint ring – replaced by the full-screen hero above.
 - Car (premium refinement): smoother plan view (nose and tail taper, tumblehome above the shoulder), deeper bevels, deep metallic lapis paint (#163a78) under a hard clear coat, gloss-black glasshouse, satin roof rails, rounded tyres with ten-spoke graphite rims and brake discs, dark headlight housings with a slim LED line, a dark red tail lens with a thin light line. The Kickdown logo file (unchanged) is printed straight onto the door paint – no white sign behind it – with the red/white stripe below. Still original: no brand, no real model, blank plates.
 - **The car:** a generic compact-SUV shape, free:
   - Option A (preferred): a **CC0** low-poly model (e.g. from Kenney, Quaternius or Poly Pizza CC0 assets) – licence and source written to `public/demo/3d/CREDITS.txt`.
   - Option B (fallback): built in code from Three.js primitives/extrusions (simple, stylised, fully ours).
   - Painted in fleet lapis blue `--lapis` with an abstract white-and-red side stripe in Kickdown colors. **No logos of any brand** (no car-maker badge, no grille emblem, no Kickdown logo on the car), and a **blank number plate**.
-- Interaction: the car turns on its own, slowly and continuously, from the moment the intro ends. Drag left/right overrides that and rotates around the vertical axis with light inertia; on release, instead of snapping back to the three-quarter rest pose, the car eases from whatever speed the drag left into the same steady auto-spin – it never just stops. On touch, `touch-action: pan-y`, so vertical swipes still scroll – only horizontal drags rotate. Keyboard: canvas focusable, ← → nudges the angle, Home eases back to the rest pose (then auto-spin resumes from there). Hint "Wischen zum Drehen" / "Ziehen zum Drehen", "Drehung anhalten" / "Drehung fortsetzen" (pause/play of the hero car), hidden after first use. `prefers-reduced-motion: reduce`: no intro, no auto-spin – the car sits at the rest pose and only turns while actively dragged.
+- Interaction: the car turns on its own, slowly and continuously, from the moment the intro ends. Drag left/right overrides that and rotates around the vertical axis with light inertia; on release, instead of snapping back to the three-quarter rest pose, the car eases from whatever speed the drag left into the same steady auto-spin – it never just stops. On touch, `touch-action: pan-y`, so vertical swipes still scroll – only horizontal drags rotate. Keyboard: canvas focusable, ← → nudges the angle, Home eases back to the rest pose (then auto-spin resumes from there). Hint "Wischen zum Drehen" / "Ziehen zum Drehen", hidden after first use; pause/play button "Drehung anhalten" / "Drehung fortsetzen". Hint and pause button step aside as soon as the visitor scrolls. `prefers-reduced-motion: reduce`: no intro, no auto-spin – the car sits at the rest pose and only turns while actively dragged.
 - **Fallback (simple image):** a still render of the same car on the same stage (`public/demo/hero-car.avif` + `.webp`, ~120 KB, made with Blender or a three.js screenshot – free) is the hero image and the LCP element. The canvas loads after the page is idle and replaces the still only if:
   - WebGL2 is available,
   - not `prefers-reduced-motion`,
@@ -634,7 +654,7 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 
 ### 5.13 New UI words (not content, owner should approve)
 
-"Private Demo", demo notices of the form and cookie dialog, "Jetzt anmelden", "Anmelden", "Anrufen", "Zeiten", "Preise ansehen", "Route planen", "Anmeldung simulieren", "Ändern", "Schritt X von 4", step names (Über dich, Wunsch, Zeiten, Prüfen), form labels and error texts, "Wischen zum Drehen" / "Ziehen zum Drehen", section titles "Deine Strecke zum Führerschein", "Wer neben dir sitzt", "Der Showroom", journey station names (Anmeldung, Theorie, Fahrstunden, Prüfung), filter "Alle / Automatik / Schaltung", header chip "Büro heute …" / "Nächste Bürozeit …", placeholder text for unbuilt pages, alt texts.
+"Private Demo", demo notices of the form and cookie dialog, "Jetzt anmelden", "Anmelden", "Anrufen", "Zeiten", "Preise ansehen", "Route planen", "Anmeldung simulieren", "Ändern", "Schritt X von 4", step names (Über dich, Wunsch, Zeiten, Prüfen), form labels and error texts, "Wischen zum Drehen" / "Ziehen zum Drehen", "Drehung anhalten" / "Drehung fortsetzen" (pause/play of the hero car), hero headline "Dein Kickstart in Bremen" and the decorative hero lettering "KICKDOWN", section titles "Deine Strecke zum Führerschein", "Wer neben dir sitzt", "Der Showroom", journey station names (Anmeldung, Theorie, Fahrstunden, Prüfung), filter "Alle / Automatik / Schaltung", header chip "Büro heute …" / "Nächste Bürozeit …", placeholder text for unbuilt pages, alt texts.
 
 Added while building (all listed in OWNER-QUESTIONS.md, question 35): "Menü" (header button), "Hauptnavigation", "Schnellzugriff", "Rechtliches" (names for screen readers), section labels above the headings ("Willkommen", "Anmeldung · Theorie · Fahrstunden · Prüfung", "Preise", "Zeiten", "Wer neben dir sitzt", "Der Showroom", "Kontakt", "Simulation"), times heading "Bürozeiten, Theoriezeiten und Praxiszeiten", journey links "Theoriezeiten" and "Unsere Fahrzeuge" (old-site headings used as link text), "Demo-Hinweis: Dieses Foto muss vor der Veröffentlichung freigegeben werden.", alt texts "Schaufenster der Fahrschule Kickdown" and "(Foto 1 von 3)", "Zur Startseite", "(öffnet in neuem Tab)", sign-up questions, hints and error texts, "Simulation beendet – es wurde keine Anmeldung gesendet.", "Simulation neu starten".
 

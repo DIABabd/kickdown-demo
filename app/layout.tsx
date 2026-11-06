@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Atkinson_Hyperlegible_Next } from "next/font/google";
+import { SiteMotion } from "@/components/site/site-motion";
 import { start } from "@/content/start";
 import "./globals.css";
 
@@ -30,13 +31,16 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0C1824",
+  themeColor: "#05070A",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="de" className={`${archivo.variable} ${atkinson.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <SiteMotion />
+      </body>
     </html>
   );
 }

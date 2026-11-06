@@ -4,29 +4,43 @@ import { SiteHeader } from "@/components/site/site-header";
 import { telefon } from "@/content/kontakt";
 import { start, ui } from "@/content/start";
 import { CarStill } from "./car-still";
+import { HeroMotion } from "./hero-motion";
 import { HeroStage } from "./hero-stage";
 import styles from "./hero.module.css";
 
 /**
- * Homepage hero: a small line, one calm headline and the call button on the
- * left; the turning 3D car on the right – both on the header's 1200 px grid.
- * Wording from CONTENT.md: "Deine Fahrschule Kickdown in Bremen" as the small
- * line, "Dein Weg zum Führerschein Klasse B" as the headline.
+ * Full-screen homepage hero (DESIGN.md 4.1, dark cinematic version).
+ *
+ * Layers, back to front:
+ *  1. atmosphere (CSS gradients)
+ *  2. "KICKDOWN" – huge, quiet background lettering (decorative, aria-hidden)
+ *  3. the 3D car on a transparent canvas covering the whole hero, so the
+ *     car stands in front of the lettering
+ *  4. the text: small line, headline, old-site line, call button + number
+ *
+ * Wording: "Deine Fahrschule Kickdown in Bremen" and "Dein Weg zum
+ * Führerschein Klasse B" are from the old site (CONTENT.md); the headline
+ * "Dein Kickstart in Bremen" is new and needs the owner's approval.
  */
 export function Hero({ children }: { children?: ReactNode }) {
   return (
     <>
       <SiteHeader page="start" />
       <main>
-        <section className={styles.hero} aria-labelledby={pageTitleId("start")}>
-          <div className={styles.inner}>
-            <div className={styles.text}>
-              <p className={styles.eyebrow}>{start.heroTitle}</p>
-              <h1 id={pageTitleId("start")} className={styles.title}>
-                {start.heroSubline.join(" ")}
-              </h1>
-            </div>
-            <HeroStage still={<CarStill />} />
+        <section className={styles.hero} aria-labelledby={pageTitleId("start")} data-hero>
+          <div className={styles.atmosphere} aria-hidden="true" />
+          <p className={styles.word} aria-hidden="true" data-hero-word>
+            {ui.heroWord}
+          </p>
+
+          <HeroStage still={<CarStill />} />
+
+          <div className={styles.content} data-hero-text>
+            <p className={styles.eyebrow}>{start.heroTitle}</p>
+            <h1 id={pageTitleId("start")} className={styles.title}>
+              {ui.heroHeadline}
+            </h1>
+            <p className={styles.sub}>{start.heroSubline.join(" ")}</p>
             <div className={styles.cta}>
               <a href={telefon.href} className={styles.button}>
                 <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
@@ -42,6 +56,8 @@ export function Hero({ children }: { children?: ReactNode }) {
               </a>
             </div>
           </div>
+
+          <HeroMotion />
         </section>
         {children}
       </main>

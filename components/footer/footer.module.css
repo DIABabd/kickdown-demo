@@ -174,3 +174,22 @@
     width: 200px;
   }
 }
+
+/* ========== Dark cinematic layer (Nov 2026) ========== */
+.footer {
+  background: var(--ink);
+  border-top-color: var(--line);
+}
+.h2 {
+  margin-bottom: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+}
+.textLink {
+  transition: text-decoration-color 200ms ease-out;
+}
+.bottom {
+  border-top-color: var(--line);
+}

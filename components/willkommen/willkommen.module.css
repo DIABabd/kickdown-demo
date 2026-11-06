@@ -3,8 +3,8 @@
 .willkommen {
   scroll-margin-top: 64px;
   padding-block: 72px;
-  background: var(--tag);
-  color: var(--tinte);
+  background: var(--charcoal);
+  color: var(--text);
 }
 
 .inner {
@@ -33,7 +33,7 @@
   display: block;
   width: 100%;
   height: auto;
-  outline: 1px solid rgb(18 26 34 / 0.12);
+  outline: 1px solid var(--line-strong);
   outline-offset: 0;
 }
 
@@ -43,11 +43,11 @@
   padding: 6px 10px;
   border: 1px solid var(--tacho-rot);
   border-radius: 6px;
-  background: #fff;
+  background: var(--surface);
   font-size: 14px;
   font-weight: 700;
   line-height: 1.4;
-  color: var(--tinte);
+  color: var(--text);
 }
 
 @media (min-width: 1024px) {
@@ -60,4 +60,27 @@
     gap: 48px;
     align-items: center;
   }
+}
+
+/* ========== Dark cinematic layer (Nov 2026) ========== */
+.willkommen {
+  background: var(--charcoal);
+}
+.text p {
+  color: var(--text-2);
+}
+.figure {
+  padding: 10px;
+  background: var(--graphite);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+.photo {
+  outline: none;
+}
+.approval {
+  margin: 12px 0 2px;
+  background: transparent;
+  border-color: rgb(230 58 60 / 0.6);
+  color: var(--text);
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, type RefObject } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useMemo, useRef, type RefObject } from "react";
 import * as THREE from "three";
 import { mergeVertices } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import {
@@ -109,6 +110,8 @@ function Wheel({ x, side, mats, geos }: { x: number; side: 1 | -1; mats: WheelMa
   const face = side * (WHEEL.width / 2 - 0.012);
   return (
     <group position={[x, WHEEL.y, z]}>
+      {/* the spokes turn with the car's travel (see CarModel) */}
+      <group name="wheelSpin">
       <mesh geometry={geos.tyre} material={mats.tyre} />
       <mesh geometry={geos.disc} material={mats.disc} position={[0, 0, side * -0.02]} />
       <group position={[0, 0, face]}>
@@ -124,6 +127,7 @@ function Wheel({ x, side, mats, geos }: { x: number; side: 1 | -1; mats: WheelMa
           />
         ))}
         <mesh geometry={geos.cap} material={mats.rim} position={[0, 0, side * 0.018]} />
+      </group>
       </group>
     </group>
   );
@@ -148,10 +152,27 @@ function wheelGeometries() {
 
 export function CarModel({
   headTarget,
+  travelRef,
 }: {
   /** Object the headlight spots aim at (lives inside the car group). */
   headTarget: RefObject<THREE.Object3D | null>;
+  /** Distance rolled (m): the wheels turn by travel / radius. */
+  travelRef?: RefObject<number>;
 }) {
+  const root = useRef<THREE.Group>(null);
+  const spinners = useRef<THREE.Object3D[] | null>(null);
+  useFrame(() => {
+    if (!travelRef || !root.current) return;
+    if (!spinners.current) {
+      const found: THREE.Object3D[] = [];
+      root.current.traverse((o) => {
+        if (o.name === "wheelSpin") found.push(o);
+      });
+      spinners.current = found;
+    }
+    const a = -travelRef.current / WHEEL.r;
+    for (const w of spinners.current) w.rotation.z = a;
+  });
   const geo = useMemo(() => {
     const body = extrude(BODY_OUTLINE, BODY.depth, BODY.bevel);
     sculpt(body, { nose: 0.2, tail: 0.14, shoulderY: 0.98, lean: 0.07, leanSpan: 0.22 });
@@ -221,7 +242,7 @@ export function CarModel({
   const sides = [1, -1] as const;
 
   return (
-    <group>
+    <group ref={root}>
       {/* Sculpted body and glasshouse */}
       <mesh geometry={geo.body} material={mats.paint}>
         {/* Kickdown logo + red/white graphic, printed onto the door paint */}
