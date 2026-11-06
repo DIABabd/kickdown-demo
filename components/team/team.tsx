@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { pageId } from "@/components/site/page-ids";
 import type { ReactNode } from "react";
 import { BayRow } from "@/components/showroom/bay-row";
 import { SectionHeading } from "@/components/site/section-heading";
@@ -29,7 +30,7 @@ const CLIP_ID = "kd-team-window";
  */
 export function Team({ labelledBy, children }: { labelledBy?: string; children?: ReactNode } = {}) {
   return (
-    <section id="team" className={styles.team} aria-labelledby={labelledBy ?? "team-title"}>
+    <section id="team" className={styles.team} aria-labelledby={labelledBy ?? pageId("team", "section-title")}>
       {/* Shared clip shape for all windows */}
       <svg className={styles.defs} aria-hidden="true" focusable="false">
         <clipPath id={CLIP_ID} clipPathUnits="objectBoundingBox">
@@ -38,7 +39,7 @@ export function Team({ labelledBy, children }: { labelledBy?: string; children?:
       </svg>
 
       <div className={styles.inner}>
-        {!labelledBy && <SectionHeading id="team-title" title={team.title} tone="night" />}
+        {!labelledBy && <SectionHeading id={pageId("team", "section-title")} title={team.title} tone="night" />}
 
         <BayRow className={styles.doors}>
           {team.members.map((m, i) => (

@@ -31,7 +31,7 @@
   margin: 0 0 12px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.2;
 }
 
@@ -44,8 +44,8 @@
   gap: 4px;
   margin-bottom: 16px;
   padding: 4px;
-  border: 2px solid var(--tinte);
-  border-radius: 8px;
+  border: 1px solid #c9d1d9;
+  border-radius: 14px;
   background: #fff;
 }
 
@@ -63,8 +63,8 @@
   align-items: center;
   justify-content: center;
   min-height: 48px;
-  padding: 6px 8px;
-  border-radius: 5px;
+  padding: 6px 10px;
+  border-radius: 10px;
   text-align: center;
   font-family: var(--font-display);
   font-weight: 700;
@@ -84,7 +84,7 @@
 }
 
 .toggle input:focus-visible + label {
-  outline: 3px solid var(--kd-blau);
+  outline: 2px solid var(--kd-blau);
   outline-offset: 2px;
 }
 
@@ -105,10 +105,11 @@
 
 .panel {
   position: relative;
-  padding: 20px 20px 16px 36px;
-  border: 2px solid var(--tinte);
-  border-radius: 16px;
+  padding: 24px 24px 16px 40px;
+  border: 1px solid #dde3e9;
+  border-radius: 14px;
   background: #fff;
+  box-shadow: 0 1px 2px rgb(18 26 34 / 0.04), 0 12px 32px -20px rgb(18 26 34 / 0.25);
   overflow: hidden;
 }
 
@@ -203,9 +204,10 @@
 }
 
 .block {
-  padding: 20px;
-  border: 2px solid var(--tinte);
-  border-radius: 8px;
+  padding: 24px;
+  border: 1px solid #dde3e9;
+  border-radius: 14px;
+  background: #fff;
   background: #fff;
 }
 
@@ -228,8 +230,8 @@
 .plate {
   display: inline-block;
   padding: 3px 10px;
-  border: 1.5px solid var(--tinte);
-  border-radius: 6px;
+  border: 1px solid var(--tinte);
+  border-radius: 5px;
   background: #fff;
   font-family: var(--font-display);
   font-weight: 600;
@@ -250,8 +252,8 @@
   gap: 8px;
   min-height: 48px;
   margin-top: 16px;
-  padding: 0 16px;
-  border-radius: 8px;
+  padding: 0 22px;
+  border-radius: 999px;
   background: var(--tinte);
   color: #fff;
   font-weight: 700;

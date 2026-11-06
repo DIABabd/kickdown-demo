@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { pageId } from "@/components/site/page-ids";
 import { SectionHeading } from "@/components/site/section-heading";
 import { fahrzeuge, getriebeOf, type Getriebe, type Vehicle } from "@/content/fahrzeuge";
 import { ui } from "@/content/start";
@@ -47,13 +48,13 @@ function groupIdentical(list: readonly Vehicle[]): Group[] {
 export function Showroom({ labelledBy }: { labelledBy?: string } = {}) {
   const groups = groupIdentical(fahrzeuge.list);
   const showFilter = groups.every((g) => g.getriebe !== null);
-  const label = labelledBy ?? "fahrzeuge-title";
+  const label = labelledBy ?? pageId("fahrzeuge", "showroom-title");
 
   return (
     <section id="fahrzeuge" className={labelledBy ? `${styles.showroom} ${styles.onPage}` : styles.showroom} aria-labelledby={label}>
       <div className={styles.inner}>
         {!labelledBy && (
-          <SectionHeading id="fahrzeuge-title" title={fahrzeuge.title} tone="night" />
+          <SectionHeading id={pageId("fahrzeuge", "showroom-title")} title={fahrzeuge.title} tone="night" />
         )}
 
         <div className={styles.room}>

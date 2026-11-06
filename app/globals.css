@@ -92,6 +92,6 @@ body {
 
 /* Visible focus everywhere (DESIGN.md 6) */
 :focus-visible {
-  outline: 3px solid var(--kd-blau);
-  outline-offset: 2px;
+  outline: 2px solid var(--kd-blau);
+  outline-offset: 3px;
 }

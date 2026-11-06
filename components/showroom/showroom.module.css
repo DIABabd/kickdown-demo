@@ -64,7 +64,7 @@
 }
 
 .filter input:focus-visible + label {
-  outline: 3px solid var(--kd-blau);
+  outline: 2px solid var(--kd-blau);
   outline-offset: 2px;
 }
 
@@ -109,7 +109,7 @@
 }
 
 .card:focus-visible {
-  outline: 3px solid var(--kd-blau);
+  outline: 2px solid var(--kd-blau);
   outline-offset: 2px;
 }
 
@@ -205,7 +205,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.2;
 }
 

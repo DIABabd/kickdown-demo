@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { pageTitleId } from "@/components/site/page-ids";
 import { PageShell } from "@/components/site/page-shell";
 import styles from "@/components/site/page.module.css";
 import { ausbildung as a } from "@/content/ausbildung";
@@ -15,8 +16,9 @@ export const metadata: Metadata = { title: a.metaTitle }; // A1
  */
 export default function AusbildungPage() {
   return (
-    <PageShell title={a.title} starts="day" ends="day">
-      <section className={styles.day} aria-labelledby="page-title">
+    <PageShell
+      page="ausbildungsfahrschule" title={a.title} starts="day" ends="day">
+      <section className={styles.day} aria-labelledby={pageTitleId("ausbildungsfahrschule")}>
         <div className={styles.inner}>
           <div className={styles.split}>
             <div className={styles.text}>

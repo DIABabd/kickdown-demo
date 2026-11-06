@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { InlineText } from "@/components/site/legal-body";
+import { pageId, pageTitleId } from "@/components/site/page-ids";
 import { PageShell } from "@/components/site/page-shell";
 import styles from "@/components/site/page.module.css";
 import { cookies } from "@/content/cookies";
@@ -16,15 +17,16 @@ export const metadata: Metadata = { title: `Fahrschule Kickdown | ${cookies.meta
  */
 export default function CookieEinstellungenPage() {
   return (
-    <PageShell title={cookies.metaTitle} starts="day" ends="day">
-      <section className={styles.day} aria-labelledby="page-title">
+    <PageShell
+      page="cookie-einstellungen" title={cookies.metaTitle} starts="day" ends="day">
+      <section className={styles.day} aria-labelledby={pageTitleId("cookie-einstellungen")}>
         <div className={styles.inner}>
           <p className={styles.note} role="note">
             {ui.cookieNote}
           </p>
 
-          <section className={styles.preview} aria-labelledby="cookie-banner-label">
-            <p id="cookie-banner-label" className={styles.previewLabel}>
+          <section className={styles.preview} aria-labelledby={pageId("cookie-einstellungen", "banner-label")}>
+            <p id={pageId("cookie-einstellungen", "banner-label")} className={styles.previewLabel}>
               {ui.cookieBannerLabel}
             </p>
             <p>

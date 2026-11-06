@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Component, useEffect, useState, type ErrorInfo, type ReactNode } from "react";
+import { ui } from "@/content/start";
 import styles from "./hero.module.css";
 
 // Three.js + R3F are only downloaded when the 3D scene is actually used.
@@ -78,6 +79,7 @@ export function HeroStage({ still }: { still: ReactNode }) {
   const [forced, setForced] = useState(false);
   const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [paused, setPaused] = useState(false);
   /** Why the still is shown – exposed as data-fallback for debugging. */
   const [reason, setReason] = useState<string | null>(null);
 
@@ -129,11 +131,35 @@ export function HeroStage({ still }: { still: ReactNode }) {
             <CarScene
               forced={forced}
               reducedMotion={reducedMotion}
+              paused={paused}
               onReady={() => setReady(true)}
               onFallback={(reason) => fallBack(reason)}
             />
           </SceneBoundary>
         </div>
+      )}
+      {/* Pause/play for the automatic turn (WCAG 2.2.2). Not shown with reduced
+          motion – nothing turns by itself then; dragging works either way. */}
+      {phase === "3d" && ready && !reducedMotion && (
+        <button
+          type="button"
+          className={styles.spinToggle}
+          onClick={() => setPaused((p) => !p)}
+          aria-pressed={paused}
+          aria-label={ui.spinPause}
+          title={paused ? ui.spinPlay : ui.spinPause}
+        >
+          {paused ? (
+            <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">
+              <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">
+              <rect x="6.5" y="5.5" width="3.6" height="13" rx="1" fill="currentColor" />
+              <rect x="13.9" y="5.5" width="3.6" height="13" rx="1" fill="currentColor" />
+            </svg>
+          )}
+        </button>
       )}
     </div>
   );

@@ -1,7 +1,11 @@
 import Image from "next/image";
+import { pageId } from "@/components/site/page-ids";
 import { SectionHeading } from "@/components/site/section-heading";
 import { start, ui } from "@/content/start";
 import styles from "./willkommen.module.css";
+
+/** Homepage-only section: its heading id is scoped to the start page. */
+const TITLE_ID = pageId("start", "willkommen-title");
 
 /**
  * Willkommen (#willkommen) – DESIGN.md 4.2, daylight section after the
@@ -16,10 +20,10 @@ import styles from "./willkommen.module.css";
 export function Willkommen() {
   const w = start.willkommen;
   return (
-    <section id="willkommen" className={styles.willkommen} aria-labelledby="willkommen-title">
+    <section id="willkommen" className={styles.willkommen} aria-labelledby={TITLE_ID}>
       <div className={styles.inner}>
         <div className={styles.text}>
-          <SectionHeading id="willkommen-title" title={w.title} tone="day" />
+          <SectionHeading id={TITLE_ID} title={w.title} tone="day" />
           {w.text.map((p) => (
             <p key={p.slice(0, 20)}>{p}</p>
           ))}

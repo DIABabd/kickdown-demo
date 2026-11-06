@@ -1,19 +1,74 @@
 /* Shared site parts: header + navigation, phone bottom bar, section
    heading pattern, night/day seam. */
 
-/* ---------- Header (moved from hero.module.css) ---------- */
+/* ---------- Header ---------- */
 
 .header {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: color-mix(in srgb, var(--nacht) 82%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid color-mix(in srgb, var(--asphalt) 70%, transparent);
-  transition:
-    background-color 200ms ease-out,
-    border-color 200ms ease-out;
+  background: color-mix(in srgb, var(--nacht) 86%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  transition: background-color 200ms ease-out;
+}
+
+/* Over daylight sections: solid, light, strong contrast (set by HeaderTheme). */
+.header[data-theme="day"] {
+  background: rgb(255 255 255 / 0.96);
+}
+
+.headerInner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1200px;
+  height: 56px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  border-radius: 6px;
+}
+
+.logo img {
+  width: 116px;
+  height: auto;
+}
+
+/* "Private Demo": small, but always clearly visible (red dot + outline). */
+.demoPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding-inline: 8px 9px;
+  border: 1px solid color-mix(in srgb, var(--tacho-rot) 75%, transparent);
+  border-radius: 999px;
+  color: var(--markierung);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.demoPill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tacho-rot);
+}
+
+.header[data-theme="day"] .demoPill {
+  color: var(--tinte); /* DESIGN.md 2.6: --tinte text on day */
 }
 
 /* ---------- Scroll progress: road strip at the header's bottom edge ----------
@@ -22,12 +77,28 @@
    height via html { scroll-padding-top } in globals.css. */
 
 .progress {
+  position: relative;
   height: var(--progress-h);
   background:
-    /* dashed centre line */
-    repeating-linear-gradient(to right, rgb(255 255 255 / 0.75) 0 14px, transparent 14px 26px) center / 100% 1.5px no-repeat,
-    var(--asphalt);
-  border-top: 1px solid color-mix(in srgb, var(--markierung) 22%, var(--asphalt));
+    /* fine dashed centre line */
+    repeating-linear-gradient(to right, rgb(255 255 255 / 0.4) 0 10px, transparent 10px 22px) center / 100% 1px no-repeat,
+    #1a232d;
+  border-top: 1px solid rgb(255 255 255 / 0.08);
+  border-bottom: 1px solid rgb(0 0 0 / 0.35);
+}
+
+/* The road already driven: a thin Kickdown-blue line behind the car. */
+.progressTrail {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  translate: 0 -50%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: linear-gradient(to right, color-mix(in srgb, var(--kd-blau) 25%, transparent), var(--kd-blau));
+  will-change: transform;
 }
 
 .progressTrack {
@@ -43,62 +114,13 @@
   height: 100%;
   aspect-ratio: 116 / 40;
   will-change: transform;
-  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--kd-blau) 70%, transparent));
+  filter: drop-shadow(0 1px 1.5px rgb(0 0 0 / 0.6));
 }
 
 .progressCar svg {
   display: block;
   width: 100%;
   height: 100%;
-}
-
-/* Over daylight sections: solid, light, strong contrast (set by HeaderTheme). */
-.header[data-theme="day"] {
-  background: #fff;
-  border-bottom-color: #d5dbe1;
-  box-shadow: 0 1px 0 rgb(18 26 34 / 0.04), 0 6px 18px -12px rgb(18 26 34 / 0.35);
-}
-
-.headerInner {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  max-width: 1200px;
-  height: 64px;
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  min-height: 48px;
-  border-radius: 8px;
-}
-
-.logo img {
-  width: 140px;
-  height: auto;
-}
-
-.demoPill {
-  display: inline-flex;
-  align-items: center;
-  height: 26px;
-  padding-inline: 10px;
-  border: 1px solid var(--tacho-rot);
-  border-radius: 999px;
-  color: var(--markierung);
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.header[data-theme="day"] .demoPill {
-  color: var(--tinte); /* DESIGN.md 2.6: --tinte text on day */
 }
 
 /* ---------- Navigation ---------- */
@@ -110,21 +132,27 @@
 .menuButton {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 12px;
-  border: 1px solid color-mix(in srgb, var(--markierung) 40%, transparent);
-  border-radius: 8px;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgb(255 255 255 / 0.22);
+  border-radius: 999px;
   background: transparent;
   color: var(--markierung);
   font: inherit;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
+  letter-spacing: 0.01em;
   cursor: pointer;
+  transition: border-color 160ms ease-out, background-color 160ms ease-out;
+}
+
+.menuButton:hover {
+  border-color: rgb(255 255 255 / 0.5);
 }
 
 .header[data-theme="day"] .menuButton {
-  border-color: var(--tinte);
+  border-color: rgb(18 26 34 / 0.35);
   color: var(--tinte);
 }
 
@@ -132,10 +160,11 @@
 .menuIcon::before,
 .menuIcon::after {
   display: block;
-  width: 16px;
-  height: 2px;
+  width: 14px;
+  height: 1.5px;
   border-radius: 1px;
   background: currentColor;
+  transition: rotate 180ms ease-out, top 180ms ease-out, background-color 120ms;
 }
 
 .menuIcon {
@@ -150,11 +179,11 @@
 }
 
 .menuIcon::before {
-  top: -5px;
+  top: -4.5px;
 }
 
 .menuIcon::after {
-  top: 5px;
+  top: 4.5px;
 }
 
 .menuIcon[data-open] {
@@ -179,59 +208,124 @@
   left: 0;
   right: 0;
   margin: 0;
-  padding: 8px var(--gutter) 16px;
+  padding: 12px var(--gutter) 20px;
   list-style: none;
   background: var(--nacht);
-  border-bottom: 1px solid var(--asphalt);
-  box-shadow: 0 12px 24px -12px rgb(0 0 0 / 0.6);
+  border-top: 1px solid rgb(255 255 255 / 0.06);
+  box-shadow: 0 24px 40px -20px rgb(0 0 0 / 0.7);
 }
 
 .navLinks[data-open] {
   display: grid;
-  gap: 4px;
 }
 
-.navLink,
-.navCta {
+.navLinks li + li .navLink {
+  border-top: 1px solid rgb(255 255 255 / 0.07);
+}
+
+.navLink {
+  position: relative;
   display: flex;
   align-items: center;
-  min-height: 48px;
-  padding: 0 12px;
-  border-radius: 8px;
-  color: var(--markierung);
+  min-height: 52px;
+  padding: 0 4px;
+  color: color-mix(in srgb, var(--markierung) 88%, var(--nacht));
+  font-size: 17px;
   font-weight: 700;
+  letter-spacing: 0.005em;
   text-decoration: none;
+  transition: color 160ms ease-out;
 }
 
 .navLink:hover {
-  background: rgb(255 255 255 / 0.08);
+  color: var(--markierung);
 }
 
-/* Current page */
+/* Current page: a short blue bar in front (phone panel) */
 .navLink[aria-current="page"] {
-  text-decoration: underline;
-  text-decoration-color: var(--kd-blau);
-  text-decoration-thickness: 3px;
-  text-underline-offset: 8px;
+  color: var(--markierung);
 }
 
-.navCta {
-  justify-content: center;
-  margin-top: 4px;
+.navLink[aria-current="page"]::before {
+  content: "";
+  width: 3px;
+  height: 18px;
+  margin-right: 12px;
+  border-radius: 2px;
   background: var(--kd-blau);
-  color: var(--nacht); /* 5.8 : 1 */
+}
+
+/* "Anrufen": outlined, with a phone icon – calm, not a default blue block */
+.navCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  margin-top: 12px;
+  padding: 0 18px;
+  border: 1px solid color-mix(in srgb, var(--kd-blau) 80%, transparent);
+  border-radius: 999px;
+  color: var(--markierung);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: background-color 160ms ease-out, border-color 160ms ease-out, color 160ms ease-out;
+}
+
+.navCta svg {
+  color: var(--kd-blau);
+  transition: color 160ms ease-out;
 }
 
 .navCta:hover {
-  background: #23b2ee;
+  background: var(--kd-blau);
+  border-color: var(--kd-blau);
+  color: var(--nacht); /* 5.8 : 1 */
+}
+
+.navCta:hover svg {
+  color: currentColor;
+}
+
+.header[data-theme="day"] .navCta {
+  border-color: var(--kd-blau-text);
+  color: var(--tinte);
+}
+
+.header[data-theme="day"] .navCta svg {
+  color: var(--kd-blau-text);
+}
+
+.header[data-theme="day"] .navCta:hover {
+  background: var(--kd-blau-text);
+  color: #fff; /* 5.4 : 1 */
+}
+
+.header[data-theme="day"] .navCta:hover svg {
+  color: #fff;
 }
 
 .menuButton:focus-visible,
 .navLink:focus-visible,
 .navCta:focus-visible,
 .logo:focus-visible {
-  outline: 3px solid var(--kd-blau);
-  outline-offset: 2px;
+  outline: 2px solid var(--kd-blau);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .navLinks[data-open] {
+    animation: kd-panel 220ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+}
+
+@keyframes kd-panel {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+  }
 }
 
 /* ---------- Phone bottom bar ---------- */
@@ -253,9 +347,10 @@
     height: var(--bar-h);
     padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
     box-sizing: content-box;
-    background: var(--nacht);
-    border-top: 1px solid var(--asphalt);
-    box-shadow: 0 -8px 20px -12px rgb(0 0 0 / 0.6);
+    background: color-mix(in srgb, var(--nacht) 94%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid rgb(255 255 255 / 0.08);
   }
 
   /* While a text field is focused (on-screen keyboard), the bar steps aside. */
@@ -269,18 +364,25 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 3px;
   min-height: 48px;
-  border-radius: 8px;
-  color: var(--markierung);
-  font-size: 14px;
+  border-radius: 10px;
+  color: color-mix(in srgb, var(--markierung) 88%, var(--nacht));
+  font-size: 13px;
   font-weight: 700;
+  letter-spacing: 0.01em;
   line-height: 1.1;
   text-decoration: none;
 }
 
+.barItem svg {
+  width: 20px;
+  height: 20px;
+}
+
 .barItem:hover {
-  background: rgb(255 255 255 / 0.08);
+  background: rgb(255 255 255 / 0.06);
+  color: var(--markierung);
 }
 
 .barPrimary {
@@ -290,11 +392,12 @@
 
 .barPrimary:hover {
   background: #23b2ee;
+  color: var(--nacht);
 }
 
 .barItem:focus-visible {
-  outline: 3px solid var(--kd-blau);
-  outline-offset: -3px;
+  outline: 2px solid var(--kd-blau);
+  outline-offset: -2px;
 }
 
 .barPrimary:focus-visible {
@@ -304,16 +407,17 @@
 /* ---------- Section heading pattern ---------- */
 
 .heading {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .h2 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-variation-settings: "wdth" 110;
-  font-size: 28px;
-  line-height: 1.1;
+  font-variation-settings: "wdth" 108;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
@@ -328,23 +432,30 @@
 /* ---------- Night ↔ day seam ---------- */
 
 .seam {
-  height: 28px;
+  height: 14px;
   background:
-    /* dashed centre line */
-    repeating-linear-gradient(to right, var(--markierung) 0 28px, transparent 28px 52px) center / 100% 2px no-repeat,
-    var(--asphalt);
-  border-block: 2px solid color-mix(in srgb, var(--markierung) 28%, var(--asphalt));
+    repeating-linear-gradient(to right, rgb(255 255 255 / 0.55) 0 22px, transparent 22px 44px) center / 100% 1.5px no-repeat,
+    #1a232d;
+  border-block: 1px solid rgb(255 255 255 / 0.08);
+}
+
+/* ---------- Tablet ---------- */
+
+@media (min-width: 640px) {
+  .h2 {
+    font-size: 30px;
+  }
 }
 
 /* ---------- Desktop ---------- */
 
 @media (min-width: 1024px) {
   .headerInner {
-    height: 72px;
+    height: 64px;
     gap: 16px;
   }
   .logo img {
-    width: 200px;
+    width: 148px;
   }
   .menuButton {
     display: none;
@@ -354,38 +465,82 @@
     position: static;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 30px;
     padding: 0;
     background: none;
     border: 0;
     box-shadow: none;
+    animation: none;
+  }
+  .navLinks li + li .navLink {
+    border-top: 0;
   }
   .navLink {
     min-height: 44px;
-    padding: 0 10px;
+    padding: 0;
+    font-size: 15px;
+    color: color-mix(in srgb, var(--markierung) 74%, var(--nacht));
+  }
+  /* Hover: a hairline grows in from the left; current page: it stays, in blue. */
+  .navLink::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 9px;
+    height: 1.5px;
+    border-radius: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .navLink:hover::after {
+    transform: scaleX(1);
+  }
+  .navLink[aria-current="page"]::before {
+    content: none;
+  }
+  .navLink[aria-current="page"]::after {
+    background: var(--kd-blau);
+    height: 2px;
+    transform: scaleX(1);
   }
   .navCta {
-    min-height: 44px;
-    margin: 0 0 0 8px;
-    padding: 0 18px;
+    min-height: 38px;
+    margin: 0 0 0 6px;
+    padding: 0 16px 0 14px;
+    font-size: 14px;
   }
   .header[data-theme="day"] .navLink {
+    color: color-mix(in srgb, var(--tinte) 78%, #fff);
+  }
+  .header[data-theme="day"] .navLink:hover,
+  .header[data-theme="day"] .navLink[aria-current="page"] {
     color: var(--tinte);
   }
-  .header[data-theme="day"] .navLink:hover {
-    background: var(--tag);
+  .header[data-theme="day"] .navLink[aria-current="page"]::after {
+    background: var(--kd-blau-text);
   }
   .heading {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
   }
   .h2 {
-    font-size: 43px;
-    line-height: 1.05;
+    font-size: 36px;
+    line-height: 1.1;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .header {
+  .header,
+  .navLink,
+  .navLink::after,
+  .navCta,
+  .navCta svg,
+  .menuButton,
+  .menuIcon,
+  .menuIcon::before,
+  .menuIcon::after {
     transition: none;
   }
 }

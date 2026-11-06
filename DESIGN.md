@@ -85,14 +85,16 @@ Rules
 - Our own UI labels are never set in all caps. Old-site text keeps its original capitalisation (rule 1.1) – the all-caps price labels are shown as written, in Archivo 700 at small size with normal letter-spacing so they don't shout.
 - Prices and times always use `font-variant-numeric: tabular-nums`.
 
-Type scale (ratio 1.25 on phones, 1.333 from 1024 px):
+Type scale (premium refinement, Nov 2026 – smaller and calmer than the first build; one step between phone, tablet ≥ 640 px and desktop ≥ 1024 px):
 
-| Step | Phone | Desktop | Font / weight |
-|---|---|---|---|
-| Hero | 44 px / 1.0 | 96 px / 0.95 | Archivo 800, wdth 125 |
-| H1 | 35 px / 1.05 | 64 px / 1.0 | Archivo 800, wdth 115 |
-| H2 | 28 px / 1.1 | 43 px / 1.05 | Archivo 700, wdth 110 |
-| H3 | 22 px / 1.2 | 28 px / 1.15 | Archivo 700, wdth 100 |
+| Step | Phone | Tablet | Desktop | Font / weight |
+|---|---|---|---|---|
+| Hero small line | 12 px caps, +0.1em | 12 px | 12 px | Atkinson 700 |
+| Hero headline | 32 px / 1.1 | 40 px | 42–54 px / 1.06 | Archivo 600, wdth 100, −0.02em |
+| H1 (subpages) | 32 px / 1.1 | 40 px | 48 px / 1.06 | Archivo 600, wdth 100, −0.02em |
+| H2 | 26 px / 1.15 | 30 px | 36 px / 1.1 | Archivo 700, wdth 108, −0.01em |
+| H3 | 19–20 px / 1.25 | – | 28 px / 1.15 | Archivo 700 |
+| Navigation | 17 px (menu panel) | – | 15 px | Atkinson 700 |
 | Price / time numbers | 28 px | 36 px | Archivo 700, tabular |
 | Body | 17 px / 1.55 | 18 px / 1.6 | Atkinson 400 |
 | Small | 15 px / 1.5 | 15 px / 1.5 | Atkinson 400 |
@@ -103,8 +105,9 @@ Text blocks max. 64 characters wide. Left aligned everywhere (centered only for 
 
 - 4 px base. Scale: 4 · 8 · 12 · 16 · 24 · 32 · 48 · 72 · 112.
 - Phone gutter 20 px; tablet 32 px; desktop 48 px. Content max 1200 px, text max 64ch.
-- Section padding: 72 px phone, 112 px desktop.
-- Radius has meaning: **0** for photos cut into shapes (windows, showroom), **8 px** for inputs and buttons, **16 px** only for the price panels.
+- Section padding: 64–72 px phone, 104–112 px desktop. Subpage header 56 px / 96 px.
+- Radius has meaning: **0** for photos (complete, no mask), **pill** for buttons and links that act like buttons (Anrufen, Route planen, Instagram, jump links), **14 px** for cards and price panels, **10–14 px** for the segmented price toggle.
+- Borders are hairlines (1 px, light grey on day, white at 6–18 % on night) with a soft shadow on day cards; no 2–3 px dark outlines. Focus rings: 2 px `--kd-blau`, 3 px offset.
 - Tap targets ≥ 48 px. Phone layout first, then widen at 640 / 1024 / 1440.
 
 ### 2.4 Motion
@@ -112,11 +115,11 @@ Text blocks max. 64 characters wide. Left aligned everywhere (centered only for 
 GSAP + ScrollTrigger (installed), React Three Fiber + drei for 3D.
 
 - **One orchestrated moment on load:** the hero. Headlights fade on (0.6 s), the car turns once into a three-quarter view (1.2 s), headline appears.
-- **Update:** after that intro the car does not just sit still – it keeps turning on its own, slowly and continuously, like a turntable. A drag still rotates it freely; on release it eases back into the same steady spin rather than snapping back to a fixed angle. (The scroll journey that used to be the one scroll-driven moment was removed – see 4.3.)
+- **Update:** after that intro the car does not just sit still – it keeps turning on its own, slowly and continuously, like a turntable, with a very slight float (±1.2 cm, ~7 s period). A drag still rotates it freely at any time; on release it eases from the drag speed back into the same steady spin rather than snapping back to a fixed angle. A small, discreet **pause/play button** (bottom-right of the stage, "Drehung anhalten", `aria-pressed`) stops spin and float; dragging still works while paused (WCAG 2.2.2). (The scroll journey that used to be the one scroll-driven moment was removed – see 4.3.)
 - Everything else is **response motion only**: switching a showroom car, hover/press feedback. 150–250 ms, `ease-out`.
 - No fade-and-slide-up on every section, no hover wiggles.
 - **Car scroll progress (every page, built):** the small top-down car from the former journey drives along a slim road strip at the bottom of the sticky header – forward when scrolling down, backward when scrolling up (3.3). With motion allowed it glides to its spot with a short exponential ease (no overshoot, no bounce); it never moves by itself.
-- `prefers-reduced-motion: reduce` → no intro, no auto-spin (the car can still be dragged, but never moves by itself), still image instead of 3D, instant transitions. The car progress indicator **stays visible** and its position is set directly from the scroll position (1:1, no smoothing, no automatic movement).
+- `prefers-reduced-motion: reduce` → no intro, no auto-spin, no float and no pause button (nothing moves by itself, so there is nothing to pause); the 3D car is still shown and can still be dragged; instant transitions. The car progress indicator **stays visible** and its position is set directly from the scroll position (1:1, no smoothing, no automatic movement).
 
 ### 2.5 Photo sizes (sharpness rules)
 
@@ -210,9 +213,9 @@ Old addresses are redirected (built, `redirects()` in `next.config.ts`, temporar
 
 ### 3.3 Global elements
 
-- Header (built): logo · "Private Demo" · Unterricht · Preise · Fahrzeuge · Team · Kontakt · button "Anrufen" (a real `tel:` link; it was "Anmelden" → `#anmeldung` before the sign-up simulation was removed). Below 1024 px the links open from a "Menü" button (Escape closes, focus returns to the button). Not built: the office-time status chip.
+- Header (built, premium refinement): 56 px phone / 64 px desktop, on the 1200 px grid; logo 116 / 148 px; links 15 px with 30 px gaps, a hairline underline that grows in on hover and stays (in blue, 2 px) for the current page; "Private Demo" as a 12 px pill with a red dot; "Anrufen" as an outlined pill with a phone icon that fills blue on hover. The phone menu panel has 17 px links with hairline separators, a blue bar in front of the current page and a short fade-in (none with reduced motion). Contents: logo · "Private Demo" · Unterricht · Preise · Fahrzeuge · Team · Kontakt · button "Anrufen" (a real `tel:` link; it was "Anmelden" → `#anmeldung` before the sign-up simulation was removed). Below 1024 px the links open from a "Menü" button (Escape closes, focus returns to the button). Not built: the office-time status chip.
 - Phone (built, below 640 px): compact header (logo + demo pill + "Menü") and a **fixed bottom bar**: "Anrufen" (tel:+4917670386440, the visible number) · "Zeiten" (link to `#zeiten`; no sheet) · "Kontakt" (link to `/kontakt`; was "Anmelden" before the sign-up simulation was removed). The page reserves the bar's height at the bottom and in scroll-padding, so the bar never covers content or the footer; while a text field is focused (on-screen keyboard) the bar is hidden.
-- Car scroll progress (built, all pages and widths): a 14 px asphalt strip with a dashed line inside the sticky header, below logo, label and menu, so it never covers page text, buttons, the header controls or the phone bottom bar. The car (the journey's top-down car, turned to drive right) shows how far the page is scrolled. Decorative (`aria-hidden`). Anchor jumps account for the extra height via `html { scroll-padding-top }`. Code: `components/site/scroll-progress.tsx`.
+- Car scroll progress (built, all pages and widths): a 14 px dark road strip with a fine dashed line inside the sticky header; a thin Kickdown-blue line shows the road already driven, ending under the car; below logo, label and menu, so it never covers page text, buttons, the header controls or the phone bottom bar. The car (the journey's top-down car, turned to drive right) shows how far the page is scrolled. Decorative (`aria-hidden`). Anchor jumps account for the extra height via `html { scroll-padding-top }`. Code: `components/site/scroll-progress.tsx`.
 - Footer: logo, address (map link), phone, Infos (Team, Unterricht, Fahrzeuge, Preise), Bürozeiten, Theoriezeiten, Instagram (icon + text link), Kontakt · Impressum · Datenschutzerklärung · Cookie-Einstellungen, copyright line as on the old site.
 
 ---
@@ -242,12 +245,14 @@ PHONE (390 px)                       DESKTOP (1440 px)
 └──────────────────────┘
 ```
 
-- Night scene built in Three.js: `--nacht` fog, a low round platform with a soft `--kd-blau` rim light, reflective floor like wet asphalt. No photo background.
+- Layout (premium refinement): small line "Deine Fahrschule Kickdown in Bremen" (caps, 12 px) above one headline "Dein Weg zum Führerschein Klasse B" (no second giant headline), then "Jetzt anrufen" and the visible phone number. Desktop: text column 5/12 and stage 7/12 inside the same 1200 px grid as the header – no edge bleed, no empty left area on wide screens. Phone: text, car, button, centred.
+- Night studio built in Three.js: matte dark floor that fades into `--nacht` just behind the car (fog follows the camera distance), a soft light pool, one faint thin ring as the only accent, studio softbox reflections (local Lightformers, nothing downloaded) and a soft car-shaped contact shadow with darker tyre patches. The neon outlines, tick marks and wet-floor reflector of the first build were removed. No photo background.
+- Car (premium refinement): smoother plan view (nose and tail taper, tumblehome above the shoulder), deeper bevels, deep metallic lapis paint (#163a78) under a hard clear coat, gloss-black glasshouse, satin roof rails, rounded tyres with ten-spoke graphite rims and brake discs, dark headlight housings with a slim LED line, a dark red tail lens with a thin light line. The Kickdown logo file (unchanged) is printed straight onto the door paint – no white sign behind it – with the red/white stripe below. Still original: no brand, no real model, blank plates.
 - **The car:** a generic compact-SUV shape, free:
   - Option A (preferred): a **CC0** low-poly model (e.g. from Kenney, Quaternius or Poly Pizza CC0 assets) – licence and source written to `public/demo/3d/CREDITS.txt`.
   - Option B (fallback): built in code from Three.js primitives/extrusions (simple, stylised, fully ours).
   - Painted in fleet lapis blue `--lapis` with an abstract white-and-red side stripe in Kickdown colors. **No logos of any brand** (no car-maker badge, no grille emblem, no Kickdown logo on the car), and a **blank number plate**.
-- Interaction: the car turns on its own, slowly and continuously, from the moment the intro ends. Drag left/right overrides that and rotates around the vertical axis with light inertia; on release, instead of snapping back to the three-quarter rest pose, the car eases from whatever speed the drag left into the same steady auto-spin – it never just stops. On touch, `touch-action: pan-y`, so vertical swipes still scroll – only horizontal drags rotate. Keyboard: canvas focusable, ← → nudges the angle, Home eases back to the rest pose (then auto-spin resumes from there). Hint "Wischen zum Drehen" / "Ziehen zum Drehen", hidden after first use. `prefers-reduced-motion: reduce`: no intro, no auto-spin – the car sits at the rest pose and only turns while actively dragged.
+- Interaction: the car turns on its own, slowly and continuously, from the moment the intro ends. Drag left/right overrides that and rotates around the vertical axis with light inertia; on release, instead of snapping back to the three-quarter rest pose, the car eases from whatever speed the drag left into the same steady auto-spin – it never just stops. On touch, `touch-action: pan-y`, so vertical swipes still scroll – only horizontal drags rotate. Keyboard: canvas focusable, ← → nudges the angle, Home eases back to the rest pose (then auto-spin resumes from there). Hint "Wischen zum Drehen" / "Ziehen zum Drehen", "Drehung anhalten" / "Drehung fortsetzen" (pause/play of the hero car), hidden after first use. `prefers-reduced-motion: reduce`: no intro, no auto-spin – the car sits at the rest pose and only turns while actively dragged.
 - **Fallback (simple image):** a still render of the same car on the same stage (`public/demo/hero-car.avif` + `.webp`, ~120 KB, made with Blender or a three.js screenshot – free) is the hero image and the LCP element. The canvas loads after the page is idle and replaces the still only if:
   - WebGL2 is available,
   - not `prefers-reduced-motion`,
@@ -642,6 +647,7 @@ Added while building (all listed in OWNER-QUESTIONS.md, question 35): "Menü" (h
 - Next.js 16.4 in this repo has breaking changes – read `node_modules/next/dist/docs/` before writing code (see `AGENTS.md`).
 - Content in typed data files (`content/preise.ts`, `content/zeiten.ts`, `content/team.ts`, `content/fahrzeuge.ts`, `content/kontakt.ts`), copied word for word from CONTENT.md, so every fact exists once.
 - 3D: `@react-three/fiber` + `drei` via `next/dynamic` (`ssr: false`) after idle; hero still is the server-rendered LCP.
-- Accessibility floor: visible focus ring (`--kd-blau`, 3 px), skip link, landmarks, real tables, form labels and error summaries, `lang="de"`, reduced motion respected.
+- **Page-scoped ids (built):** with `cacheComponents`, Next keeps the previously visited page in the DOM (hidden) after a client navigation. Every heading/label id that `aria-labelledby`, `aria-controls` or `<label for>` points to is therefore built from the page key (`components/site/page-ids.ts`: `pageId(page, name)`, `pageTitleId(page)`), e.g. `team-title`, `start-preise-title`, `preise-preisliste`. React `useId()` is not enough – it yields the same ids on every route. Anchor targets (`#zeiten`, `#theorie`, `#praxis` …) stay unscoped so links keep working. `PageShell`, `SiteHeader`, `Footer` and `Preise` take a `page` prop.
+- Accessibility floor: visible focus ring (`--kd-blau`, 2 px, 3 px offset), skip link, landmarks, real tables, form labels and error summaries, `lang="de"`, reduced motion respected.
 - Performance targets on a mid-range phone over 4G: LCP < 2.5 s, CLS < 0.05, no 3D download when the device check fails.
 - Demo check before showing it to anyone: network tab shows no third-party requests and no request on form submit; Application tab shows no cookies or storage; `noindex` present in HTML and response headers; "Private Demo" visible on every route.

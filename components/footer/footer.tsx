@@ -4,6 +4,7 @@ import { CameraIcon } from "@/components/kontakt/kontakt";
 import { adresse, footer, instagram, kontaktUi, telefon } from "@/content/kontakt";
 import { logoAlt, ui } from "@/content/start";
 import { buerozeiten, theoriezeiten } from "@/content/zeiten";
+import { pageId, type PageKey } from "@/components/site/page-ids";
 import styles from "./footer.module.css";
 
 /**
@@ -12,7 +13,8 @@ import styles from "./footer.module.css";
  * placeholder (DESIGN.md 3.1). Outbound links (map, Instagram, KS Design)
  * are plain links: nothing is loaded from those sites.
  */
-export function Footer() {
+export function Footer({ page }: { page: PageKey }) {
+  const infosId = pageId(page, "footer-infos");
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
@@ -38,8 +40,8 @@ export function Footer() {
           </a>
         </div>
 
-        <nav className={styles.col} aria-labelledby="footer-infos">
-          <h2 id="footer-infos" className={styles.h2}>
+        <nav className={styles.col} aria-labelledby={infosId}>
+          <h2 id={infosId} className={styles.h2}>
             {footer.infos.title}
           </h2>
           <ul className={styles.list}>

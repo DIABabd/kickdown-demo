@@ -68,4 +68,6 @@ Diese Punkte betreffen Wünsche, kleine Korrekturen oder Dinge, die erst für ei
 33. **Theorie- und Praxisunterricht zu einer Seite „Unterricht" zusammengelegt – in Ordnung?** Kein Text geht verloren.
 34. **Die drei gleichen VW T-Roc (Automatik) auf einer Karte mit drei Fotos statt drei einzelnen Karten – in Ordnung?**
 35. **Text bei „Fahrstunden" ist der alte Text von „Praktischer Unterricht" – in Ordnung?** (Damit wiederholt sich der Willkommens-Text nicht.)
-36. **Neue, kurze UI-Texte freigeben?** Für Knöpfe, Navigation und Hinweise mussten wir ein paar neue Wörter ergänzen (z. B. „Jetzt anmelden", „Anrufen", „Route planen", „Menü", „Zeiten", „Simulation beendet – es wurde keine Anmeldung gesendet."). Die vollständige Liste steht in DESIGN.md, Abschnitt 5.13.
+36. **Neue, kurze UI-Texte freigeben?** Für Knöpfe, Navigation und Hinweise mussten wir ein paar neue Wörter ergänzen (z. B. „Jetzt anmelden", „Anrufen", „Route planen", „Menü", „Zeiten", „Simulation beendet – es wurde keine Anmeldung gesendet.", „Drehung anhalten" / „Drehung fortsetzen" für den Pause-Knopf am 3D-Auto). Die vollständige Liste steht in DESIGN.md, Abschnitt 5.13.
+37. **Startseite: „Deine Fahrschule Kickdown in Bremen" als kleine Zeile, „Dein Weg zum Führerschein Klasse B" als Hauptüberschrift – in Ordnung?** Beide Texte sind von der alten Seite, nur die Gewichtung ist neu. Daneben steht jetzt auch die sichtbare Telefonnummer.
+38. **Logo auf dem 3D-Auto direkt auf dem Lack (ohne weißes Schild) – in Ordnung?** Die Logodatei selbst ist unverändert.

@@ -1,98 +1,119 @@
-/* Hero – night section with the car on the turntable (DESIGN.md 4.1). */
-
-/* The site header lives in components/site/site.module.css. */
+/* Hero – night section with the turning car (DESIGN.md 4.1).
+   Text and stage sit on the header grid (max 1200 px + --gutter). */
 
 /* ---------- Layout ---------- */
 
 .hero {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-areas:
-    "title"
-    "stage"
-    "sub"
-    "cta";
-  min-height: calc(100svh - 64px);
-  align-content: center;
-  padding-block: 24px 48px;
   background: var(--nacht);
   color: var(--markierung);
   overflow: clip;
 }
 
-.title,
-.sub,
-.cta {
-  padding-inline: var(--gutter);
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "text"
+    "stage"
+    "cta";
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 40px var(--gutter) 48px;
+}
+
+.text {
+  grid-area: text;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  color: color-mix(in srgb, var(--markierung) 70%, var(--nacht));
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  display: none;
+  width: 18px;
+  height: 1.5px;
+  background: var(--kd-blau);
 }
 
 .title {
-  grid-area: title;
-  margin: 0;
+  margin: 0 auto;
+  max-width: 16ch;
   font-family: var(--font-display);
-  font-weight: 800;
-  font-variation-settings: "wdth" 118;
-  font-size: clamp(2.5rem, 11vw, 2.75rem); /* 44px on phones */
-  line-height: 1;
-  letter-spacing: -0.01em;
-  text-align: center;
-  text-wrap: balance;
-}
-
-.sub {
-  grid-area: sub;
-  margin: 8px 0 0;
-  text-align: center;
-}
-
-.subTop {
-  display: block;
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.5;
-  color: color-mix(in srgb, var(--markierung) 78%, var(--nacht));
-}
-
-.subBottom {
-  display: block;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-variation-settings: "wdth" 110;
-  font-size: 28px;
+  font-weight: 600;
+  font-variation-settings: "wdth" 100;
+  font-size: 32px;
   line-height: 1.1;
-  color: var(--kd-blau);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .cta {
   grid-area: cta;
   display: flex;
-  justify-content: center;
-  margin-top: 24px;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
 }
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 52px;
-  padding-inline: 28px;
-  border-radius: 8px;
+  gap: 10px;
+  min-height: 50px;
+  padding-inline: 24px 26px;
+  border-radius: 999px;
   background: var(--kd-blau);
   color: var(--nacht); /* 5.8 : 1 on --kd-blau */
   font-family: var(--font-body);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
+  letter-spacing: 0.01em;
   text-decoration: none;
-  box-shadow: 0 0 0 0 color-mix(in srgb, var(--kd-blau) 0%, transparent);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.25) inset, 0 10px 30px -14px rgb(0 156 220 / 0.7);
   transition:
     background-color 180ms ease-out,
-    box-shadow 180ms ease-out;
+    box-shadow 180ms ease-out,
+    translate 180ms ease-out;
 }
 
 .button:hover {
   background: #23b2ee;
-  box-shadow: 0 6px 28px -6px color-mix(in srgb, var(--kd-blau) 70%, transparent);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.3) inset, 0 14px 34px -14px rgb(0 156 220 / 0.85);
+}
+
+.phone {
+  color: color-mix(in srgb, var(--markierung) 72%, var(--nacht));
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.phone:hover {
+  color: var(--markierung);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.button:focus-visible,
+.phone:focus-visible {
+  outline: 2px solid var(--kd-blau);
+  outline-offset: 3px;
 }
 
 /* ---------- Stage (still + 3D) ---------- */
@@ -102,8 +123,8 @@
   position: relative;
   width: 100%;
   aspect-ratio: 5 / 4;
-  max-height: 58svh;
-  margin-top: 8px;
+  max-height: 54svh;
+  margin-block: 8px 4px;
 }
 
 .still,
@@ -127,9 +148,9 @@
 .live {
   opacity: 0;
   /* Blend the canvas edges into the night background. */
-  -webkit-mask-image: radial-gradient(ellipse 62% 58% at 55% 52%, #000 62%, transparent 100%);
-  mask-image: radial-gradient(ellipse 62% 58% at 55% 52%, #000 62%, transparent 100%);
-  transition: opacity 450ms ease-out;
+  -webkit-mask-image: radial-gradient(ellipse 70% 64% at 50% 50%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 64% at 50% 50%, #000 55%, transparent 100%);
+  transition: opacity 600ms ease-out;
 }
 
 .stage[data-ready] .still {
@@ -149,7 +170,7 @@
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .interactive:active {
@@ -157,8 +178,8 @@
 }
 
 .interactive:focus-visible {
-  outline: 3px solid var(--kd-blau);
-  outline-offset: -3px;
+  outline: 2px solid var(--kd-blau);
+  outline-offset: -2px;
 }
 
 .canvas {
@@ -170,41 +191,69 @@
 .hint {
   position: absolute;
   left: 50%;
-  bottom: 6%;
+  bottom: 13%;
   translate: -50% 0;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   margin: 0;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--nacht) 70%, transparent);
-  color: color-mix(in srgb, var(--markierung) 85%, var(--nacht));
+  color: color-mix(in srgb, var(--markierung) 66%, var(--nacht));
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
   line-height: 1.5;
   white-space: nowrap;
   pointer-events: none;
   transition: opacity 250ms ease-out;
 }
 
+.hint svg {
+  width: 15px;
+  height: 15px;
+}
+
 .hint[data-hidden] {
   opacity: 0;
 }
 
-/* ---------- Load motion: text appears, nothing loops ---------- */
+/* Small, discreet pause/play control in the stage corner. */
+.spinToggle {
+  position: absolute;
+  right: 8px;
+  bottom: 10%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: 50%;
+  background: rgb(12 24 36 / 0.6);
+  color: color-mix(in srgb, var(--markierung) 80%, var(--nacht));
+  cursor: pointer;
+  transition: border-color 160ms ease-out, color 160ms ease-out;
+}
+
+.spinToggle:hover {
+  border-color: rgb(255 255 255 / 0.45);
+  color: var(--markierung);
+}
+
+.spinToggle:focus-visible {
+  outline: 2px solid var(--kd-blau);
+  outline-offset: 2px;
+}
+
+/* ---------- Load motion: text appears once, nothing loops ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
-  .title,
-  .sub,
+  .text,
   .cta {
-    animation: kd-rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  }
-  .sub {
-    animation-delay: 90ms;
+    animation: kd-rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
   .cta {
-    animation-delay: 160ms;
+    animation-delay: 120ms;
   }
 }
 
@@ -212,7 +261,8 @@
   .still,
   .live,
   .hint,
-  .button {
+  .button,
+  .spinToggle {
     transition: none;
   }
 }
@@ -220,7 +270,7 @@
 @keyframes kd-rise {
   from {
     opacity: 0;
-    translate: 0 12px;
+    translate: 0 10px;
   }
   to {
     opacity: 1;
@@ -231,64 +281,56 @@
 /* ---------- Tablet ---------- */
 
 @media (min-width: 640px) {
+  .inner {
+    padding-block: 56px 64px;
+  }
   .stage {
     aspect-ratio: 16 / 10;
   }
   .title {
-    font-size: 56px;
+    font-size: 40px;
   }
 }
 
-/* ---------- Desktop: text left, stage right and bleeding to the edge ---------- */
+/* ---------- Desktop: text left, stage right, same grid as the header ---------- */
 
 @media (min-width: 1024px) {
-  .hero {
-    min-height: calc(100svh - 72px);
-    grid-template-columns:
-      max(var(--gutter), calc((100vw - 1200px) / 2))
-      minmax(0, 520px)
-      minmax(0, 1fr);
-    grid-template-rows: 1fr auto auto auto 1fr;
+  .inner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-rows: 1fr auto auto 1fr;
     grid-template-areas:
-      ". .     stage"
-      ". title stage"
-      ". sub   stage"
-      ". cta   stage"
-      ". .     stage";
-    padding-block: 0;
+      ".    stage"
+      "text stage"
+      "cta  stage"
+      ".    stage";
+    column-gap: 24px;
+    min-height: min(680px, calc(100svh - 64px - var(--progress-h)));
+    padding-block: 24px;
   }
 
-  .title,
-  .sub,
-  .cta {
+  .text {
     position: relative;
     z-index: 1;
-    padding-inline: 0;
     text-align: left;
-    justify-content: flex-start;
+  }
+
+  .eyebrow::before {
+    display: block;
   }
 
   .title {
-    font-variation-settings: "wdth" 125;
-    font-size: clamp(64px, 5.4vw, 96px);
-    line-height: 0.95;
-    text-wrap: wrap;
-  }
-
-  .sub {
-    margin-top: 28px;
-  }
-
-  .subTop {
-    font-size: 18px;
-  }
-
-  .subBottom {
-    font-size: 43px;
-    line-height: 1.05;
+    margin: 0;
+    max-width: 13ch;
+    font-size: clamp(42px, 3.6vw, 54px);
+    line-height: 1.06;
   }
 
   .cta {
+    position: relative;
+    z-index: 1;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 22px;
     margin-top: 36px;
   }
 
@@ -296,10 +338,7 @@
     aspect-ratio: auto;
     max-height: none;
     height: 100%;
-    min-height: 560px;
-    margin-top: 0;
-    /* Let the turntable start under the end of the headline. */
-    margin-left: -3%;
-    width: 103%;
+    min-height: 520px;
+    margin: 0;
   }
 }

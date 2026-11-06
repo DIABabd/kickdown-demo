@@ -1,8 +1,12 @@
 import { SectionHeading } from "@/components/site/section-heading";
+import { pageId } from "@/components/site/page-ids";
 import { telefon } from "@/content/kontakt";
 import { ui } from "@/content/start";
 import { buerozeiten, parseSpan, praxiszeiten, theoriezeiten } from "@/content/zeiten";
 import styles from "./tageslicht.module.css";
+
+/** Homepage-only section: its heading id is scoped to the start page. */
+const TITLE_ID = pageId("start", "zeiten-title");
 
 /**
  * Times (#zeiten) – daylight section, DESIGN.md 4.6. The ONE main place
@@ -16,9 +20,9 @@ import styles from "./tageslicht.module.css";
  */
 export function Zeiten() {
   return (
-    <section id="zeiten" className={`${styles.day} ${styles.dayTimes}`} aria-labelledby="zeiten-title">
+    <section id="zeiten" className={`${styles.day} ${styles.dayTimes}`} aria-labelledby={TITLE_ID}>
       <div className={styles.inner}>
-        <SectionHeading id="zeiten-title" title={ui.zeitenTitle} tone="day" />
+        <SectionHeading id={TITLE_ID} title={ui.zeitenTitle} tone="day" />
 
         <div className={styles.blocks}>
           <div className={styles.block}>

@@ -54,7 +54,7 @@
 }
 
 .card:focus-visible {
-  outline: 3px solid var(--kd-blau);
+  outline: 2px solid var(--kd-blau);
   outline-offset: 3px;
 }
 
@@ -122,16 +122,15 @@
   position: relative;
   margin-top: 18px;
   padding-top: 26px; /* the handle has its own row under the beltline */
-  /* Glowing beltline, like the hero car */
-  border-top: 1px solid #7fdcff;
-  box-shadow: 0 -1px 6px -1px color-mix(in srgb, var(--kd-blau) 70%, transparent);
+  /* Fine beltline, like the hero car's shoulder */
+  border-top: 1px solid rgb(255 255 255 / 0.14);
 }
 
 .name {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.2;
 }
 

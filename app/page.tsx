@@ -22,13 +22,13 @@ export default function Home() {
         <Seam />
         {/* day, through to the end of the page */}
         <Willkommen />
-        <Preise />
+        <Preise page="start" />
         <Zeiten />
         <Kontakt />
         <Seam />
       </Hero>
       {/* night */}
-      <Footer />
+      <Footer page="start" />
     </>
   );
 }

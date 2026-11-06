@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Seam } from "@/components/site/seam";
+import { pageId } from "@/components/site/page-ids";
 import { PageShell } from "@/components/site/page-shell";
 import { BueroCard, PraxisCard, TheorieCard } from "@/components/site/time-cards";
 import styles from "@/components/site/page.module.css";
@@ -20,11 +21,12 @@ export const metadata: Metadata = {
  */
 export default function UnterrichtPage() {
   return (
-    <PageShell title={u.title} starts="day" ends="day">
-      <section id="theorie" className={styles.day} aria-labelledby="theorie-title">
+    <PageShell
+      page="unterricht" title={u.title} starts="day" ends="day">
+      <section id="theorie" className={styles.day} aria-labelledby={pageId("unterricht", "theorie-title")}>
         <div className={styles.inner}>
-          <nav aria-labelledby="unterrichtsform-title" style={{ marginBottom: 40 }}>
-            <h2 id="unterrichtsform-title" className={styles.h3}>
+          <nav aria-labelledby={pageId("unterricht", "form-title")} style={{ marginBottom: 40 }}>
+            <h2 id={pageId("unterricht", "form-title")} className={styles.h3}>
               {u.unterrichtsform.title}
             </h2>
             <ul className={styles.jump}>
@@ -38,7 +40,7 @@ export default function UnterrichtPage() {
 
           <div className={styles.split}>
             <div className={styles.text}>
-              <h2 id="theorie-title" className={styles.h2}>
+              <h2 id={pageId("unterricht", "theorie-title")} className={styles.h2}>
                 {u.theorie.title}
               </h2>
               <p>{u.theorie.text}</p>
@@ -63,11 +65,11 @@ export default function UnterrichtPage() {
 
       <Seam />
 
-      <section id="praxis" className={styles.night} aria-labelledby="praxis-title">
+      <section id="praxis" className={styles.night} aria-labelledby={pageId("unterricht", "praxis-title")}>
         <div className={styles.inner}>
           <div className={styles.split}>
             <div className={styles.text}>
-              <h2 id="praxis-title" className={styles.h2}>
+              <h2 id={pageId("unterricht", "praxis-title")} className={styles.h2}>
                 {u.praxis.title}
               </h2>
               <p>

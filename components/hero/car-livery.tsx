@@ -78,17 +78,6 @@ function stripeTexture(frontOnRight: boolean) {
   });
 }
 
-function signTexture() {
-  const PX = 1000;
-  const w = Math.round(DOOR_SIGN.w * PX);
-  const h = Math.round(DOOR_SIGN.h * PX);
-  return canvasTexture(w, h, (g) => {
-    roundRect(g, 2, 2, w - 4, h - 4, DOOR_SIGN.r * PX);
-    g.fillStyle = "#ffffff";
-    g.fill();
-  });
-}
-
 function plateTexture() {
   const PX = 1000;
   const w = Math.round(PLATE.w * PX);
@@ -166,22 +155,16 @@ const layer = (n: number) => ({
 });
 
 /**
- * Night readability: the sign catches a little light like a reflective
- * door sign. Emissive uses the texture's own colours, so the logo file's
- * colours are shown unchanged – only the lighting differs.
+ * Printed-on look: the decals use the same glossy, clear-coated finish as
+ * the paint and no glow of their own, so they read as part of the door.
+ * The logo file's colours are used unchanged (no recolouring).
  */
-const glow = (map: THREE.Texture, intensity: number) => ({
-  map,
-  emissiveMap: map,
-  emissive: "#ffffff",
-  emissiveIntensity: intensity,
-});
+const print = (map: THREE.Texture) => ({ map, roughness: 0.3, metalness: 0.15 });
 
 export function DoorDecals() {
   const logo = useLogoTexture();
   const tex = useMemo(
     () => ({
-      sign: signTexture(),
       stripeRight: stripeTexture(true),
       stripeLeft: stripeTexture(false),
     }),
@@ -208,29 +191,10 @@ export function DoorDecals() {
             polygonOffsetFactor={layer(1).polygonOffsetFactor}
           >
             <meshStandardMaterial
-              {...glow(s === 1 ? tex.stripeRight : tex.stripeLeft, 0.28)}
+              {...print(s === 1 ? tex.stripeRight : tex.stripeLeft)}
               {...layer(1)}
               transparent
               depthWrite={false}
-              roughness={0.35}
-              metalness={0.1}
-            />
-          </Decal>
-
-          <Decal
-            position={[DOOR_SIGN.x, DOOR_SIGN.y, s * BODY_SIDE_Z]}
-            rotation={sideRotation(s)}
-            scale={[DOOR_SIGN.w, DOOR_SIGN.h, DEPTH]}
-            depthTest
-            polygonOffsetFactor={layer(2).polygonOffsetFactor}
-          >
-            <meshStandardMaterial
-              {...glow(tex.sign, 0.42)}
-              {...layer(2)}
-              transparent
-              depthWrite={false}
-              roughness={0.45}
-              metalness={0}
             />
           </Decal>
 
@@ -243,13 +207,11 @@ export function DoorDecals() {
               polygonOffsetFactor={layer(3).polygonOffsetFactor}
             >
               <meshStandardMaterial
-                {...glow(logo, 0.42)}
+                {...print(logo)}
                 {...layer(3)}
                 transparent
                 alphaTest={0.02}
                 depthWrite={false}
-                roughness={0.45}
-                metalness={0}
               />
             </Decal>
           )}
@@ -269,7 +231,7 @@ export function Plates() {
     return {
       map,
       geo: new THREE.PlaneGeometry(PLATE.w, PLATE.h),
-      mat: new THREE.MeshStandardMaterial({ map, roughness: 0.5, metalness: 0 }),
+      mat: new THREE.MeshStandardMaterial({ map, color: "#c9d0d8", roughness: 0.55, metalness: 0 }),
     };
   }, []);
 

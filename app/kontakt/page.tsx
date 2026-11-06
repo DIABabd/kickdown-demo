@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import kontaktStyles from "@/components/kontakt/kontakt.module.css";
+import { pageTitleId } from "@/components/site/page-ids";
 import { PageShell } from "@/components/site/page-shell";
 import styles from "@/components/site/page.module.css";
 import { BueroCard } from "@/components/site/time-cards";
@@ -20,6 +21,7 @@ export default function KontaktPage() {
   const photo = start.willkommen.photo;
   return (
     <PageShell
+      page="kontakt"
       title={k.title}
       starts="day"
       ends="day"
@@ -31,7 +33,7 @@ export default function KontaktPage() {
         </p>
       }
     >
-      <section className={styles.day} aria-labelledby="page-title">
+      <section className={styles.day} aria-labelledby={pageTitleId("kontakt")}>
         <div className={styles.inner}>
           <div className={styles.split}>
             <div style={{ display: "grid", gap: 20, alignContent: "start" }}>

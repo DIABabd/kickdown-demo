@@ -34,8 +34,9 @@
   align-items: center;
   gap: 12px 20px;
   padding: 20px 16px 20px 30px;
-  border: 2px solid var(--tinte);
-  border-radius: 16px;
+  border: 1px solid #dde3e9;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgb(18 26 34 / 0.04), 0 12px 32px -20px rgb(18 26 34 / 0.25);
   background: #fff;
   color: var(--tinte);
   overflow: hidden;
@@ -54,8 +55,8 @@
   align-items: center;
   gap: 8px;
   min-height: 52px;
-  padding: 6px 16px;
-  border-radius: 8px;
+  padding: 6px 22px;
+  border-radius: 999px;
   background: var(--tinte);
   color: #fff;
   font-weight: 700;
@@ -130,8 +131,8 @@
   align-items: center;
   gap: 8px;
   min-height: 48px;
-  padding: 0 18px;
-  border-radius: 8px;
+  padding: 0 20px;
+  border-radius: 999px;
   font-weight: 700;
   text-decoration: none;
 }
@@ -146,7 +147,7 @@
 }
 
 .insta {
-  border: 2px solid #fff;
+  border: 1px solid rgb(255 255 255 / 0.6);
   color: #fff;
 }
 
@@ -156,14 +157,14 @@
 
 .phone:focus-visible,
 .hoursLink:focus-visible {
-  outline: 3px solid var(--kd-blau);
+  outline: 2px solid var(--kd-blau);
   outline-offset: 3px;
 }
 
 /* Inside the blue sign a white ring is the visible one. */
 .route:focus-visible,
 .insta:focus-visible {
-  outline: 3px solid #fff;
+  outline: 2px solid #fff;
   outline-offset: 3px;
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Environment, Lightformer, MeshReflectorMaterial } from "@react-three/drei";
+import { Environment, Lightformer } from "@react-three/drei";
 import {
   useEffect,
   useMemo,
@@ -43,6 +43,12 @@ type Control = {
    * automatic return, no body lean).
    */
   calm: boolean;
+  /** Pause/play button: stops the idle spin and float (drag still works). */
+  paused: boolean;
+  /** Clock for the idle float (s). */
+  clock: number;
+  /** Current float offset (m) – eases back to 0 when paused / reduced motion. */
+  float: number;
 };
 
 function createControl(calm: boolean): Control {
@@ -57,6 +63,9 @@ function createControl(calm: boolean): Control {
     rollVel: 0,
     prevAngle: calm ? REST_ANGLE : INTRO_ANGLE,
     calm,
+    paused: false,
+    clock: 0,
+    float: 0,
   };
 }
 
@@ -124,23 +133,34 @@ function radialTexture(stops: [number, string][], size = 256) {
   return tex;
 }
 
-function asphaltTexture(size = 256) {
+/**
+ * Soft, car-shaped ground shadow (drawn once, no downloads): a wide ambient
+ * shade plus darker contact patches under the four tyres. Turns with the car.
+ */
+function shadowTexture() {
+  const W = 512;
+  const H = 256;
   const c = document.createElement("canvas");
-  c.width = c.height = size;
+  c.width = W;
+  c.height = H;
   const g = c.getContext("2d")!;
-  const img = g.createImageData(size, size);
-  // Deterministic grain, so every visit looks the same.
-  let seed = 7;
-  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-  for (let i = 0; i < img.data.length; i += 4) {
-    const v = 190 + rnd() * 65;
-    img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
-    img.data[i + 3] = 255;
-  }
-  g.putImageData(img, 0, 0);
+  // Blur via shadowBlur of an off-canvas shape – works in every browser.
+  const blob = (x: number, y: number, w: number, h: number, r: number, alpha: number, blur: number) => {
+    g.save();
+    g.shadowColor = `rgba(0,0,0,${alpha})`;
+    g.shadowBlur = blur;
+    g.shadowOffsetX = W * 2;
+    g.fillStyle = "#000";
+    g.beginPath();
+    g.roundRect(x - W * 2, y, w, h, r);
+    g.fill();
+    g.restore();
+  };
+  blob(56, 70, 400, 116, 58, 0.55, 46); // body footprint
+  blob(110, 92, 292, 72, 36, 0.5, 20); // core under the floor pan
+  for (const x of [118, 362]) for (const y of [66, 164]) blob(x - 18, y - 13, 36, 26, 12, 0.85, 10); // tyres
   const tex = new THREE.CanvasTexture(c);
-  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(36, 36);
+  tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
 }
 
@@ -153,16 +173,21 @@ function Framing() {
   const get = useThree((s) => s.get);
 
   useEffect(() => {
-    const { camera, invalidate } = get();
+    const { camera, invalidate, scene } = get();
     if (!(camera instanceof THREE.PerspectiveCamera)) return;
     const aspect = size.width / Math.max(1, size.height);
     const vHalf = THREE.MathUtils.degToRad(camera.fov / 2);
     const hHalf = Math.atan(Math.tan(vHalf) * aspect);
     // Half-widths (m) that must stay visible: car + most of the ring.
-    const dist = clamp(Math.max(3.1 / Math.tan(hHalf), 1.7 / Math.tan(vHalf)), 8, 22);
+    const dist = clamp(Math.max(2.95 / Math.tan(hHalf), 1.55 / Math.tan(vHalf)), 7.5, 22);
     const elev = THREE.MathUtils.degToRad(11);
     camera.position.set(0, 0.62 + dist * Math.sin(elev), dist * Math.cos(elev));
     camera.lookAt(0, 0.62, 0);
+    // The floor fades into the night just behind the car, whatever the distance.
+    if (scene.fog instanceof THREE.Fog) {
+      scene.fog.near = dist + 1.5;
+      scene.fog.far = dist + 9;
+    }
     camera.updateProjectionMatrix();
     invalidate();
   }, [size, get]);
@@ -174,109 +199,49 @@ function Framing() {
 /* Turntable stage                                                     */
 /* ------------------------------------------------------------------ */
 
-function Turntable({ spin }: { spin: RefObject<THREE.Group | null> }) {
+/**
+ * Quiet studio stage: a matte floor that fades into the dark, a soft light
+ * pool under the car and one very faint ring as the only accent.
+ */
+function Stage() {
   const tex = useMemo(
     () => ({
-      ring: radialTexture([
-        [0, "rgba(0,156,220,0)"],
-        [0.8, "rgba(0,156,220,0)"],
-        [0.9, "rgba(0,156,220,0.45)"],
-        [0.94, "rgba(0,156,220,0.12)"],
-        [1, "rgba(0,156,220,0)"],
+      pool: radialTexture([
+        [0, "rgba(150,180,220,0.20)"],
+        [0.45, "rgba(90,120,170,0.08)"],
+        [1, "rgba(40,60,100,0)"],
       ]),
       backGlow: radialTexture([
-        [0, "rgba(29,79,166,0.55)"],
-        [0.5, "rgba(29,79,166,0.18)"],
+        [0, "rgba(29,79,166,0.16)"],
+        [0.55, "rgba(29,79,166,0.04)"],
         [1, "rgba(29,79,166,0)"],
       ]),
     }),
     [],
   );
 
-  const ticks = useMemo(() => {
-    const count = 72;
-    const geo = new THREE.BoxGeometry(1, 1, 1);
-    const mesh = new THREE.InstancedMesh(
-      geo,
-      new THREE.MeshBasicMaterial({ color: KD_BLAU, transparent: true, opacity: 0.55, toneMapped: false }),
-      count,
-    );
-    const m = new THREE.Matrix4();
-    const q = new THREE.Quaternion();
-    const up = new THREE.Vector3(0, 1, 0);
-    for (let i = 0; i < count; i++) {
-      const a = (i / count) * TAU;
-      const long = i % 6 === 0;
-      const len = long ? 0.18 : 0.07;
-      const r = 2.62 - len / 2;
-      q.setFromAxisAngle(up, -a);
-      m.compose(
-        new THREE.Vector3(Math.cos(a) * r, 0.004, Math.sin(a) * r),
-        q,
-        new THREE.Vector3(len, 0.004, long ? 0.016 : 0.01),
-      );
-      mesh.setMatrixAt(i, m);
-    }
-    return mesh;
-  }, []);
-
   return (
     <group>
-      {/* Glowing rim of the turntable */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.006, 0]}>
-        <torusGeometry args={[2.75, 0.012, 6, 160]} />
-        <meshBasicMaterial color="#5fd0ff" toneMapped={false} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[60, 60]} />
+        <meshStandardMaterial color="#0e1620" roughness={0.6} metalness={0.15} />
       </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.003, 0]}>
-        <planeGeometry args={[6.4, 6.4]} />
-        <meshBasicMaterial
-          map={tex.ring}
-          transparent
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-          toneMapped={false}
-        />
+      {/* soft light pool on the floor */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.002, 0]}>
+        <planeGeometry args={[9, 9]} />
+        <meshBasicMaterial map={tex.pool} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
-      {/* Tacho-like tick marks turn with the car */}
-      <group ref={spin}>
-        <primitive object={ticks} />
-      </group>
-      {/* Soft lapis glow behind the car */}
-      <mesh position={[0, 1.4, -5]}>
-        <planeGeometry args={[14, 7]} />
-        <meshBasicMaterial
-          map={tex.backGlow}
-          transparent
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-          toneMapped={false}
-        />
+      {/* one faint, thin ring – a subtle accent, not a neon effect */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]}>
+        <torusGeometry args={[2.85, 0.006, 4, 180]} />
+        <meshBasicMaterial color="#6f9fc8" transparent opacity={0.22} toneMapped={false} />
+      </mesh>
+      {/* very soft lapis glow behind the car */}
+      <mesh position={[0, 1.6, -6]}>
+        <planeGeometry args={[16, 8]} />
+        <meshBasicMaterial map={tex.backGlow} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
     </group>
-  );
-}
-
-function WetFloor({ resolution }: { resolution: number }) {
-  const rough = useMemo(() => asphaltTexture(), []);
-  return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[60, 60]} />
-      <MeshReflectorMaterial
-        resolution={resolution}
-        blur={[400, 120]}
-        mixBlur={1}
-        mixStrength={9}
-        mixContrast={1}
-        roughness={0.85}
-        roughnessMap={rough}
-        depthScale={1.1}
-        minDepthThreshold={0.4}
-        maxDepthThreshold={1.3}
-        color="#111b26"
-        metalness={0.4}
-        mirror={0.6}
-      />
-    </mesh>
   );
 }
 
@@ -301,21 +266,12 @@ function Rig({
 }) {
   const car = useRef<THREE.Group>(null);
   const body = useRef<THREE.Group>(null);
-  const ticks = useRef<THREE.Group>(null);
   const headTarget = useRef<THREE.Object3D>(null);
   const headL = useRef<THREE.SpotLight>(null);
   const headR = useRef<THREE.SpotLight>(null);
   const tail = useRef<THREE.PointLight>(null);
 
-  const shadow = useMemo(
-    () =>
-      radialTexture([
-        [0, "rgba(0,0,0,0.85)"],
-        [0.45, "rgba(0,0,0,0.55)"],
-        [1, "rgba(0,0,0,0)"],
-      ]),
-    [],
-  );
+  const shadow = useMemo(() => shadowTexture(), []);
 
   // Spot lights need their target object wired once it exists.
   useEffect(() => {
@@ -350,6 +306,13 @@ function Rig({
       if (c.calm) {
         // Reduced motion: hold still until dragged again – no auto-spin.
         c.vel = 0;
+      } else if (c.paused) {
+        // Paused: come to a gentle stop and stay (dragging still works).
+        c.vel *= Math.exp(-6 * dt);
+        if (Math.abs(c.vel) > 0.002) {
+          c.angle += c.vel * dt;
+          busy = true;
+        } else c.vel = 0;
       } else {
         // Ease whatever a drag left behind (or 0, right after the intro)
         // toward the steady idle spin, so the car always keeps turning.
@@ -384,14 +347,23 @@ function Rig({
       if (Math.abs(c.roll - rollTarget) > 1e-4 || Math.abs(c.rollVel) > 1e-4) busy = true;
     }
 
+    /* --- idle float: a very slight, slow rise and fall --- */
+    const floating = !c.calm && !c.paused;
+    if (floating) c.clock += dt;
+    const floatTarget = floating ? Math.sin(c.clock * 0.9) * 0.012 : 0;
+    c.float += (floatTarget - c.float) * (1 - Math.exp(-6 * dt));
+    if (floating || Math.abs(c.float) > 1e-4) busy = true;
+
     /* --- apply --- */
     if (car.current) car.current.rotation.y = c.angle;
-    if (ticks.current) ticks.current.rotation.y = c.angle;
-    if (body.current) body.current.rotation.x = c.roll;
+    if (body.current) {
+      body.current.rotation.x = c.roll;
+      body.current.position.y = c.float;
+    }
     const l = c.lights;
-    if (headL.current) headL.current.intensity = 26 * l;
-    if (headR.current) headR.current.intensity = 26 * l;
-    if (tail.current) tail.current.intensity = 1.6 * l;
+    if (headL.current) headL.current.intensity = 1.2 * l;
+    if (headR.current) headR.current.intensity = 1.2 * l;
+    if (tail.current) tail.current.intensity = 0.8 * l;
 
     /* --- readiness + 1-second frame-rate probe --- */
     const p = probe.current;
@@ -439,11 +411,11 @@ function Rig({
 
   return (
     <>
-      <Turntable spin={ticks} />
+      <Stage />
       <group ref={car} rotation={[0, INTRO_ANGLE, 0]}>
-        {/* Blob shadow turns with the car */}
+        {/* Soft car-shaped ground shadow – turns with the car */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.008, 0]}>
-          <planeGeometry args={[5.6, 2.9]} />
+          <planeGeometry args={[5.4, 2.7]} />
           <meshBasicMaterial map={shadow} transparent depthWrite={false} />
         </mesh>
         {/* Suspension pivot sits at axle height */}
@@ -459,12 +431,12 @@ function Rig({
             key={z}
             ref={i === 0 ? headL : headR}
             position={[LIGHTS.head.x + 0.1, LIGHTS.head.y, z]}
-            angle={0.55}
-            penumbra={0.9}
-            distance={14}
+            angle={0.45}
+            penumbra={1}
+            distance={5}
             decay={1.6}
             intensity={0}
-            color="#dbeeff"
+            color="#f2f6ff"
           />
         ))}
         <pointLight
@@ -487,6 +459,7 @@ function Rig({
 export default function CarScene({
   forced,
   reducedMotion,
+  paused,
   onReady,
   onFallback,
 }: {
@@ -494,6 +467,8 @@ export default function CarScene({
   forced: boolean;
   /** prefers-reduced-motion: show the 3D car, but nothing moves by itself. */
   reducedMotion: boolean;
+  /** Pause/play control (outside the canvas): stops the idle spin and float. */
+  paused: boolean;
   onReady: () => void;
   /** The scene can't run well here: show the still, with a reason. */
   onFallback: (reason: string) => void;
@@ -510,6 +485,7 @@ export default function CarScene({
   const [dpr] = useState<[number, number]>(() => (coarse ? [1, 1.5] : [1, 2]));
   const [frameloop, setFrameloop] = useState<"demand" | "never">("demand");
 
+
   // Pause rendering while the hero is off screen.
   useEffect(() => {
     const el = wrap.current;
@@ -522,6 +498,11 @@ export default function CarScene({
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  useEffect(() => {
+    ctrl.current.paused = paused;
+    invalidateRef.current();
+  }, [paused]);
 
   // Reduced motion can be switched while the page is open.
   useEffect(() => {
@@ -635,25 +616,23 @@ export default function CarScene({
         aria-hidden="true"
       >
         <color attach="background" args={["#0C1824"]} />
-        <fog attach="fog" args={["#0C1824", 12, 30]} />
+        <fog attach="fog" args={["#0C1824", 10, 19]} />
         <Framing />
 
-        <hemisphereLight args={["#3a5f99", "#05080c", 0.9]} />
-        <directionalLight position={[4, 6, 5]} intensity={0.5} color="#cfe3ff" />
-        <pointLight position={[-4.5, 2.6, -3.5]} intensity={34} distance={14} color={KD_BLAU} />
-        <pointLight position={[4.5, 2.2, -4]} intensity={18} distance={12} color="#1D4FA6" />
+        <hemisphereLight args={["#9fb4d4", "#05080c", 0.45]} />
+        <directionalLight position={[3, 7, 4]} intensity={0.9} color="#ffffff" />
+        <directionalLight position={[-5, 3, -4]} intensity={0.55} color="#9fc6ff" />
 
-        {/* Local light studio for paint reflections – nothing is downloaded */}
-        <Environment resolution={128} frames={1} environmentIntensity={1.6}>
-          <Lightformer form="rect" intensity={2.2} color="#bcd8ff" position={[0, 6, 0]} rotation-x={Math.PI / 2} scale={[8, 3, 1]} />
-          <Lightformer form="rect" intensity={4} color="#e8f3ff" position={[0, 2.2, 6]} scale={[12, 0.35, 1]} />
-          <Lightformer form="rect" intensity={2} color="#cfe3ff" position={[6, 2, 4]} rotation-y={-Math.PI / 4} scale={[6, 0.4, 1]} />
-          <Lightformer form="rect" intensity={1.2} color="#e8f3ff" position={[0, 1.2, 6]} scale={[12, 0.15, 1]} />
-          <Lightformer form="rect" intensity={2.5} color={KD_BLAU} position={[-6, 1.5, -2]} rotation-y={Math.PI / 2} scale={[8, 1.2, 1]} />
-          <Lightformer form="rect" intensity={1.5} color="#1D4FA6" position={[6, 1.5, -2]} rotation-y={-Math.PI / 2} scale={[8, 1.2, 1]} />
+        {/* Local studio for clear-coat reflections – softboxes, nothing is downloaded */}
+        <Environment resolution={256} frames={1} environmentIntensity={1}>
+          <Lightformer form="rect" intensity={2.4} color="#ffffff" position={[0, 6, 0]} rotation-x={Math.PI / 2} scale={[10, 4, 1]} />
+          <Lightformer form="rect" intensity={3.2} color="#f4f7ff" position={[0, 2.4, 7]} scale={[14, 0.5, 1]} />
+          <Lightformer form="rect" intensity={1.4} color="#f4f7ff" position={[0, 1.1, 7]} scale={[14, 0.18, 1]} />
+          <Lightformer form="rect" intensity={1.8} color="#ffffff" position={[7, 2, 2]} rotation-y={-Math.PI / 2.4} scale={[6, 1.2, 1]} />
+          <Lightformer form="rect" intensity={1.2} color="#cfe0ff" position={[-7, 2, -2]} rotation-y={Math.PI / 2} scale={[8, 1.2, 1]} />
+          <Lightformer form="ring" intensity={0.8} color={KD_BLAU} position={[0, 3, -8]} scale={4} />
         </Environment>
 
-        <WetFloor resolution={coarse ? 512 : 1024} />
         <Rig
           ctrlRef={ctrl}
           forced={forced}

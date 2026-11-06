@@ -1,9 +1,13 @@
 import Link from "next/link";
+import { pageId } from "@/components/site/page-ids";
 import { SectionHeading } from "@/components/site/section-heading";
 import { adresse, fragen, instagram, kontaktUi, telefon } from "@/content/kontakt";
 import { ui } from "@/content/start";
 import { buerozeiten } from "@/content/zeiten";
 import styles from "./kontakt.module.css";
+
+/** Homepage-only section: its heading id is scoped to the start page. */
+const TITLE_ID = pageId("start", "kontakt-title");
 
 /**
  * Contact block (#kontakt) – DESIGN.md section 9 ("Du hast Fragen …").
@@ -14,10 +18,10 @@ import styles from "./kontakt.module.css";
  */
 export function Kontakt() {
   return (
-    <section id="kontakt" className={styles.kontakt} aria-labelledby="kontakt-title">
+    <section id="kontakt" className={styles.kontakt} aria-labelledby={TITLE_ID}>
       <div className={styles.inner}>
         <div className={styles.intro}>
-          <SectionHeading id="kontakt-title" title={fragen.title} tone="day" />
+          <SectionHeading id={TITLE_ID} title={fragen.title} tone="day" />
           <p className={styles.text}>{fragen.text}</p>
         </div>
 

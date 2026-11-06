@@ -3,6 +3,7 @@ import Link from "next/link";
 import { HeaderTheme } from "@/components/hero/header-theme";
 import { telefon } from "@/content/kontakt";
 import { logoAlt, ui } from "@/content/start";
+import { pageId, type PageKey } from "./page-ids";
 import { NavMenu } from "./nav-menu";
 import { ScrollProgress } from "./scroll-progress";
 import styles from "./site.module.css";
@@ -14,7 +15,7 @@ import styles from "./site.module.css";
  * its own reserved space at the bottom of the page, so it never covers
  * content (see .bottomBar / body padding in site.module.css).
  */
-export function SiteHeader() {
+export function SiteHeader({ page }: { page: PageKey }) {
   return (
     <>
       <header className={styles.header} data-site-header>
@@ -28,7 +29,7 @@ export function SiteHeader() {
             {ui.privateDemo}
             <span className="sr-only"> – {ui.privateDemoHint}</span>
           </span>
-          <NavMenu />
+          <NavMenu listId={pageId(page, "nav-links")} />
         </div>
         <ScrollProgress />
       </header>

@@ -4,9 +4,7 @@
   position: relative;
   background: var(--nacht);
   color: var(--markierung);
-  /* Lapis light line on top, like the cars' shoulder light */
-  border-top: 3px solid var(--lapis);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--kd-blau) 55%, transparent);
+  border-top: 1px solid rgb(255 255 255 / 0.08);
 }
 
 .inner {
@@ -48,10 +46,10 @@
   align-items: center;
   height: 26px;
   padding-inline: 10px;
-  border: 1px solid var(--tacho-rot);
+  border: 1px solid color-mix(in srgb, var(--tacho-rot) 75%, transparent);
   border-radius: 999px;
   color: var(--markierung);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
@@ -111,8 +109,8 @@
   min-height: 48px;
   margin-top: 16px;
   padding: 0 16px;
-  border: 1px solid color-mix(in srgb, var(--markierung) 45%, transparent);
-  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--markierung) 30%, transparent);
+  border-radius: 999px;
   color: var(--markierung);
   font-weight: 700;
   text-decoration: none;
@@ -156,7 +154,7 @@
 .insta:focus-visible,
 .credit:focus-visible,
 .logo:focus-visible {
-  outline: 3px solid var(--kd-blau);
+  outline: 2px solid var(--kd-blau);
   outline-offset: 2px;
 }
 

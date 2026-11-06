@@ -35,6 +35,9 @@ export const ui = {
   privateDemoHint: "keine echte Website der Fahrschule",
   /** Hero's primary action – a real phone call, not a sign-up form. */
   callNow: "Jetzt anrufen",
+  /** Pause/play control for the turning hero car (new UI words, OWNER-QUESTIONS). */
+  spinPause: "Drehung anhalten",
+  spinPlay: "Drehung fortsetzen",
 
   /** Header navigation (DESIGN.md 3.3) and phone bottom bar. */
   nav: {

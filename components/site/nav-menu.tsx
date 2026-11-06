@@ -13,7 +13,7 @@ import styles from "./site.module.css";
  * button can't open the panel, but the phone bottom bar and the footer
  * still link to every section.
  */
-export function NavMenu() {
+export function NavMenu({ listId }: { listId: string }) {
   const [open, setOpen] = useState(false);
   const button = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
@@ -39,13 +39,13 @@ export function NavMenu() {
         type="button"
         className={styles.menuButton}
         aria-expanded={open}
-        aria-controls="site-nav-links"
+        aria-controls={listId}
         onClick={() => setOpen((o) => !o)}
       >
         <span className={styles.menuIcon} data-open={open || undefined} aria-hidden="true" />
         {ui.nav.menu}
       </button>
-      <ul id="site-nav-links" className={styles.navLinks} data-open={open || undefined}>
+      <ul id={listId} className={styles.navLinks} data-open={open || undefined}>
         {ui.nav.links.map((l) => (
           <li key={l.href}>
             <Link
@@ -60,6 +60,12 @@ export function NavMenu() {
         ))}
         <li>
           <a href={ui.nav.contact.href} className={styles.navCta} onClick={close}>
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false">
+              <path
+                d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"
+                fill="currentColor"
+              />
+            </svg>
             {ui.nav.contact.label}
           </a>
         </li>
