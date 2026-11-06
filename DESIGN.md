@@ -115,7 +115,8 @@ GSAP + ScrollTrigger (installed), React Three Fiber + drei for 3D.
 - **Update:** after that intro the car does not just sit still – it keeps turning on its own, slowly and continuously, like a turntable. A drag still rotates it freely; on release it eases back into the same steady spin rather than snapping back to a fixed angle. (The scroll journey that used to be the one scroll-driven moment was removed – see 4.3.)
 - Everything else is **response motion only**: switching a showroom car, hover/press feedback. 150–250 ms, `ease-out`.
 - No fade-and-slide-up on every section, no hover wiggles.
-- `prefers-reduced-motion: reduce` → no intro, no auto-spin (the car can still be dragged, but never moves by itself), still image instead of 3D, instant transitions.
+- **Car scroll progress (every page, built):** the small top-down car from the former journey drives along a slim road strip at the bottom of the sticky header – forward when scrolling down, backward when scrolling up (3.3). With motion allowed it glides to its spot with a short exponential ease (no overshoot, no bounce); it never moves by itself.
+- `prefers-reduced-motion: reduce` → no intro, no auto-spin (the car can still be dragged, but never moves by itself), still image instead of 3D, instant transitions. The car progress indicator **stays visible** and its position is set directly from the scroll position (1:1, no smoothing, no automatic movement).
 
 ### 2.5 Photo sizes (sharpness rules)
 
@@ -184,7 +185,7 @@ No repetition: prices appear only in the price list; full office hours only in `
 
 Prices and times are full versions on the homepage; team and the showroom are full versions on their own pages. Later subpages reuse the same components either way.
 
-Nav links to pages that don't exist yet go to one shared placeholder: "Diese Seite wird nach Freigabe der Startseite gebaut." with a link back. Header "Anmelden" scrolls to `#anmeldung`.
+All planned pages now exist (3.2), so the earlier shared placeholder page was removed; every nav and footer link goes to a real page.
 
 ### 3.2 Phase 2 – other pages (only after the homepage is approved)
 
@@ -193,7 +194,7 @@ All 10 old pages keep their content. Theorie and Praxis become one page (`/unter
 | New URL | Replaces | Content |
 |---|---|---|
 | `/` Start | `index.html` | Phase 1 (above). |
-| `/unterricht` | `theoretischer-unterricht.html`, `praktischer-unterricht.html` | `#theorie`: cropped theory photo, course text, Theoriezeiten. `#praxis`: praxis photo, text, "Praxiszeiten: nach Vereinbarung". `#zeiten`: full week table. "Unterrichtsform" links become a tab switch. |
+| `/unterricht` | `theoretischer-unterricht.html`, `praktischer-unterricht.html` | `#theorie`: cropped theory photo, course text, Theoriezeiten. `#praxis`: praxis photo, text, "Praxiszeiten: nach Vereinbarung". `#buerozeiten`: the office hours (shown on both old pages) once, with the phone link. "Unterrichtsform" keeps its two links as jump links to `#theorie` / `#praxis` – no tab switch, so no text is hidden. |
 | `/preise` | `preise.html` | Same price component as homepage. |
 | `/fahrzeuge` | `fahrzeuge.html` | Same showroom component. |
 | `/team` | `team.html` | Same team component + link to `/ausbildungsfahrschule`. |
@@ -205,12 +206,13 @@ All 10 old pages keep their content. Theorie and Praxis become one page (`/unter
 
 **Update:** the optional `/anmeldung` route (same simulated form as the homepage section) was never built, and the homepage's own sign-up simulation was later removed entirely (4.7). There is no sign-up route or form anywhere in the demo; every "Anmelden" action is now a phone call or a link to `/kontakt`.
 
-Old URL mapping (for a real launch later): `index.html`, `index-1.html` → `/`; `team.html` → `/team`; `theoretischer-unterricht.html` → `/unterricht#theorie`; `praktischer-unterricht.html` → `/unterricht#praxis`; `fahrzeuge.html` → `/fahrzeuge`; `ausbildungsfahrschule.html` → `/ausbildungsfahrschule`; `preise.html` → `/preise`; `kontakt.html` → `/kontakt`; `impressum.html` → `/impressum`; `datenschutz.html` → `/datenschutz`.
+Old addresses are redirected (built, `redirects()` in `next.config.ts`, temporary 307 while this is a demo): `index.html`, `index-1.html` → `/`; `team.html` → `/team`; `theoretischer-unterricht.html` → `/unterricht#theorie`; `praktischer-unterricht.html` → `/unterricht#praxis`; `fahrzeuge.html` → `/fahrzeuge`; `ausbildungsfahrschule.html` → `/ausbildungsfahrschule`; `preise.html` → `/preise`; `kontakt.html` → `/kontakt`; `impressum.html` → `/impressum`; `datenschutz.html` → `/datenschutz`. For a real launch they can become permanent (308).
 
 ### 3.3 Global elements
 
 - Header (built): logo · "Private Demo" · Unterricht · Preise · Fahrzeuge · Team · Kontakt · button "Anrufen" (a real `tel:` link; it was "Anmelden" → `#anmeldung` before the sign-up simulation was removed). Below 1024 px the links open from a "Menü" button (Escape closes, focus returns to the button). Not built: the office-time status chip.
 - Phone (built, below 640 px): compact header (logo + demo pill + "Menü") and a **fixed bottom bar**: "Anrufen" (tel:+4917670386440, the visible number) · "Zeiten" (link to `#zeiten`; no sheet) · "Kontakt" (link to `/kontakt`; was "Anmelden" before the sign-up simulation was removed). The page reserves the bar's height at the bottom and in scroll-padding, so the bar never covers content or the footer; while a text field is focused (on-screen keyboard) the bar is hidden.
+- Car scroll progress (built, all pages and widths): a 14 px asphalt strip with a dashed line inside the sticky header, below logo, label and menu, so it never covers page text, buttons, the header controls or the phone bottom bar. The car (the journey's top-down car, turned to drive right) shows how far the page is scrolled. Decorative (`aria-hidden`). Anchor jumps account for the extra height via `html { scroll-padding-top }`. Code: `components/site/scroll-progress.tsx`.
 - Footer: logo, address (map link), phone, Infos (Team, Unterricht, Fahrzeuge, Preise), Bürozeiten, Theoriezeiten, Instagram (icon + text link), Kontakt · Impressum · Datenschutzerklärung · Cookie-Einstellungen, copyright line as on the old site.
 
 ---
@@ -262,7 +264,7 @@ Day section. "Willkommen in der Fahrschule Kickdown" + both paragraphs word for 
 
 ### 4.3 Scroll journey – "Deine Strecke zum Führerschein" (REMOVED)
 
-**Update: this section was built, then removed, to shorten the homepage and cut a second big motion set-piece that competed with the hero.** What follows below is the original plan, kept for history.
+**Update: this section was built, then removed, to shorten the homepage and cut a second big motion set-piece that competed with the hero.** Only its small top-down car and road came back, as the slim scroll progress indicator in the header (2.4, 3.3) – without the stations, the Anmeldung journey or the sign-up simulation. What follows below is the original plan, kept for history.
 
 Every piece of its text was already duplicated elsewhere by design (see the table), so removing it loses no old-site content:
 
@@ -448,7 +450,7 @@ Legend: ✅ used · ⛔ not shown · ↻ replaced by an element with the same fu
 
 | # | Item | New location | Phase | |
 |---|---|---|---|---|
-| G1 | Navigation: Willkommen, Team, Unterricht, Theoretischer Unterricht, Praktischer Unterricht, Fahrzeuge, Ausbildungsfahrschule, Kontakt | Header nav (phase 1 links → placeholder until pages exist); Ausbildungsfahrschule in footer | 1 | ✅ |
+| G1 | Navigation: Willkommen, Team, Unterricht, Theoretischer Unterricht, Praktischer Unterricht, Fahrzeuge, Ausbildungsfahrschule, Kontakt | Header nav (Unterricht, Preise, Fahrzeuge, Team, Kontakt → real pages); Ausbildungsfahrschule in footer; Willkommen = logo → `/`; Theoretischer/Praktischer Unterricht = `/unterricht#theorie` / `#praxis` | 1 | ✅ |
 | G2 | Mobile menu (same links; logo → broken `index-1.html`) | Phone menu, logo → `/` | 1 | ✅ |
 | G3 | Address "Friedrich-Ebert-Straße 11/15, 28199 Bremen" + map link | Footer, question block on `/`; later Kontakt, Impressum, Datenschutz | 1 | ✅ |
 | G4 | "Telefon: 01 76 - 70 386 440" (tel:+4917670386440) | Footer, bottom bar "Anrufen", `#zeiten` (next to the office hours), question block, form result | 1 | ✅ |

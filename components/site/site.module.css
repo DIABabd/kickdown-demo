@@ -16,6 +16,42 @@
     border-color 200ms ease-out;
 }
 
+/* ---------- Scroll progress: road strip at the header's bottom edge ----------
+   Part of the sticky header (below logo, label and menu), so it never covers
+   page text, buttons or the phone bottom bar. Anchor jumps get the extra
+   height via html { scroll-padding-top } in globals.css. */
+
+.progress {
+  height: var(--progress-h);
+  background:
+    /* dashed centre line */
+    repeating-linear-gradient(to right, rgb(255 255 255 / 0.75) 0 14px, transparent 14px 26px) center / 100% 1.5px no-repeat,
+    var(--asphalt);
+  border-top: 1px solid color-mix(in srgb, var(--markierung) 22%, var(--asphalt));
+}
+
+.progressTrack {
+  position: relative;
+  height: 100%;
+  margin-inline: 4px;
+}
+
+.progressCar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  aspect-ratio: 116 / 40;
+  will-change: transform;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--kd-blau) 70%, transparent));
+}
+
+.progressCar svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 /* Over daylight sections: solid, light, strong contrast (set by HeaderTheme). */
 .header[data-theme="day"] {
   background: #fff;

@@ -10,6 +10,24 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Old site addresses → new pages (DESIGN.md 3.2). Temporary (307) while
+  // this is a private demo, so browsers don't cache them permanently.
+  async redirects() {
+    const map: [string, string][] = [
+      ["/index.html", "/"],
+      ["/index-1.html", "/"],
+      ["/team.html", "/team"],
+      ["/theoretischer-unterricht.html", "/unterricht#theorie"],
+      ["/praktischer-unterricht.html", "/unterricht#praxis"],
+      ["/fahrzeuge.html", "/fahrzeuge"],
+      ["/ausbildungsfahrschule.html", "/ausbildungsfahrschule"],
+      ["/preise.html", "/preise"],
+      ["/kontakt.html", "/kontakt"],
+      ["/impressum.html", "/impressum"],
+      ["/datenschutz.html", "/datenschutz"],
+    ];
+    return map.map(([source, destination]) => ({ source, destination, permanent: false }));
+  },
   experimental: {
     agentFeedback: true,
   },

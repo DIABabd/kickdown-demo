@@ -4,6 +4,7 @@ import { HeaderTheme } from "@/components/hero/header-theme";
 import { telefon } from "@/content/kontakt";
 import { logoAlt, ui } from "@/content/start";
 import { NavMenu } from "./nav-menu";
+import { ScrollProgress } from "./scroll-progress";
 import styles from "./site.module.css";
 
 /**
@@ -29,6 +30,7 @@ export function SiteHeader() {
           </span>
           <NavMenu />
         </div>
+        <ScrollProgress />
       </header>
 
       <nav className={styles.bottomBar} aria-label={ui.bottomBar.label}>

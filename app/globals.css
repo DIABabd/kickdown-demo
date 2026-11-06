@@ -19,6 +19,14 @@
   --gutter: 20px;
   /* Height of the phone bottom bar (without the safe-area inset). */
   --bar-h: 56px;
+  /* Height of the car progress strip at the bottom of the sticky header. */
+  --progress-h: 14px;
+}
+
+/* The header is taller by the progress strip: anchor jumps and focus
+   scrolling stop that much lower, so no heading lands under the strip. */
+html {
+  scroll-padding-top: calc(var(--progress-h) + 1px);
 }
 
 /* Phones: reserve room for the fixed bottom bar, so it never covers the
