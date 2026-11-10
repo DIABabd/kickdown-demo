@@ -16,6 +16,8 @@ The one bold thing is the **3D car + scroll journey on the start page**. Everyth
 
 **Update (Nov 2026) – dark cinematic redesign (current direction, supersedes "Tageslicht").** The whole site is now night: near-black, charcoal, graphite and deep blue, with Kickdown blue and a little red as the only accents. There are no full-width white sections any more – light fills only on small elements (the call buttons, the selected toggle segment, the white border of the blue address sign). Reading stays easy: body text is off-white (`--text`, 17 : 1) or soft grey (`--text-2`, 10 : 1) on charcoal. The homepage opens with a **full-screen hero**: the 3D car, very large on a transparent canvas, in front of a huge, quiet "KICKDOWN" lettering, with the headline "Dein Kickstart in Bremen" (new wording – owner question 39). On load the car drives in while a light sweeps across its paint; scrolling out of the hero (GSAP ScrollTrigger, scrubbed, never pinned) turns its nose toward the viewer, it grows and drives on into the next section. Sections fade between dark tones; the road-line seams became a hairline that catches one light sweep. Blocks below the fold rise in softly once. Details: 2.1 (tokens), 2.4 (motion), 4.1 (hero).
 
+**Update (Nov 2026) – road journey back, hero car fixed in place.** The winding road journey (Anmeldung → Theorie → Fahrstunden → Prüfung) is back on the homepage right after the hero, restyled dark (4.3); its small car follows the scroll in both directions, also with reduced motion (then 1:1). The hero car no longer grows, turns or drives away on scroll – it stays in place and keeps its auto-rotation, dragging and pause button (4.1).
+
 ---
 
 ## 1. DEMO RULES (apply to everything below)
@@ -134,7 +136,7 @@ GSAP + ScrollTrigger (installed), React Three Fiber + drei for 3D.
 
 - **One orchestrated moment on load:** the hero. Headlights fade on (0.6 s), the car turns once into a three-quarter view (1.2 s), headline appears.
 - **Update:** after that intro the car does not just sit still – it keeps turning on its own, slowly and continuously, like a turntable, with a very slight float (±1.2 cm, ~7 s period). A drag still rotates it freely at any time; on release it eases from the drag speed back into the same steady spin rather than snapping back to a fixed angle. A small, discreet **pause/play button** (bottom-right of the stage, "Drehung anhalten", `aria-pressed`) stops spin and float; dragging still works while paused (WCAG 2.2.2). (The scroll journey that used to be the one scroll-driven moment was removed – see 4.3.)
-- **Dark cinematic redesign (current):** opening – the car drives in from the left with turning wheels while the studio reflections rotate across its paint (a light sweep), then it turns into the three-quarter view (≈ 2.6 s); the "KICKDOWN" lettering settles and catches a sheen; the text rises. Scroll-out (GSAP ScrollTrigger, scrubbed 0.35 s, no pin, `components/hero/hero-motion.tsx`): the car turns toward the viewer, grows and drives forward while its layer lags behind the page and fades; the lettering drifts up, the text lifts away. Site-wide (`components/site/site-motion.tsx`): blocks below the fold fade and rise in once; section hairlines catch one light sweep; refined hovers (button light pass, panel lift, underline colour). All of it only with `prefers-reduced-motion: no-preference`.
+- **Dark cinematic redesign (current):** opening – the car drives in from the left with turning wheels while the studio reflections rotate across its paint (a light sweep), then it turns into the three-quarter view (≈ 2.6 s); the "KICKDOWN" lettering settles and catches a sheen; the text rises. Scroll-out (GSAP ScrollTrigger, scrubbed 0.35 s, no pin, `components/hero/hero-motion.tsx`): only the typography moves – the lettering drifts up and dims, the text fades. **The hero car is not animated by scrolling (removed Nov 2026): it stays in place.** The second scroll moment is the road journey (4.3). Site-wide (`components/site/site-motion.tsx`): blocks below the fold fade and rise in once; section hairlines catch one light sweep; refined hovers (button light pass, panel lift, underline colour). All of it only with `prefers-reduced-motion: no-preference`.
 - Everything else is **response motion only**: switching a showroom car, hover/press feedback. 150–250 ms, `ease-out`.
 - No fade-and-slide-up on every section, no hover wiggles.
 - **Car scroll progress (every page, built):** the small top-down car from the former journey drives along a slim road strip at the bottom of the sticky header – forward when scrolling down, backward when scrolling up (3.3). With motion allowed it glides to its spot with a short exponential ease (no overshoot, no bounce); it never moves by itself.
@@ -172,6 +174,8 @@ Native sizes: team and car photos **370 × 400 px**; shop window **870 × 470**;
 ## 3. SCOPE AND SITE MAP
 
 ### 3.1 Phase 1 – homepage (build now, after this plan is approved)
+
+**Update (Nov 2026): the road journey is back** on the homepage, right after the hero (4.3) – the sign-up simulation, team and showroom stay off the homepage. Current order: hero → road journey → Willkommen → Preise → Zeiten → Kontakt → footer.
 
 **Update (post-launch revision): the homepage was shortened.** Team, the showroom, the scroll journey and the sign-up simulation were removed from `/` – see "As revised" below for why and where that content lives now. The numbered list right below is the **original** Phase-1 plan, kept for history; it no longer matches the built site.
 
@@ -264,7 +268,7 @@ PHONE (390 px)                       DESKTOP (1440 px)
 └──────────────────────┘
 ```
 
-- Layout (dark cinematic redesign, current): a full-screen hero (phones: the space between header and bottom bar). Back to front: atmosphere gradients → the huge "KICKDOWN" lettering (Archivo 800, ~13 vw, white 3–20 %, decorative, `aria-hidden`) → the 3D car on a transparent canvas that covers the whole hero → the text. Text: small line "Deine Fahrschule Kickdown in Bremen" (old site), headline **"Dein Kickstart in Bremen"** (new, owner question 39), the old-site line "Dein Weg zum Führerschein Klasse B" (kept – old content is never removed), "Jetzt anrufen" and the visible phone number. Desktop: the car fills about half the width, centred at ~66 %, the text sits bottom-left on the header grid with a calm gradient behind it, so it stays readable at every car angle. Phones/tablets: the car spans ~92 % of the width in the upper part (in front of the lettering), the text and call button sit below it and are never covered at rest. The whole hero is the drag surface (links stay clickable).
+- Layout (dark cinematic redesign, current): a full-screen hero (phones: the space between header and bottom bar). Back to front: atmosphere gradients → the huge "KICKDOWN" lettering (Archivo 800, ~13 vw, white 3–20 %, decorative, `aria-hidden`) → the 3D car on a transparent canvas that covers the whole hero → the text. Text: small line "Deine Fahrschule Kickdown in Bremen" (old site), headline **"Dein Kickstart in Bremen"** (new, owner question 39), the old-site line "Dein Weg zum Führerschein Klasse B" (kept – old content is never removed), "Jetzt anrufen" and the visible phone number. Desktop: the car fills about half the width, centred at ~66 %, the text sits bottom-left on the header grid with a calm gradient behind it, so it stays readable at every car angle. Phones/tablets: the car spans ~92 % of the width in the upper part (in front of the lettering), the text and call button sit below it and are never covered at rest. The whole hero is the drag surface (links stay clickable). Scrolling never moves, scales or turns the car – it scrolls away with the hero like any other content (the earlier scroll-out "drive away" was removed).
 - Studio in Three.js: the canvas is transparent (no floor plane, no fog); a soft light pool and the car-shaped contact shadow sit on the "floor"; studio softbox reflections from local Lightformers (nothing downloaded). The camera uses a view offset to place the car per layout without changing the perspective.
 - Earlier (premium refinement): text column 5/12 + stage 7/12; matte floor with fog and one faint ring – replaced by the full-screen hero above.
 - Car (premium refinement): smoother plan view (nose and tail taper, tumblehome above the shoulder), deeper bevels, deep metallic lapis paint (#163a78) under a hard clear coat, gloss-black glasshouse, satin roof rails, rounded tyres with ten-spoke graphite rims and brake discs, dark headlight housings with a slim LED line, a dark red tail lens with a thin light line. The Kickdown logo file (unchanged) is printed straight onto the door paint – no white sign behind it – with the red/white stripe below. Still original: no brand, no real model, blank plates.
@@ -287,23 +291,22 @@ Day section. "Willkommen in der Fahrschule Kickdown" + both paragraphs word for 
 
 **As built:** the photo is the original file, shown complete – no crop, no rounded corners, no mask, no overlay – so the visible copyright notice ("© Copyright … Werbegestaltung", bottom-right) is not cut off, covered or edited. Under the photo a visible demo note: "Demo-Hinweis: Dieses Foto muss vor der Veröffentlichung freigegeben werden." **The photo must be approved before going live (owner question 13 stays open).**
 
-### 4.3 Scroll journey – "Deine Strecke zum Führerschein" (REMOVED)
+### 4.3 Road journey – "Deine Strecke zum Führerschein" (RESTORED, Nov 2026)
 
-**Update: this section was built, then removed, to shorten the homepage and cut a second big motion set-piece that competed with the hero.** Only its small top-down car and road came back, as the slim scroll progress indicator in the header (2.4, 3.3) – without the stations, the Anmeldung journey or the sign-up simulation. What follows below is the original plan, kept for history.
+**Current:** restored from git (`c88deac^`) and placed on the homepage directly after the hero (the hero fades into it). Restyled for the dark cinematic design – charcoal with a little deep-blue air, no white section, no neon glow.
 
-Every piece of its text was already duplicated elsewhere by design (see the table), so removing it loses no old-site content:
-
-| Station text | Where it still lives |
-|---|---|
-| S8, first sentence ("Wir stehen dir gern als Ansprechpartner …") | `#kontakt` on the homepage (`content/kontakt.ts`, `fragen.text`) – the full S7/S8 passage, word for word |
-| U4, complete ("Unser Theorieunterricht findet in Form von Kursen …") | `/unterricht#theorie` (`content/unterricht.ts`) |
-| U10, complete ("Wir bereiten dich zu fairen Preisen …") | `/unterricht#praxis` (`content/unterricht.ts`) |
-| S6, end of sentence ("… und bereiten dich auf die praktische Prüfung vor.") | Willkommen on the homepage (`content/start.ts`, `willkommen.text`) – already part of the same S4–S6 paragraph shown there |
-
-`content/strecke.ts` and `components/journey/*` were deleted.
+- **Stations:** 1 Anmeldung · 2 Theorie · 3 Fahrstunden · 4 Prüfung – each with its real text (word for word, see the table below) and ONE link. No prices, times or footnotes are repeated here.
+- **Links:** "Anmelden" → `/kontakt` (the multi-step sign-up form stays removed; the contact page has the phone number) · "Theoriezeiten" → `#zeiten` · "Unsere Fahrzeuge" → `/fahrzeuge` (the showroom is no longer on the homepage) · "Preise ansehen" → `#preise`.
+- **Road:** a sticky winding road (SVG, `components/journey/road-path.ts`) – dark asphalt with a hairline edge and a fine dashed lane line; numbered markers turn Kickdown blue when the car reaches them; a thin blue line shows the road already driven, ending under the car.
+- **Car:** a small top-down car (same drawing language as the header progress car) drives along the road with the scroll – forward when scrolling down, backward when scrolling up (GSAP ScrollTrigger, no pinning, `components/journey/journey-motion.tsx`).
+  - Motion allowed: the car glides to its spot (0.45 s, no overshoot); stations fade in as the car reaches them.
+  - **Reduced motion (Windows "Animation effects" off): the road and car stay visible; the car's position is set directly from the scroll position on every scroll event (1:1, no smoothing, nothing moves by itself); all stations are always visible.**
+  - Without JavaScript: the car waits at the start of the road; all stations are visible.
+- The header's thin car scroll indicator stays as it is (3.3).
+- Ids are page-scoped (`start-strecke-title`, `start-station-…`, see 6); the site-wide reveal (`site-motion.tsx`) leaves the journey alone.
 
 <details>
-<summary>Original plan (not current)</summary>
+<summary>Original plan and removal note (history)</summary>
 
 A real sequence, so numbered markers are justified.
 

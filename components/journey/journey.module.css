@@ -1,0 +1,280 @@
+/* Road journey – a dark winding road seen from above (DESIGN.md 4.3).
+   Restored Nov 2026 and restyled for the dark cinematic design. */
+
+.journey {
+  position: relative;
+  scroll-margin-top: 64px;
+  padding-block: 72px;
+  /* the hero fades into charcoal; a little deep-blue air on the road side */
+  background:
+    radial-gradient(40% 60% at 18% 40%, rgb(18 46 104 / 0.28), transparent 70%),
+    var(--charcoal);
+  color: var(--text);
+}
+
+.head,
+.layout {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 16px;
+}
+
+/* ---------- Road (sticky, decorative) ---------- */
+
+.roadCol {
+  position: relative;
+}
+
+.road {
+  position: sticky;
+  top: 86px; /* header 56 + strip 15 + 15 */
+  height: calc(100svh - 86px - 96px);
+  min-height: 360px;
+}
+
+.roadSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  --road: 22px;
+}
+
+.roadSvg path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+}
+
+.edge {
+  stroke: rgb(255 255 255 / 0.14);
+  stroke-width: calc(var(--road) + 2px);
+}
+
+.asphalt {
+  stroke: #161b22;
+  stroke-width: var(--road);
+}
+
+/* the road already driven – drawn up to the car (stroke-dashoffset from JS) */
+.driven {
+  stroke: var(--kd-blau);
+  stroke-width: 2px;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  opacity: 0.85;
+}
+
+.lane {
+  stroke: rgb(255 255 255 / 0.45);
+  stroke-width: 1px;
+  stroke-dasharray: 8 14;
+  stroke-linecap: butt !important;
+}
+
+.marker {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  translate: -50% -50%;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--charcoal);
+  color: var(--text-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.marker[data-reached] {
+  border-color: var(--kd-blau);
+  background: var(--kd-blau);
+  color: var(--ink);
+}
+
+.marker[data-current] {
+  box-shadow: 0 0 0 5px rgb(0 156 220 / 0.18);
+}
+
+.car {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 0;
+  width: 20px;
+  translate: none;
+  /* without JavaScript: waiting at the start of the road */
+  transform: translate(-50%, -50%) rotate(180deg);
+  will-change: transform;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.7));
+}
+
+.car svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- Stations ---------- */
+
+.stations {
+  margin: 0;
+  padding: 0 0 24px;
+  list-style: none;
+}
+
+.station {
+  position: relative;
+  padding-block: 32px 48px;
+}
+
+.station + .station {
+  border-top: 1px solid var(--line);
+}
+
+.stationBody {
+  max-width: 60ch;
+}
+
+/* Hidden only while the motion version runs (JS + motion allowed). */
+.layout[data-motion="on"] .station:not([data-reached]) .stationBody {
+  opacity: 0;
+  translate: 0 24px;
+}
+
+.stationTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.stationNum {
+  font-weight: 300;
+  font-variation-settings: "wdth" 100;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--kd-blau);
+  font-variant-numeric: tabular-nums;
+}
+
+.text {
+  margin: 0 0 16px;
+  color: var(--text-2);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  color: var(--kd-blau);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgb(0 156 220 / 0.45);
+  text-underline-offset: 5px;
+  transition: text-decoration-color 200ms ease-out;
+}
+
+.link:hover {
+  text-decoration-color: currentColor;
+}
+
+.link span {
+  transition: translate 300ms var(--ease-out);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--kd-blau);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stationBody {
+    transition:
+      opacity 600ms var(--ease-out),
+      translate 700ms var(--ease-out);
+  }
+  .marker {
+    transition:
+      background-color 250ms ease-out,
+      border-color 250ms ease-out,
+      color 250ms ease-out,
+      box-shadow 250ms ease-out;
+  }
+  .link:hover span {
+    translate: 4px 0;
+  }
+}
+
+/* ---------- Tablet / desktop ---------- */
+
+@media (min-width: 640px) {
+  .layout {
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 32px;
+  }
+  .roadSvg {
+    --road: 30px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .journey {
+    scroll-margin-top: 64px;
+    padding-block: 112px;
+  }
+  .layout {
+    grid-template-columns: minmax(260px, 5fr) minmax(0, 7fr);
+    gap: 64px;
+  }
+  .road {
+    top: 103px; /* header 64 + strip 15 + 24 */
+    height: calc(100svh - 103px - 48px);
+  }
+  .roadSvg {
+    --road: 50px;
+  }
+  .lane {
+    stroke-dasharray: 14 18;
+  }
+  .driven {
+    stroke-width: 3px;
+  }
+  .marker {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+  }
+  .car {
+    width: 32px;
+  }
+  .station {
+    min-height: 48svh;
+    padding-block: 48px;
+  }
+  .stationTitle {
+    font-size: 32px;
+  }
+  .stationNum {
+    font-size: 64px;
+  }
+}

@@ -4,8 +4,6 @@
 /* ---------- Frame ---------- */
 
 .hero {
-  /* Positioned + z-index: while scrolling out, the car layer may drive on
-     over the top of the next section (it fades out on the way). */
   position: relative;
   z-index: 1;
   /* Phones: header (56 + strip) and bottom bar (77) stay visible around it. */
@@ -79,19 +77,8 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  will-change: transform, opacity;
 }
 
-.stage[data-leaving] {
-  pointer-events: none;
-}
-
-/* the controls step back as soon as the hero starts to leave */
-.stage[data-scrolled] .hint,
-.stage[data-scrolled] .spinToggle {
-  opacity: 0;
-  visibility: hidden;
-}
 
 .still,
 .live {

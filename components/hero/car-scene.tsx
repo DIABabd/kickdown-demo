@@ -14,7 +14,6 @@ import {
 import * as THREE from "three";
 import { CarModel, KD_BLAU } from "./car-model";
 import { INTRO_ANGLE, REST_ANGLE } from "./car-profile";
-import { heroScroll } from "./hero-scroll";
 import styles from "./hero.module.css";
 
 /* ------------------------------------------------------------------ */
@@ -38,16 +37,14 @@ type Control = {
   travel: number;
   /** Environment rotation (rad): the reflections sweep across the paint in the intro. */
   env: number;
-  /** Smoothed scroll progress out of the hero (0 → 1). */
-  scroll: number;
   /** Body roll spring – the car leans a little when it turns. */
   roll: number;
   rollVel: number;
   prevAngle: number;
   /**
    * Reduced motion: the 3D car is shown and can be turned by the visitor,
-   * but nothing moves by itself (no intro, no spin, no float, no scroll
-   * animation, no coasting, no body lean).
+   * but nothing moves by itself (no intro, no spin, no float, no coasting,
+   * no body lean). Scrolling never moves the car – it stays in place.
    */
   calm: boolean;
   /** Pause/play button: stops the idle spin and float (drag still works). */
@@ -82,7 +79,6 @@ function createControl(calm: boolean): Control {
     x: calm ? 0 : INTRO.driveFrom,
     travel: 0,
     env: calm ? 0 : INTRO.sweepFrom,
-    scroll: 0,
     roll: 0,
     rollVel: 0,
     prevAngle: calm ? REST_ANGLE : INTRO_ANGLE,
@@ -119,9 +115,6 @@ const KEY_STEP = Math.PI / 12; // 15°
 const DRAG_SPEED = 0.0085; // rad per CSS px
 /** Steady idle turn (rad/s). A drag only interrupts it, never stops it. */
 const AUTO_SPIN_VEL = -0.15;
-/** Scroll-out: the car turns its nose toward the viewer and drives forward. */
-const DRIVE_ANGLE = -1.05;
-const DRIVE_DIST = 6.5;
 
 /**
  * Frame-rate probe. Warm-up frames are skipped (first shader compiles on
@@ -334,17 +327,9 @@ function Rig({
       busy = true;
     }
 
-    /* --- scroll out of the hero: turn toward the viewer and drive forward --- */
-    const goal = c.calm ? 0 : heroScroll.progress;
-    const prevScroll = c.scroll;
-    c.scroll += (goal - c.scroll) * (1 - Math.exp(-12 * dt));
-    if (Math.abs(goal - c.scroll) < 1e-4) c.scroll = goal;
-    else busy = true;
-    const e = easeInOut(clamp(c.scroll, 0, 1));
-    const shown = c.angle + (nearest(c.angle, DRIVE_ANGLE) - c.angle) * e;
-    const forward = DRIVE_DIST * Math.pow(e, 1.4);
-    const prevForward = DRIVE_DIST * Math.pow(easeInOut(clamp(prevScroll, 0, 1)), 1.4);
-    travel.current += c.x - xBefore + (forward - prevForward);
+    // the wheels turn while the car drives in (intro only)
+    travel.current += c.x - xBefore;
+    const shown = c.angle;
 
     /* --- body roll spring: lean into the turn, then settle --- */
     const angVel = dt > 0 ? (shown - c.prevAngle) / dt : 0;
@@ -369,11 +354,7 @@ function Rig({
     /* --- apply --- */
     if (car.current) {
       car.current.rotation.y = shown;
-      car.current.position.set(
-        c.x + Math.cos(DRIVE_ANGLE) * forward,
-        0,
-        -Math.sin(DRIVE_ANGLE) * forward,
-      );
+      car.current.position.set(c.x, 0, 0);
     }
     if (body.current) {
       body.current.rotation.x = c.roll;
@@ -507,13 +488,6 @@ export default function CarScene({
     invalidateRef.current();
   }, [reducedMotion]);
 
-  useEffect(
-    () => () => {
-      heroScroll.invalidate = () => {};
-    },
-    [],
-  );
-
   const reportAngle = (rad: number) => {
     const d = Math.round(THREE.MathUtils.radToDeg(-rad)) % 360;
     setDeg(d < 0 ? d + 360 : d);
@@ -613,7 +587,6 @@ export default function CarScene({
         gl={{ antialias: true, powerPreference: "high-performance", alpha: true }}
         onCreated={(state) => {
           invalidateRef.current = state.invalidate;
-          heroScroll.invalidate = state.invalidate;
           state.gl.setClearColor(0x000000, 0);
           state.gl.domElement.addEventListener("webglcontextlost", (event) => {
             event.preventDefault();

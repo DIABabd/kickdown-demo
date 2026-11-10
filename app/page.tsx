@@ -1,5 +1,6 @@
 import { Footer } from "@/components/footer/footer";
 import { Hero } from "@/components/hero/hero";
+import { Journey } from "@/components/journey/journey";
 import { Kontakt } from "@/components/kontakt/kontakt";
 import { Seam } from "@/components/site/seam";
 import { Preise } from "@/components/tageslicht/preise";
@@ -7,27 +8,26 @@ import { Zeiten } from "@/components/tageslicht/zeiten";
 import { Willkommen } from "@/components/willkommen/willkommen";
 
 /**
- * The homepage, kept short on purpose: hero, a short welcome, prices and
- * times, and a way to get in touch. Team and vehicles have their own full
- * pages (/team, /fahrzeuge), reachable from the header nav and the footer
- * on every page – their content isn't repeated here. The sign-up
- * simulation and the station-by-station "Strecke" journey were removed
- * (DESIGN.md); "Anmelden" is now a call action.
+ * The homepage: the full-screen hero, the road journey (Anmeldung → Theorie →
+ * Fahrstunden → Prüfung, each with its real text and one link), a short
+ * welcome, prices and times, and a way to get in touch. Team and vehicles
+ * have their own pages (/team, /fahrzeuge), reachable from the header nav
+ * and the footer. The sign-up simulation stays removed: "Anmelden" leads to
+ * /kontakt, where the visitor can call the school.
  */
 export default function Home() {
   return (
     <>
       <Hero>
-        {/* hero: night */}
+        {/* the road journey follows the hero directly (the hero fades into it) */}
+        <Journey />
         <Seam />
-        {/* day, through to the end of the page */}
         <Willkommen />
         <Preise page="start" />
         <Zeiten />
         <Kontakt />
         <Seam />
       </Hero>
-      {/* night */}
       <Footer page="start" />
     </>
   );

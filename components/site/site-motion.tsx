@@ -10,7 +10,8 @@ const REVEAL = "main h2, main h3, main p, main figure, main table, main dl, main
 /**
  * Site-wide, quiet scroll motion (every page):
  * - reveal: blocks below the fold fade and rise in once (nested blocks move
- *   with their parent, never on their own),
+ *   with their parent, never on their own; the hero and the road journey
+ *   have their own motion and are left alone),
  * - sweep: section transitions (`[data-sweep]`) catch one light sweep.
  *
  * Only elements *below* the viewport at load are hidden first, so nothing
@@ -53,7 +54,7 @@ export function SiteMotion() {
         if (el.checkVisibility()) io.observe(el);
       }
       const found = [...document.querySelectorAll<HTMLElement>(REVEAL)].filter(
-        (el) => !el.dataset.reveal && !el.closest("[data-hero]") && el.checkVisibility(),
+        (el) => !el.dataset.reveal && !el.closest("[data-hero], [data-journey]") && el.checkVisibility(),
       );
       const set = new Set(found);
       const outer = found.filter((el) => {
