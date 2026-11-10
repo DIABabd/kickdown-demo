@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Atkinson_Hyperlegible_Next } from "next/font/google";
+import { DebugPanel } from "@/components/site/debug-panel";
 import { SiteMotion } from "@/components/site/site-motion";
 import { start } from "@/content/start";
 import "./globals.css";
@@ -40,6 +41,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         {children}
         <SiteMotion />
+        {/* temporary: only renders with ?debug=1 */}
+        <DebugPanel />
       </body>
     </html>
   );

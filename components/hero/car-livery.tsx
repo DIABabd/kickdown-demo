@@ -43,9 +43,16 @@ function canvasTexture(w: number, h: number, draw: (g: CanvasRenderingContext2D)
   return tex;
 }
 
+/** Rounded rectangle path, drawn by hand (CanvasRenderingContext2D.roundRect needs iOS 16+). */
 function roundRect(g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  const rr = Math.min(r, w / 2, h / 2);
   g.beginPath();
-  g.roundRect(x, y, w, h, r);
+  g.moveTo(x + rr, y);
+  g.arcTo(x + w, y, x + w, y + h, rr);
+  g.arcTo(x + w, y + h, x, y + h, rr);
+  g.arcTo(x, y + h, x, y, rr);
+  g.arcTo(x, y, x + w, y, rr);
+  g.closePath();
 }
 
 /**

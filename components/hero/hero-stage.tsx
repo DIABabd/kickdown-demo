@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Component, useEffect, useState, type ErrorInfo, type ReactNode } from "react";
+import { debugInfo } from "@/components/site/debug-info";
 import { ui } from "@/content/start";
 import styles from "./hero.module.css";
 
@@ -12,14 +13,10 @@ const REDUCED = "(prefers-reduced-motion: reduce)";
 
 type Phase = "waiting" | "3d" | "still";
 
-type NavigatorHints = Navigator & {
-  deviceMemory?: number;
-  connection?: { saveData?: boolean };
-};
-
 /**
- * WebGL2 support. A "major performance caveat" (software renderer) is not
- * treated as a failure here – the frame-rate probe decides that.
+ * WebGL2 support (three.js needs WebGL2). A "major performance caveat"
+ * (software renderer) is not treated as a failure – the scene then simply
+ * renders at pixel ratio 1.
  */
 function hasWebGL2() {
   try {
@@ -29,22 +26,6 @@ function hasWebGL2() {
   } catch {
     return false;
   }
-}
-
-/**
- * Reasons that genuinely call for the still image before trying 3D.
- * Reduced motion is NOT one of them: the 3D car is shown without
- * automatic motion instead. Slow devices are caught by the frame probe.
- */
-function hardReason(force: boolean): string | null {
-  if (force) return null;
-  const nav = navigator as NavigatorHints;
-  if (nav.connection?.saveData) return "Data Saver is on";
-  if (typeof nav.deviceMemory === "number" && nav.deviceMemory < 4)
-    return `low device memory (${nav.deviceMemory} GB)`;
-  if (typeof nav.hardwareConcurrency === "number" && nav.hardwareConcurrency < 4)
-    return `few CPU cores (${nav.hardwareConcurrency})`;
-  return null;
 }
 
 /** Catches errors from loading or running the 3D scene → still image. */
@@ -67,12 +48,17 @@ class SceneBoundary extends Component<
 
 /**
  * Shows the server-rendered still first, then swaps in the interactive
- * Three.js car once the page is idle. The still stays only when 3D is
- * truly not possible: no WebGL2, Data Saver, a very weak device, a frame
- * rate that stays too low, or a 3D error.
+ * Three.js car. The 3D car runs on every device with WebGL2 – phones
+ * included. There are NO device, screen-size, memory, CPU, touch, Data
+ * Saver or frame-rate checks any more. The still is shown only when:
+ * - WebGL2 is not available, or
+ * - the 3D scene crashes (error boundary), or
+ * - briefly, while the browser has taken the WebGL context away (it comes
+ *   back on its own when the context is restored).
+ * Slow devices get a lower pixel ratio instead (car-scene.tsx).
  *
- * Testing: `?hero3d=0` always shows the still, `?hero3d=1` skips the
- * device hints and the frame-rate probe.
+ * Testing: `?hero3d=0` always shows the still. `?debug=1` shows the
+ * debug panel (components/site/debug-panel.tsx).
  */
 export function HeroStage({ still }: { still: ReactNode }) {
   const [phase, setPhase] = useState<Phase>("waiting");
@@ -82,11 +68,15 @@ export function HeroStage({ still }: { still: ReactNode }) {
   const [paused, setPaused] = useState(false);
   /** Why the still is shown – exposed as data-fallback for debugging. */
   const [reason, setReason] = useState<string | null>(null);
+  /** The browser took the WebGL context away (e.g. memory pressure) – the still shows until it's back. */
+  const [lost, setLost] = useState(false);
 
   const fallBack = (why: string) => {
     setReady(false);
     setPhase("still");
     setReason(why);
+    debugInfo.heroFallback = why;
+    debugInfo.heroPhase = "still";
   };
 
   useEffect(() => {
@@ -98,13 +88,12 @@ export function HeroStage({ still }: { still: ReactNode }) {
 
     const start = () => {
       setReducedMotion(motion.matches);
+      debugInfo.webgl2 = hasWebGL2();
       if (flag === "0") return fallBack("URL flag ?hero3d=0");
-      if (!hasWebGL2()) return fallBack("WebGL2 not available");
-      const hard = hardReason(force);
-      if (hard) return fallBack(hard);
-
+      if (!debugInfo.webgl2) return fallBack("WebGL2 not available");
       setForced(force);
       setPhase("3d");
+      debugInfo.heroPhase = "3d";
     };
 
     let idleId: number | undefined;
@@ -126,7 +115,7 @@ export function HeroStage({ still }: { still: ReactNode }) {
     <div
       className={styles.stage}
       data-hero-stage
-      data-ready={ready || undefined}
+      data-ready={(ready && !lost) || undefined}
       data-fallback={reason ?? undefined}
     >
       <div className={styles.still}>{still}</div>
@@ -138,14 +127,14 @@ export function HeroStage({ still }: { still: ReactNode }) {
               reducedMotion={reducedMotion}
               paused={paused}
               onReady={() => setReady(true)}
-              onFallback={(reason) => fallBack(reason)}
+              onContextLost={(isLost) => setLost(isLost)}
             />
           </SceneBoundary>
         </div>
       )}
       {/* Pause/play for the automatic turn (WCAG 2.2.2). Not shown with reduced
           motion – nothing turns by itself then; dragging works either way. */}
-      {phase === "3d" && ready && !reducedMotion && (
+      {phase === "3d" && ready && !lost && !reducedMotion && (
         <button
           type="button"
           className={styles.spinToggle}

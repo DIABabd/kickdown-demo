@@ -12,6 +12,7 @@ import {
   type RefObject,
 } from "react";
 import * as THREE from "three";
+import { debugInfo } from "@/components/site/debug-info";
 import { CarModel, KD_BLAU } from "./car-model";
 import { INTRO_ANGLE, REST_ANGLE } from "./car-profile";
 import styles from "./hero.module.css";
@@ -117,18 +118,15 @@ const DRAG_SPEED = 0.0085; // rad per CSS px
 const AUTO_SPIN_VEL = -0.15;
 
 /**
- * Frame-rate probe. Warm-up frames are skipped (first shader compiles on
- * Windows/ANGLE can take seconds even on a good GPU), then 1 s is measured.
- * Below STEP_DOWN_FPS the pixel ratio drops to 1 and we measure again; only
- * below FALLBACK_FPS at pixel ratio 1 do we give up and show the still.
+ * Frame-rate probe – it only ever makes rendering lighter, it never
+ * replaces the 3D car with the still. Warm-up frames are skipped (first
+ * shader compiles can take a while), then 1 s is measured; below
+ * STEP_DOWN_FPS the pixel ratio drops to 1.
  */
 const PROBE = {
   warmupFrames: 20,
   windowMs: 1000,
   stepDownFps: 40,
-  fallbackFps: 24,
-  /** Even the warm-up takes this long → the device really can't render it. */
-  maxWarmupMs: 10000,
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -146,6 +144,17 @@ function radialTexture(stops: [number, string][], size = 256) {
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
+}
+
+/** Rounded rectangle path (CanvasRenderingContext2D.roundRect needs iOS 16+). */
+function roundedRect(g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  const rr = Math.min(r, w / 2, h / 2);
+  g.moveTo(x + rr, y);
+  g.arcTo(x + w, y, x + w, y + h, rr);
+  g.arcTo(x + w, y + h, x, y + h, rr);
+  g.arcTo(x, y + h, x, y, rr);
+  g.arcTo(x, y, x + w, y, rr);
+  g.closePath();
 }
 
 /**
@@ -167,7 +176,7 @@ function shadowTexture() {
     g.shadowOffsetX = W * 2;
     g.fillStyle = "#000";
     g.beginPath();
-    g.roundRect(x - W * 2, y, w, h, r);
+    roundedRect(g, x - W * 2, y, w, h, r);
     g.fill();
     g.restore();
   };
@@ -258,14 +267,12 @@ function Rig({
   forced,
   inViewRef,
   onReady,
-  onSlow,
   onSettledAngle,
 }: {
   ctrlRef: RefObject<Control>;
   forced: boolean;
   inViewRef: RefObject<boolean>;
   onReady: () => void;
-  onSlow: (fps: number) => void;
   onSettledAngle: (deg: number) => void;
 }) {
   const car = useRef<THREE.Group>(null);
@@ -379,30 +386,24 @@ function Rig({
         p.first = now;
         p.frames = 1;
       } else if (p.frames < PROBE.warmupFrames) {
-        if (now - p.first > PROBE.maxWarmupMs) {
-          p.done = true;
-          onSlow(((p.frames - 1) * 1000) / (now - p.first));
-        }
+        // still warming up
       } else if (p.frames === PROBE.warmupFrames) {
         p.start = now;
       } else if (now - p.start >= PROBE.windowMs) {
         const fps = ((p.frames - PROBE.warmupFrames) * 1000) / (now - p.start);
         if (fps >= PROBE.stepDownFps) {
           p.done = true;
-        } else if (!p.steppedDown && state.viewport.dpr > 1) {
-          // Try a lighter setting before giving up.
-          p.steppedDown = true;
-          state.setDpr(1);
-          p.frames = 0;
-          p.first = 0;
         } else {
+          // Slow device: render fewer pixels – the car stays 3D.
+          if (state.viewport.dpr > 1) state.setDpr(1);
           p.done = true;
-          if (fps < PROBE.fallbackFps) onSlow(fps);
         }
       }
       busy = true;
     }
 
+    debugInfo.heroFrames++;
+    debugInfo.heroDpr = state.viewport.dpr;
     if (busy && inViewRef.current) state.invalidate();
   });
 
@@ -437,7 +438,7 @@ export default function CarScene({
   reducedMotion,
   paused,
   onReady,
-  onFallback,
+  onContextLost,
 }: {
   /** Skip the frame probe (`?hero3d=1`). */
   forced: boolean;
@@ -446,8 +447,8 @@ export default function CarScene({
   /** Pause/play control (outside the canvas): stops the idle spin and float. */
   paused: boolean;
   onReady: () => void;
-  /** The scene can't run well here: show the still, with a reason. */
-  onFallback: (reason: string) => void;
+  /** The browser took the WebGL context away (true) or gave it back (false). */
+  onContextLost: (lost: boolean) => void;
 }) {
   const ctrl = useRef<Control>(createControl(reducedMotion));
   const wrap = useRef<HTMLDivElement>(null);
@@ -588,9 +589,17 @@ export default function CarScene({
         onCreated={(state) => {
           invalidateRef.current = state.invalidate;
           state.gl.setClearColor(0x000000, 0);
+          // preventDefault lets the browser restore the context; three.js then
+          // rebuilds its GPU resources and the car comes back by itself.
           state.gl.domElement.addEventListener("webglcontextlost", (event) => {
             event.preventDefault();
-            onFallback("WebGL context lost");
+            debugInfo.contextLost = true;
+            onContextLost(true);
+          });
+          state.gl.domElement.addEventListener("webglcontextrestored", () => {
+            debugInfo.contextLost = false;
+            onContextLost(false);
+            state.invalidate();
           });
         }}
         aria-hidden="true"
@@ -603,7 +612,7 @@ export default function CarScene({
 
         {/* Local studio for clear-coat reflections – softboxes, nothing is downloaded.
             Rotating it in the intro sweeps the light across the paint. */}
-        <Environment resolution={256} frames={1} environmentIntensity={1}>
+        <Environment resolution={coarse ? 128 : 256} frames={1} environmentIntensity={1}>
           <Lightformer form="rect" intensity={2.4} color="#ffffff" position={[0, 6, 0]} rotation-x={Math.PI / 2} scale={[10, 4, 1]} />
           <Lightformer form="rect" intensity={3.4} color="#f4f7ff" position={[0, 2.4, 7]} scale={[14, 0.5, 1]} />
           <Lightformer form="rect" intensity={1.4} color="#f4f7ff" position={[0, 1.1, 7]} scale={[14, 0.18, 1]} />
@@ -617,7 +626,6 @@ export default function CarScene({
           forced={forced}
           inViewRef={inView}
           onReady={onReady}
-          onSlow={(fps) => onFallback(`too slow (${Math.round(fps)} fps)`)}
           onSettledAngle={reportAngle}
         />
       </Canvas>
