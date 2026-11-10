@@ -62,7 +62,7 @@ Diese Punkte betreffen Wünsche, kleine Korrekturen oder Dinge, die erst für ei
 27. **Kleine Fehler in den alten Texten korrigieren?** Wir übernehmen die Texte genau so, inkl. kleiner Fehler (z. B. „einen passendes Theorie-Angebot", „Automatik Getriebe" vs. „Automatikgetriebe", Leerzeichen in „Fahrschüler/ Fahranfänger"). Sollen wir das korrigieren?
 28. **Theorie-Intensivkurs:** Im alten Quellcode stehen nur alte Termine (2019–2021), wir zeigen sie nicht. Gibt es einen aktuellen Kurs, den wir zeigen sollen?
 29. **Mitgliedschaft im Fahrlehrerverband Bremen e. V. zeigen?** Steht im alten Quellcode, ist aber nicht sichtbar.
-30. **„Programmiert durch KS Design" in Fußzeile/Impressum behalten?**
+30. **„Programmiert durch KS Design" in Fußzeile/Impressum behalten?** – In der Fußzeile jetzt ersetzt, siehe Frage 41. Im Impressum steht der KS-Design-Hinweis weiter (Rechtstext, unverändert von der alten Website).
 31. **Datenschutztext zu Hosting (KS Design, Timme Hosting) anpassen** – nötig, sobald die echte Website woanders liegt. Wer schreibt und prüft den neuen Text?
 32. **Preise jetzt im Hauptmenü statt nur in der Fußzeile – in Ordnung?**
 33. **Theorie- und Praxisunterricht zu einer Seite „Unterricht" zusammengelegt – in Ordnung?** Kein Text geht verloren.
@@ -73,3 +73,4 @@ Diese Punkte betreffen Wünsche, kleine Korrekturen oder Dinge, die erst für ei
 38. **Logo auf dem 3D-Auto direkt auf dem Lack (ohne weißes Schild) – in Ordnung?** Die Logodatei selbst ist unverändert.
 39. **Neue Hauptüberschrift „Dein Kickstart in Bremen" freigeben?** Dieser Text ist neu (nicht von der alten Website). Darunter stehen weiter die alten Zeilen „Deine Fahrschule Kickdown in Bremen" und „Dein Weg zum Führerschein Klasse B". Ebenfalls neu: das große Hintergrundwort „KICKDOWN" hinter dem Auto (nur Gestaltung, wird nicht vorgelesen).
 40. **Dunkles Design auf allen Seiten – in Ordnung?** Preise, Zeiten und Rechtstexte stehen jetzt hell auf dunklem Grund (gut lesbar, Kontrast mindestens 6 : 1). Falls Sie für Preise oder Rechtstexte lieber hellen Hintergrund möchten, ist das leicht umstellbar.
+41. **Neuer Hinweis in der Fußzeile freigeben: „Design & Entwicklung: Abdullah Diab"** – ersetzt „Programmiert durch KS Design." und dessen Link (ohne Link). Die Zeile „© 2026/2027" davor bleibt unverändert. Bitte bestätigen, ob dieser Hinweis so erscheinen darf.

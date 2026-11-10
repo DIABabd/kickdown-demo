@@ -67,8 +67,13 @@ export const footer = {
     // Preview of the old cookie dialog – the demo sets no cookies.
     { label: "Cookie-Einstellungen", href: "/cookie-einstellungen" },
   ],
-  /** Kept: DESIGN.md G9 lists it for the footer, word for word (owner question 16). */
-  credit: { text: "© 2026/2027 | Programmiert durch KS Design.", href: "https://www.ks-media.de" },
+  /**
+   * Bottom line: the school's copyright (old site, unchanged) and the new
+   * credit – it replaces "Programmiert durch KS Design." and its link (no link
+   * any more). The credit needs the owner's approval (OWNER-QUESTIONS 41).
+   */
+  copyright: "© 2026/2027",
+  credit: "Design & Entwicklung: Abdullah Diab",
 } as const;
 
 /** New UI words (DESIGN.md 5.13 / alt texts / link hints). */

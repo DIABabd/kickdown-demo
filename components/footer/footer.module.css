@@ -142,17 +142,14 @@
 }
 
 .credit {
+  margin: 0;
   padding-block: 6px;
   font-size: 15px;
   color: color-mix(in srgb, var(--markierung) 72%, var(--nacht)); /* ≥ 7:1 */
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--markierung) 30%, transparent);
-  text-underline-offset: 4px;
 }
 
 .textLink:focus-visible,
 .insta:focus-visible,
-.credit:focus-visible,
 .logo:focus-visible {
   outline: 2px solid var(--kd-blau);
   outline-offset: 2px;

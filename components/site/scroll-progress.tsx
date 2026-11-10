@@ -33,17 +33,27 @@ export function ScrollProgress() {
     let frame = 0;
     let last = 0;
 
+    // Sizes are measured only when they can change (resize, content change),
+    // never while scrolling – each frame then only reads window.scrollY.
+    let maxScroll = 0;
+    let range = 0;
+    let trackW = 1;
+    let carW = 0;
+    const measure = () => {
+      maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      trackW = t.parentElement?.clientWidth || 1;
+      carW = c.offsetWidth;
+      range = Math.max(0, t.clientWidth - carW);
+    };
     const targetX = () => {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-      return p * Math.max(0, t.clientWidth - c.offsetWidth);
+      const p = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+      return p * range;
     };
     const place = (px: number) => {
       x = px;
       c.style.transform = `translate3d(${px}px, 0, 0)`;
       // the driven road ends under the middle of the car
-      const w = t.parentElement?.clientWidth || 1;
-      if (trail.current) trail.current.style.transform = `scaleX(${Math.min(1, (px + 4 + c.offsetWidth / 2) / w)})`;
+      if (trail.current) trail.current.style.transform = `scaleX(${Math.min(1, (px + 4 + carW / 2) / trackW)})`;
     };
     const glide = (now: number) => {
       const dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60;
@@ -70,6 +80,7 @@ export function ScrollProgress() {
       }
     };
     const jump = () => {
+      measure();
       cancelAnimationFrame(frame);
       frame = 0;
       last = 0;

@@ -10,7 +10,7 @@ import styles from "./footer.module.css";
 /**
  * Site footer (DESIGN.md 3.3) – all texts word for word from the old
  * footer. Links to pages that don't exist yet go to the shared
- * placeholder (DESIGN.md 3.1). Outbound links (map, Instagram, KS Design)
+ * placeholder (DESIGN.md 3.1). Outbound links (map, Instagram)
  * are plain links: nothing is loaded from those sites.
  */
 export function Footer({ page }: { page: PageKey }) {
@@ -98,10 +98,9 @@ export function Footer({ page }: { page: PageKey }) {
               ))}
             </ul>
           </nav>
-          <a href={footer.credit.href} target="_blank" rel="noopener noreferrer" className={styles.credit}>
-            {footer.credit.text}
-            <span className="sr-only"> {kontaktUi.newTab}</span>
-          </a>
+          <p className={styles.credit}>
+            {footer.copyright} | {footer.credit}
+          </p>
         </div>
       </div>
     </footer>
