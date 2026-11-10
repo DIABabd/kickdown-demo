@@ -5,12 +5,13 @@ import { debugInfo } from "./debug-info";
 
 /**
  * TEMPORARY debug panel – only with `?debug=1` in the address.
- * Shows what the phone actually does: WebGL, 3D renderer, fallback reason,
+ * Shows what the phone actually does: WebGL, 3D renderer, why 3D is off,
  * reduced motion and the journey car's progress. Reads values in memory
  * only (debug-info.ts); nothing is stored or sent. Remove before go-live.
  *
  * If the panel does NOT appear with ?debug=1, JavaScript is not running on
- * that device at all – which also explains a 2D hero and a still car.
+ * that device at all – which also explains an empty car area and a still
+ * journey car.
  */
 export function DebugPanel() {
   const [lines, setLines] = useState<[string, string][]>([]);
@@ -40,8 +41,8 @@ export function DebugPanel() {
         ["JavaScript", "running"],
         ["WebGL2", debugInfo.webgl2 === null ? "checking…" : debugInfo.webgl2 ? "yes" : "NO"],
         ["3D renderer", renderer],
-        ["Hero shows", debugInfo.heroPhase === "still" ? "2D fallback" : debugInfo.heroPhase === "3d" ? "3D car" : "waiting…"],
-        ["Fallback reason", debugInfo.heroFallback ?? "none"],
+        ["Hero car", debugInfo.heroPhase === "off" ? "not shown (car area empty)" : debugInfo.heroPhase === "3d" ? "3D car" : "loading…"],
+        ["3D off reason", debugInfo.heroOffReason ?? "none"],
         ["Frames drawn / DPR", `${debugInfo.heroFrames} / ${debugInfo.heroDpr || "–"}`],
         ["Reduced motion", window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "yes" : "no"],
         ["Journey", `${debugInfo.journeyMode} – ${Math.round(debugInfo.journeyProgress * 100)} % (${debugInfo.journeyUpdates} updates)`],

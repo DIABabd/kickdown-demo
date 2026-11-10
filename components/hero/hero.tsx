@@ -3,7 +3,6 @@ import { pageTitleId } from "@/components/site/page-ids";
 import { SiteHeader } from "@/components/site/site-header";
 import { telefon } from "@/content/kontakt";
 import { start, ui } from "@/content/start";
-import { CarStill } from "./car-still";
 import { HeroMotion } from "./hero-motion";
 import { HeroStage } from "./hero-stage";
 import styles from "./hero.module.css";
@@ -33,7 +32,7 @@ export function Hero({ children }: { children?: ReactNode }) {
             {ui.heroWord}
           </p>
 
-          <HeroStage still={<CarStill />} />
+          <HeroStage />
 
           <div className={styles.content} data-hero-text>
             <p className={styles.eyebrow}>{start.heroTitle}</p>

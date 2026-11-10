@@ -153,11 +153,14 @@ function wheelGeometries() {
 export function CarModel({
   headTarget,
   travelRef,
+  onLiveryReady,
 }: {
   /** Object the headlight spots aim at (lives inside the car group). */
   headTarget: RefObject<THREE.Object3D | null>;
   /** Distance rolled (m): the wheels turn by travel / radius. */
   travelRef?: RefObject<number>;
+  /** The door logo decal is built (see DoorDecals). */
+  onLiveryReady?: () => void;
 }) {
   const root = useRef<THREE.Group>(null);
   const spinners = useRef<THREE.Object3D[] | null>(null);
@@ -246,7 +249,7 @@ export function CarModel({
       {/* Sculpted body and glasshouse */}
       <mesh geometry={geo.body} material={mats.paint}>
         {/* Kickdown logo + red/white graphic, printed onto the door paint */}
-        <DoorDecals />
+        <DoorDecals onReady={onLiveryReady} />
       </mesh>
       <mesh geometry={geo.cabin} material={mats.glass} />
 

@@ -2,8 +2,7 @@
  * Side profile of the stylised hero car – an original compact-SUV shape.
  *
  * Plain data, no Three.js import: the 3D model (car-model.tsx) extrudes
- * these outlines, and the server-rendered still (car-still.tsx) draws the
- * very same outlines as SVG, so the fallback image is the same car.
+ * these outlines.
  *
  * Units are metres. x points forward (front of the car at +x),
  * y points up (ground at y = 0). The car is centred on x = 0.
@@ -208,13 +207,5 @@ export const ARCH = { r: ARCH_R, start: ARCH_END, end: Math.PI - ARCH_END } as c
 /** Car rest pose: the three-quarter front view (radians, around y). */
 export const REST_ANGLE = -0.62;
 
-/** Pose at the very start of the intro: pure side view, like the still. */
+/** Pose at the very start of the intro: pure side view. */
 export const INTRO_ANGLE = 0;
-
-/** Serialise points to an SVG path (y flipped by the caller's transform). */
-export function toSvgPath(pts: readonly Pt[], closed = true) {
-  const d = pts
-    .map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(3)} ${y.toFixed(3)}`)
-    .join("");
-  return closed ? `${d}Z` : d;
-}

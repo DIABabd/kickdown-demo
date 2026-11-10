@@ -11,7 +11,8 @@ const CarScene = dynamic(() => import("./car-scene"), { ssr: false });
 
 const REDUCED = "(prefers-reduced-motion: reduce)";
 
-type Phase = "waiting" | "3d" | "still";
+/** "off": no WebGL2 or the scene crashed – the car area simply stays empty. */
+type Phase = "waiting" | "3d" | "off";
 
 /**
  * WebGL2 support (three.js needs WebGL2). A "major performance caveat"
@@ -28,7 +29,7 @@ function hasWebGL2() {
   }
 }
 
-/** Catches errors from loading or running the 3D scene → still image. */
+/** Catches errors from loading or running the 3D scene → empty car area. */
 class SceneBoundary extends Component<
   { onError: (message: string) => void; children: ReactNode },
   { failed: boolean }
@@ -47,36 +48,39 @@ class SceneBoundary extends Component<
 }
 
 /**
- * Shows the server-rendered still first, then swaps in the interactive
- * Three.js car. The 3D car runs on every device with WebGL2 – phones
- * included. There are NO device, screen-size, memory, CPU, touch, Data
- * Saver or frame-rate checks any more. The still is shown only when:
- * - WebGL2 is not available, or
- * - the 3D scene crashes (error boundary), or
- * - briefly, while the browser has taken the WebGL context away (it comes
- *   back on its own when the context is restored).
- * Slow devices get a lower pixel ratio instead (car-scene.tsx).
+ * The hero's car area: the interactive Three.js car, nothing else. There is
+ * no 2D picture of the car at all – not while loading, not as a fallback.
  *
- * Testing: `?hero3d=0` always shows the still. `?debug=1` shows the
- * debug panel (components/site/debug-panel.tsx).
+ * - While the 3D scene loads, the car area is empty: the hero shows only its
+ *   background and the "KICKDOWN" lettering. Once the first frames are
+ *   drawn, the car fades in (opacity only – no layout shift).
+ * - The 3D car runs on every device with WebGL2, phones included (no
+ *   device, memory, CPU, touch or frame-rate checks; slow devices get a
+ *   lower pixel ratio instead, car-scene.tsx).
+ * - No WebGL2, or the scene crashes: the car area stays empty; the text,
+ *   call button and layout are unaffected.
+ * - The browser takes the WebGL context away (memory pressure): the car
+ *   fades out and comes back by itself when the context is restored.
+ *
+ * `?debug=1` shows the debug panel (components/site/debug-panel.tsx).
  */
-export function HeroStage({ still }: { still: ReactNode }) {
+export function HeroStage() {
   const [phase, setPhase] = useState<Phase>("waiting");
   const [forced, setForced] = useState(false);
   const [ready, setReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [paused, setPaused] = useState(false);
-  /** Why the still is shown – exposed as data-fallback for debugging. */
+  /** Why there is no 3D car (no WebGL2 / crash) – exposed as data-off for debugging. */
   const [reason, setReason] = useState<string | null>(null);
-  /** The browser took the WebGL context away (e.g. memory pressure) – the still shows until it's back. */
+  /** The browser took the WebGL context away (e.g. memory pressure) – the car is hidden until it's back. */
   const [lost, setLost] = useState(false);
 
-  const fallBack = (why: string) => {
+  const turnOff = (why: string) => {
     setReady(false);
-    setPhase("still");
+    setPhase("off");
     setReason(why);
-    debugInfo.heroFallback = why;
-    debugInfo.heroPhase = "still";
+    debugInfo.heroOffReason = why;
+    debugInfo.heroPhase = "off";
   };
 
   useEffect(() => {
@@ -89,8 +93,7 @@ export function HeroStage({ still }: { still: ReactNode }) {
     const start = () => {
       setReducedMotion(motion.matches);
       debugInfo.webgl2 = hasWebGL2();
-      if (flag === "0") return fallBack("URL flag ?hero3d=0");
-      if (!debugInfo.webgl2) return fallBack("WebGL2 not available");
+      if (!debugInfo.webgl2) return turnOff("WebGL2 not available");
       setForced(force);
       setPhase("3d");
       debugInfo.heroPhase = "3d";
@@ -116,12 +119,11 @@ export function HeroStage({ still }: { still: ReactNode }) {
       className={styles.stage}
       data-hero-stage
       data-ready={(ready && !lost) || undefined}
-      data-fallback={reason ?? undefined}
+      data-off={reason ?? undefined}
     >
-      <div className={styles.still}>{still}</div>
       {phase === "3d" && (
         <div className={styles.live}>
-          <SceneBoundary onError={(message) => fallBack(`3D error: ${message}`)}>
+          <SceneBoundary onError={(message) => turnOff(`3D error: ${message}`)}>
             <CarScene
               forced={forced}
               reducedMotion={reducedMotion}

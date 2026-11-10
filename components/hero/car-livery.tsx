@@ -103,10 +103,11 @@ function plateTexture() {
 /* Original logo file → texture, kept sharp                            */
 /* ------------------------------------------------------------------ */
 
+/** The logo texture, or "failed" if the file could not be loaded. */
 function useLogoTexture() {
   const gl = useThree((s) => s.gl);
   const invalidate = useThree((s) => s.invalidate);
-  const [tex, setTex] = useState<THREE.Texture | null>(null);
+  const [tex, setTex] = useState<THREE.Texture | "failed" | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -123,6 +124,8 @@ function useLogoTexture() {
         setTex(t);
         invalidate();
       } else t.dispose();
+    }, undefined, () => {
+      if (alive) setTex("failed");
     });
     return () => {
       alive = false;
@@ -168,8 +171,16 @@ const layer = (n: number) => ({
  */
 const print = (map: THREE.Texture) => ({ map, roughness: 0.3, metalness: 0.15 });
 
-export function DoorDecals() {
-  const logo = useLogoTexture();
+/**
+ * `onReady`: called once the logo decal exists (or the logo could not load),
+ * so the scene can reveal the car only after this heavy one-time step.
+ */
+export function DoorDecals({ onReady }: { onReady?: () => void }) {
+  const loaded = useLogoTexture();
+  const logo = loaded === "failed" ? null : loaded;
+  useEffect(() => {
+    if (loaded) onReady?.();
+  }, [loaded, onReady]);
   const tex = useMemo(
     () => ({
       stripeRight: stripeTexture(true),

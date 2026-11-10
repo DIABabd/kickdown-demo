@@ -71,7 +71,9 @@
   pointer-events: none;
 }
 
-/* ---------- Stage: still image + 3D, covering the hero ---------- */
+/* ---------- Stage: the 3D car, covering the hero ----------
+   No 2D picture of the car exists: while the scene loads (or if WebGL is
+   unavailable) the car area is simply empty – background + lettering only. */
 
 .stage {
   position: absolute;
@@ -79,35 +81,12 @@
   z-index: 1;
 }
 
-
-.still,
+/* Fades in once the first frames are drawn (data-ready) – opacity only. */
 .live {
   position: absolute;
-}
-
-/* The still sits where the 3D car will be (phones: upper part). */
-.still {
-  inset: 15% 3% auto;
-  height: 38%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 450ms ease-out;
-}
-
-.still svg {
-  width: 100%;
-  height: 100%;
-}
-
-.live {
   inset: 0;
   opacity: 0;
   transition: opacity 700ms ease-out;
-}
-
-.stage[data-ready] .still {
-  opacity: 0;
 }
 
 .stage[data-ready] .live {
@@ -338,14 +317,6 @@
   .content > :nth-child(4) {
     animation-delay: 0.92s;
   }
-  /* The still only appears if the 3D car hasn't arrived after 2.5 s
-     (or at once, below, when 3D isn't possible) – no image swap at load. */
-  .still {
-    animation: kd-fade-in 400ms ease-out 2.5s backwards;
-  }
-  .stage[data-fallback] .still {
-    animation: none;
-  }
   .button:hover::after {
     translate: 120% 0;
     transition: translate 700ms var(--ease-out);
@@ -353,8 +324,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .still,
-  .live,
+  /* a short, motion-free fade for the car */
+  .live {
+    transition-duration: 300ms;
+  }
   .hint,
   .button,
   .spinToggle {
@@ -389,12 +362,6 @@
   }
 }
 
-@keyframes kd-fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
 /* ---------- Tablet ---------- */
 
 @media (min-width: 640px) {
@@ -403,10 +370,6 @@
   }
   .word {
     top: 14%;
-  }
-  .still {
-    inset: 16% 6% auto;
-    height: 40%;
   }
   .hint {
     top: calc(37% + 20vw);
@@ -442,10 +405,6 @@
     top: 47%;
     font-size: min(13.2vw, 280px);
     translate: -50% -100%;
-  }
-  .still {
-    inset: 16% 1% 22% 38%;
-    height: auto;
   }
   .hint {
     left: 68%;

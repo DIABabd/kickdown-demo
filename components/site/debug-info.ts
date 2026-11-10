@@ -5,8 +5,9 @@
  */
 export const debugInfo = {
   webgl2: null as boolean | null,
-  heroPhase: "waiting" as "waiting" | "3d" | "still",
-  heroFallback: null as string | null,
+  heroPhase: "waiting" as "waiting" | "3d" | "off",
+  /** Why the 3D car is not shown (no WebGL2 / crash); null while it runs. */
+  heroOffReason: null as string | null,
   /** Frames the 3D renderer has drawn (grows while it is active). */
   heroFrames: 0,
   heroDpr: 0,

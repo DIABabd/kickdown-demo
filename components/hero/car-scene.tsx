@@ -3,6 +3,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer } from "@react-three/drei";
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -119,7 +120,7 @@ const AUTO_SPIN_VEL = -0.15;
 
 /**
  * Frame-rate probe – it only ever makes rendering lighter, it never
- * replaces the 3D car with the still. Warm-up frames are skipped (first
+ * hides the 3D car. Warm-up frames are skipped (first
  * shader compiles can take a while), then 1 s is measured; below
  * STEP_DOWN_FPS the pixel ratio drops to 1.
  */
@@ -280,7 +281,13 @@ function Rig({
   const headTarget = useRef<THREE.Object3D>(null);
   const travel = useRef(0);
   const shadow = useMemo(() => shadowTexture(), []);
-  const probe = useRef({ frames: 0, first: 0, start: 0, steppedDown: false, done: forced, readySent: false });
+  const probe = useRef({ frames: 0, first: 0, start: 0, steppedDown: false, done: forced, readySent: false, steady: 0, livery: false, compiling: false, compiled: false });
+  // Building the door-logo decal is one heavy step (~0.7 s on a slow phone):
+  // the car is revealed only after it, so the fade-in never shows a stall.
+  const onLiveryReady = useCallback(() => {
+    probe.current.livery = true;
+    probe.current.steady = 0; // count steady frames again from here
+  }, []);
 
   useFrame((state, rawDt) => {
     const c = ctrlRef.current;
@@ -288,9 +295,11 @@ function Rig({
     let busy = false;
     const xBefore = c.x;
 
-    /* --- intro: drive in from the left, light sweeps over the paint, turn into 3/4 --- */
+    /* --- intro: drive in from the left, light sweeps over the paint, turn into 3/4 ---
+       The intro clock waits until the car is revealed, so the entrance starts
+       exactly as the car fades in. */
     if (c.mode === "intro") {
-      c.t += dt;
+      if (probe.current.readySent) c.t += dt;
       const drive = clamp(c.t / INTRO.driveDur, 0, 1);
       c.x = INTRO.driveFrom * (1 - easeOutCubic(drive));
       const turn = clamp((c.t - INTRO.turnStart) / INTRO.turnDur, 0, 1);
@@ -372,10 +381,32 @@ function Rig({
     /* --- readiness + 1-second frame-rate probe --- */
     const p = probe.current;
     p.frames++;
-    if (p.frames === 2 && !p.readySent) {
+    // Reveal only once the livery is built, everything is compiled and frames
+    // arrive at a steady pace – so the fade-in never shows a stall or jump.
+    // Very slow devices: after that and 20 frames anyway; a missing logo or a
+    // failed compile can never keep the car hidden (240 frames).
+    // Before the drive-in the car is parked off-screen, so three.js would
+    // compile its shaders and prepare the reflection map only when it first
+    // comes into view (≈1 s stall on a slow device). Compile everything now,
+    // while the car is still invisible.
+    if (p.livery && !p.compiling) {
+      p.compiling = true;
+      state.gl
+        .compileAsync(state.scene, state.camera)
+        .catch(() => {})
+        .finally(() => {
+          p.compiled = true;
+          p.steady = 0;
+          state.invalidate();
+        });
+    }
+    p.steady = rawDt > 0 && rawDt < 0.06 ? p.steady + 1 : 0;
+    const settled = p.livery && p.compiled && (p.steady >= 3 || p.frames >= 20);
+    if (!p.readySent && (settled || p.frames >= 240)) {
       p.readySent = true;
       onReady();
     }
+    if (!p.readySent) busy = true;
     if (!p.done) {
       const now = performance.now();
       if (document.visibilityState === "hidden") {
@@ -420,7 +451,7 @@ function Rig({
         <group position={[0, 0.4, 0]}>
           <group ref={body}>
             <group position={[0, -0.4, 0]}>
-              <CarModel headTarget={headTarget} travelRef={travel} />
+              <CarModel headTarget={headTarget} travelRef={travel} onLiveryReady={onLiveryReady} />
             </group>
           </group>
         </group>
