@@ -1,6 +1,5 @@
 import { SectionHeading } from "@/components/site/section-heading";
 import { pageId } from "@/components/site/page-ids";
-import { telefon } from "@/content/kontakt";
 import { ui } from "@/content/start";
 import { buerozeiten, parseSpan, praxiszeiten, theoriezeiten } from "@/content/zeiten";
 import styles from "./tageslicht.module.css";
@@ -16,7 +15,8 @@ const TITLE_ID = pageId("start", "zeiten-title");
  * The three cards carry the exact wording (definition lists) at every
  * width. The former desktop week overview repeated the same times and was
  * removed: the cards are the clearer choice – exact old-site wording,
- * readable by screen readers, the phone button next to the office hours.
+ * readable by screen readers. The phone is in the contact section right
+ * below (and the footer), so it is not repeated here.
  */
 export function Zeiten() {
   return (
@@ -37,10 +37,6 @@ export function Zeiten() {
                 </div>
               ))}
             </dl>
-            <a href={telefon.href} className={styles.phone}>
-              <PhoneIcon />
-              {telefon.text}
-            </a>
           </div>
 
           <div className={styles.block}>
@@ -79,16 +75,5 @@ function Plate({ text }: { text: string }) {
       <span className={styles.plate}>{label}</span>
       {rest}
     </>
-  );
-}
-
-function PhoneIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
-      <path
-        d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"
-        fill="currentColor"
-      />
-    </svg>
   );
 }

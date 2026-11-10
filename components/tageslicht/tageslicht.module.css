@@ -245,25 +245,7 @@
   font-size: 18px;
 }
 
-.phone {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 48px;
-  margin-top: 16px;
-  padding: 0 22px;
-  border-radius: 999px;
-  background: var(--text);
-  color: var(--ink);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  text-decoration: none;
-}
 
-.phone:hover {
-  background: var(--kd-blau);
-  color: var(--ink);
-}
 
 /* ---------- Tablet ---------- */
 

@@ -303,25 +303,9 @@
   color: var(--ink); /* 6.3 : 1 */
 }
 
-.phone {
-  color: var(--text-2);
-  font-size: 15px;
-  letter-spacing: 0.02em;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 5px;
-  transition:
-    color 180ms ease-out,
-    text-decoration-color 180ms ease-out;
-}
 
-.phone:hover {
-  color: var(--text);
-  text-decoration-color: var(--kd-blau);
-}
 
-.button:focus-visible,
-.phone:focus-visible {
+.button:focus-visible {
   outline: 2px solid var(--kd-blau);
   outline-offset: 3px;
 }
@@ -373,7 +357,6 @@
   .live,
   .hint,
   .button,
-  .phone,
   .spinToggle {
     transition: none;
   }

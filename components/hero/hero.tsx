@@ -51,9 +51,6 @@ export function Hero({ children }: { children?: ReactNode }) {
                 </svg>
                 {ui.callNow}
               </a>
-              <a href={telefon.href} className={styles.phone}>
-                {telefon.text}
-              </a>
             </div>
           </div>
 
